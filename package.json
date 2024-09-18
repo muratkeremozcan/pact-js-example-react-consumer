@@ -2,7 +2,6 @@
   "name": "quick-vitejs-react-typescript-jest",
   "version": "1.0.0",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
@@ -45,6 +44,7 @@
     "@typescript-eslint/parser": "8.3.0",
     "@vitejs/plugin-react": "4.3.1",
     "cypress": "13.14.2",
+    "cypress-data-session": "^2.8.5",
     "cypress-map": "^1.40.0",
     "dotenv": "^16.4.5",
     "eslint": "8.57.0",
@@ -61,7 +61,6 @@
     "jest-environment-jsdom": "29.7.0",
     "lint-staged": "15.2.9",
     "lodash": "^4.17.21",
-    "nock": "^13.5.5",
     "npm-run-all2": "6.2.3",
     "prettier": "3.3.3",
     "start-server-and-test": "2.0.8",

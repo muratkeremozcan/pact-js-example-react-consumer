@@ -1,4 +1,5 @@
-const cyGrep = require('@cypress/grep/src/plugin')
+// @ts-expect-error okay
+import * as cyDataSession from 'cypress-data-session/src/plugin'
 
 /**
  * The collection of plugins to use with Cypress
@@ -11,7 +12,6 @@ export default function plugins(
 ) {
   return {
     // add plugins here
-    // ...cyDataSession(on, config), // example
-    ...cyGrep(config),
+    ...cyDataSession(on, config),
   }
 }

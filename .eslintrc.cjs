@@ -17,11 +17,7 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.jest.json'],
   },
-  plugins: [
-    '@typescript-eslint',
-    'implicit-dependencies',
-    'no-only-tests',
-  ],
+  plugins: ['@typescript-eslint', 'implicit-dependencies', 'no-only-tests'],
   settings: {
     'import/resolver': {
       typescript: {},
