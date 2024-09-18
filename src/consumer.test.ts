@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import nock, {cleanAll} from 'nock'
 import {
   fetchMovies,

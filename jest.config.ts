@@ -34,8 +34,14 @@ export const config: JestConfigWithTsJest = {
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {tsconfig: 'tsconfig.jest.json'}],
   },
-  testMatch: ['**/*.test.ts'],
-  testEnvironment: 'node',
+  testMatch: ['**/*.test.ts*'],
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'], // runs before each test file
+  // Mock static file imports (CSS, images, etc.)
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy', // Mock CSS files
+    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.ts', // Mock image files
+  },
 }
 
 export default config
