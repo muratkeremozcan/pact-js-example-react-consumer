@@ -7,30 +7,35 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
-    "test:coverage": "yarn test --watchAll=false --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/**/*.*.ts* --coverage",
+    "test:coverage": "npm run test --watchAll=false --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/**/*.*.ts* --coverage",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|css|md|mdx|html)\"",
-    "lint": "eslint . --cache-location node_modules/.cache/eslint",
+    "lint": "eslint . --cache-location node_modules/.cache/eslint --fix",
     "typecheck": "tsc --noEmit",
     "validate": "npm-run-all --parallel format lint typecheck build",
-    "cy:open": "cypress open",
-    "cy:open-e2e": "server-test 3000 'cypress open --e2e --browser chrome'",
-    "cy:run-e2e": "server-test 3000 'cypress run --e2e --browser chrome'",
-    "cy:open-ct": "cypress open --component --browser chrome",
-    "cy:run-ct": "cypress run --component --browser chrome",
-    "cy:run-ct-fast": "yarn cy:run-ct --config video=false screenshot=false"
+    "cy:open-local": "cypress open --e2e --browser chrome --config-file cypress/config/local.config.ts",
+    "cy:run-local": "cypress run --e2e --browser chrome --config-file cypress/config/local.config.ts",
+    "cy:open-ct": "cypress open --component --browser chrome --config-file cypress/config/local.config.ts",
+    "cy:run-ct": "cypress run --component --browser chrome --config-file cypress/config/local.config.ts",
+    "cy:run-ct-fast": "npm run cy:run-ct --config video=false screenshot=false cypress/config/local.config.ts"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@bahmutov/cy-api": "^2.2.6",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.3",
     "@cypress/grep": "4.1.0",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@testing-library/cypress": "10.0.1",
     "@testing-library/dom": "10.0.0",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "15.0.2",
     "@testing-library/user-event": "14.4.3",
     "@types/jest": "29.5.12",
+    "@types/lodash": "^4.17.7",
     "@types/node": "20.16.1",
     "@types/react": "18.3.4",
     "@types/react-dom": "18.3.0",
@@ -38,6 +43,8 @@
     "@typescript-eslint/parser": "8.3.0",
     "@vitejs/plugin-react": "4.3.1",
     "cypress": "13.14.2",
+    "cypress-map": "^1.40.0",
+    "dotenv": "^16.4.5",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-react-app": "7.0.1",
@@ -50,17 +57,19 @@
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "lint-staged": "15.2.9",
+    "lodash": "^4.17.21",
+    "nock": "^13.5.5",
     "npm-run-all2": "6.2.2",
     "prettier": "2.8.8",
     "start-server-and-test": "2.0.5",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
-    "typescript": "4.3.2",
+    "typescript": "5.6.2",
     "vite": "5.4.6"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn typecheck && yarn test --watchAll=false && lint-staged"
+      "pre-commit": "npm run typecheck && npm run test --watchAll=false && lint-staged"
     }
   }
 }
