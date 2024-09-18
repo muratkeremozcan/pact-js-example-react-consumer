@@ -22,16 +22,6 @@ declare global {
         args?: any,
       ): Chainable<JQuery<HTMLElement>>
 
-      /** Yields the element that partially matches the css class
-       * ```
-       * cy.getByClassLike('StyledIconBase') // where the class is class="StyledIconBase-ea9ulj-0 lbJwfL"
-       * ```
-       */
-      getByClassLike(
-        qaSelector: string,
-        args?: any,
-      ): Chainable<JQuery<HTMLElement>>
-
       /** Mounts a React node
        * @param component React Node to mount
        * @param options Additional options to pass into mount
@@ -40,6 +30,43 @@ declare global {
         component: React.ReactNode,
         options?: MountOptions,
       ): Cypress.Chainable<MountReturn>
+
+      /** Gets a list of movies
+       * ```js
+       * cy.getAllMovies()
+       * ```
+       */
+      getAllMovies(url?: string): Chainable<Response<Movie[]> & Messages>
+
+      /** Gets a movie by id
+       * ```js
+       * cy.getMovieById(1)
+       * ```
+       */
+      getMovieById(
+        id: number,
+        url?: string,
+      ): Chainable<Response<Movie> & Messages>
+
+      /** Creates a movie
+       * ```js
+       * cy.addMovie({name: 'The Great Gatsby', year: 1925 })
+       * ```
+       */
+      addMovie(
+        body: Omit<Movie, 'id'>,
+        url?: string,
+      ): Chainable<Response<Movie> & Messages>
+
+      /** Deletes a movie
+       * ```js
+       * cy.deleteMovie(1)
+       * ```
+       */
+      deleteMovie(
+        id: number,
+        url?: string,
+      ): Chainable<Response<Movie> & Messages>
     }
   }
 }
