@@ -13,7 +13,7 @@ const config = {
     env: {
       ENVIRONMENT: 'local',
     },
-    baseUrl: `http://localhost:${process.env.PORT}`,
+    baseUrl: 'http://localhost:3000', // can set to ${process.env.PORT} later
   },
   component: {
     experimentalJustInTimeCompile: true,
