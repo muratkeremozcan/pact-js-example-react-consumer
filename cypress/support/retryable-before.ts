@@ -23,7 +23,7 @@ export const retryableBefore = (fn: () => void) => {
   // When a test fails we flip the `shouldRun` flag back to true
   // so when cypress retries and runs the `beforeEach()` before
   // the test that failed, we'll run the `fn()` logic once more.
-  Cypress.on('test:after:run', (result) => {
+  Cypress.on('test:after:run', result => {
     if (result.state === 'failed') {
       if (result.currentRetry < result.retries) {
         shouldRun = true

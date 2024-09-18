@@ -15,6 +15,7 @@ Cypress.Commands.add('getMovieById', (id: number, url = apiUrl) => {
   return cy.task('fetchSingleMovie', {url, id}) // Pass an object with `url` and `id`
 })
 
+// @ts-expect-error ffs
 Cypress.Commands.add('addMovie', (body: Omit<Movie, 'id'>, url = apiUrl) => {
   cy.log('**addMovie**')
   return cy.task('addNewMovie', {
@@ -25,6 +26,6 @@ Cypress.Commands.add('addMovie', (body: Omit<Movie, 'id'>, url = apiUrl) => {
 })
 
 Cypress.Commands.add('deleteMovie', (id: number, url = apiUrl) => {
-  cy.log('**deleteMovie by id: ${id}**')
+  cy.log(`**deleteMovie by id: ${id}**`)
   return cy.task('deleteMovie', {url, id})
 })

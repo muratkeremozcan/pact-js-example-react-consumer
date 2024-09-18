@@ -50,13 +50,13 @@ declare global {
 
       /** Creates a movie
        * ```js
-       * cy.addMovie({name: 'The Great Gatsby', year: 1925  })
+       * cy.addMovie({name: 'The Great Gatsby', year: 1925 })
        * ```
        */
       addMovie(
         body: Omit<Movie, 'id'>,
         url?: string,
-      ): Chainable<Response<Omit<Movie, 'id'>> & Messages>
+      ): Chainable<Response<Movie> & Messages>
 
       /** Deletes a movie
        * ```js
