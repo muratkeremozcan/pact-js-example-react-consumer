@@ -1,5 +1,4 @@
-// @ts-expect-error okay
-import * as cyDataSession from 'cypress-data-session/src/plugin'
+const cyDataSession = require('cypress-data-session/src/plugin')
 
 /**
  * The collection of plugins to use with Cypress
