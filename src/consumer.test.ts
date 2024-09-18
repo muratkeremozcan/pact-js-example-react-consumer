@@ -33,7 +33,9 @@ Key differences between Nock and Pact:
    - **Pact**: Allows for loose matchers, enabling more flexibility by focusing on the shape of the data rather than exact values.
 */
 
-const MOCKSERVER_URL = 'http://mockserver.com'
+// baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
+// and Nock must intercept that exact URL for the tests to work.
+const MOCKSERVER_URL = 'http://localhost:3001'
 
 describe('Consumer API functions', () => {
   afterEach(() => {
@@ -51,7 +53,7 @@ describe('Consumer API functions', () => {
 
       nock(MOCKSERVER_URL).get('/movies').reply(200, [EXPECTED_BODY])
 
-      const res = (await fetchMovies(MOCKSERVER_URL)) as Movie[]
+      const res = (await fetchMovies()) as Movie[]
       expect(res[0]).toEqual(EXPECTED_BODY)
     })
 
@@ -62,7 +64,7 @@ describe('Consumer API functions', () => {
       const errorRes: ErrorResponse = {error: 'Not found'}
       nock(MOCKSERVER_URL).get('/movies').reply(404, errorRes)
 
-      const res = await fetchMovies(MOCKSERVER_URL)
+      const res = await fetchMovies()
       expect(res).toEqual(errorRes)
     })
   })
@@ -81,7 +83,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(MOCKSERVER_URL).get('/movie/1').reply(200, EXPECTED_BODY)
 
-      const res = await fetchSingleMovie(MOCKSERVER_URL, 1)
+      const res = await fetchSingleMovie(1)
       expect(res).toEqual(EXPECTED_BODY)
     })
 
@@ -90,7 +92,7 @@ describe('Consumer API functions', () => {
       const errorRes: ErrorResponse = {error: 'Movie not found'}
       nock(MOCKSERVER_URL).get(`/movie/${testId}`).reply(404, errorRes)
 
-      const result = await fetchSingleMovie(MOCKSERVER_URL, testId)
+      const result = await fetchSingleMovie(testId)
       expect(result).toEqual(errorRes)
     })
   })
@@ -110,7 +112,7 @@ describe('Consumer API functions', () => {
         year,
       })
 
-      const res = await addNewMovie(MOCKSERVER_URL, name, year)
+      const res = await addNewMovie(name, year)
       expect(res).toEqual({
         id: expect.any(Number),
         name,
@@ -132,7 +134,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(MOCKSERVER_URL).post('/movies', movie).reply(409, errorRes)
 
-      const res = await addNewMovie(MOCKSERVER_URL, movie.name, movie.year)
+      const res = await addNewMovie(movie.name, movie.year)
       expect(res).toEqual(errorRes)
     })
   })
@@ -149,7 +151,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(MOCKSERVER_URL).delete(`/movie/${testId}`).reply(200, successRes)
 
-      const res = await deleteMovie(MOCKSERVER_URL, testId)
+      const res = await deleteMovie(testId)
       expect(res).toEqual(successRes)
     })
 
@@ -162,7 +164,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(MOCKSERVER_URL).delete(`/movie/${testId}`).reply(404, errorRes)
 
-      const res = await deleteMovie(MOCKSERVER_URL, testId)
+      const res = await deleteMovie(testId)
       expect(res).toEqual(errorRes)
     })
   })

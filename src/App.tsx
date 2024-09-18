@@ -1,31 +1,41 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import './App.css'
+import type {Movie, ErrorResponse} from './consumer'
+import {fetchMovies} from './consumer' // Importing necessary types and functions
 
-export default function App() {
-  const [count, setCount] = useState(0)
+function App() {
+  const [movies, setMovies] = useState<Movie[] | null>(null)
+  const [error, setError] = useState<ErrorResponse | null>(null)
+
+  useEffect(() => {
+    fetchMovies()
+      .then(data => {
+        if ('error' in data) setError(data)
+        else setMovies(data)
+      })
+      .catch(err => {
+        console.error(`Error fetching movies: ${err} `)
+      })
+  })
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src="/react.svg" className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button data-cy="count" onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Movie List</h1>
+      {error ? (
+        <p style={{color: 'red'}}>{error.error}</p>
+      ) : movies ? (
+        <ul>
+          {movies.map(movie => (
+            <li key={movie.id}>
+              {movie.name} ({movie.year})
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading movies</p>
+      )}
     </div>
   )
 }
+
+export default App

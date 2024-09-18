@@ -18,6 +18,12 @@ export type SuccessResponse = {
   message: string
 }
 
+// baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
+// and Nock must intercept that exact URL for the tests to work.
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:3001', // this is really the API url where the requests are going to
+})
+
 // Helper function to extract data from Axios response
 const yieldData = <T>(res: AxiosResponse<T>): T => res.data
 
@@ -28,19 +34,15 @@ const handleError = (err: AxiosError): ErrorResponse => {
 }
 
 // Fetch all movies
-const fetchMovies = (url: string): Promise<Movie[] | ErrorResponse> =>
-  axios.get(`${url}/movies`).then(yieldData).catch(handleError)
+const fetchMovies = (): Promise<Movie[] | ErrorResponse> =>
+  axiosInstance.get('/movies').then(yieldData).catch(handleError)
 
 // Fetch a single movie by ID
-const fetchSingleMovie = (
-  url: string,
-  id: number,
-): Promise<Movie | ErrorResponse> =>
-  axios.get(`${url}/movie/${id}`).then(yieldData).catch(handleError)
+const fetchSingleMovie = (id: number): Promise<Movie | ErrorResponse> =>
+  axiosInstance.get(`/movie/${id}`).then(yieldData).catch(handleError)
 
 // Add a new movie (don't specify id)
 const addNewMovie = async (
-  url: string,
   movieName: string,
   movieYear: number,
 ): Promise<Movie | ErrorResponse> => {
@@ -49,8 +51,8 @@ const addNewMovie = async (
     year: movieYear,
   }
 
-  const response = await axios
-    .post(`${url}/movies`, data)
+  const response = await axiosInstance
+    .post('/movies', data)
     .then(yieldData)
     .catch(handleError)
 
@@ -58,10 +60,7 @@ const addNewMovie = async (
 }
 
 // Delete a movie by ID
-const deleteMovie = (
-  url: string,
-  id: number,
-): Promise<SuccessResponse | ErrorResponse> =>
-  axios.delete(`${url}/movie/${id}`).then(yieldData).catch(handleError)
+const deleteMovie = (id: number): Promise<SuccessResponse | ErrorResponse> =>
+  axiosInstance.delete(`/movie/${id}`).then(yieldData).catch(handleError)
 
 export {fetchMovies, fetchSingleMovie, addNewMovie, deleteMovie}
