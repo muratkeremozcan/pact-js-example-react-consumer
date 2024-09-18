@@ -132,6 +132,7 @@ jobs:
           start: yarn start
           wait-on: 'http://localhost:3000'
           browser: chrome
+          config-file: cypress/config/local.config.ts
           # if you want to enable parallelization
           # record: true
           # parallel: true
@@ -181,6 +182,7 @@ jobs:
           # install: false # Cypress gha will take care of caching instead of bahmutov/installs
           component: true
           browser: chrome
+          config-file: cypress/config/local.config.ts
           # if you want to enable parallelization
           # record: true
           # parallel: true
