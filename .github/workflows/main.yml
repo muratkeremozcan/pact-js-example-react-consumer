@@ -5,6 +5,7 @@ on:
 
 env:
   VITE_PORT: 3000
+  API_PORT: 3001
   VITE_API_URL: 'http://localhost:3001'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # if you want to enable parallelization
