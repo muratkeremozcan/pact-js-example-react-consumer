@@ -1,40 +1,64 @@
-import {useEffect, useState} from 'react'
 import './App.css'
-import type {Movie, ErrorResponse} from './consumer'
-import {fetchMovies} from './consumer' // Importing necessary types and functions
+import {useMovies, useAddMovie, useDeleteMovie} from './hooks/useMovies'
+import {useState} from 'react'
 
 function App() {
-  const [movies, setMovies] = useState<Movie[] | null>(null)
-  const [error, setError] = useState<ErrorResponse | null>(null)
+  const {data: movies, error, isLoading: moviesLoading} = useMovies()
+  const {status, mutate} = useAddMovie()
+  const movieLoading = status === 'pending'
+  const deleteMovieMutation = useDeleteMovie()
 
-  useEffect(() => {
-    fetchMovies()
-      .then(data => {
-        console.log(data)
-        if ('error' in data) setError(data)
-        else setMovies(data)
-      })
-      .catch(err => {
-        console.error(`Error fetching movies: ${err} `)
-      })
-  })
+  const [movieName, setMovieName] = useState('')
+  const [movieYear, setMovieYear] = useState(2023)
+
+  const handleAddMovie = () => {
+    mutate({name: movieName, year: movieYear})
+    setMovieName('')
+    setMovieYear(2023)
+  }
+
+  const handleDeleteMovie = (id: number) => {
+    deleteMovieMutation.mutate(id)
+  }
 
   return (
     <div className="App">
       <h1>Movie List</h1>
-      {error ? (
-        <p style={{color: 'red'}}>{error.error}</p>
-      ) : movies ? (
-        <ul>
-          {movies.map(movie => (
-            <li key={movie.id}>
-              {movie.name} ({movie.year})
-            </li>
-          ))}
-        </ul>
+
+      {moviesLoading ? (
+        <p>Loading movies...</p>
+      ) : error ? (
+        <p style={{color: 'red'}}>{error.message}</p>
       ) : (
-        <p>Loading movies</p>
+        <ul>
+          {Array.isArray(movies) &&
+            movies.map(movie => (
+              <li key={movie.id}>
+                {movie.name} ({movie.year})
+                <button onClick={() => handleDeleteMovie(movie.id)}>
+                  Delete
+                </button>
+              </li>
+            ))}
+        </ul>
       )}
+
+      <h2>Add a New Movie</h2>
+      <input
+        type="text"
+        placeholder="Movie name"
+        value={movieName}
+        onChange={e => setMovieName(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Movie year"
+        value={movieYear}
+        onChange={e => setMovieYear(Number(e.target.value))}
+      />
+      <button onClick={handleAddMovie} disabled={movieLoading}>
+        {movieLoading ? 'Adding...' : 'Add Movie'}
+      </button>
     </div>
   )
 }
