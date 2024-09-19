@@ -1,20 +1,24 @@
-import {defineConfig} from 'vite'
+import {defineConfig, loadEnv} from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  server: {
-    port: 3000,
-    host: true,
-    proxy: {
-      '/movies': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      },
-      '/movie': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
+export default defineConfig(({mode}) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    server: {
+      port: Number(env.VITE_PORT),
+      host: true,
+      proxy: {
+        '/movies': {
+          target: `http://localhost:${env.API_PORT}`,
+          changeOrigin: true,
+        },
+        '/movie': {
+          target: `http://localhost:${env.API_PORT}`,
+          changeOrigin: true,
+        },
       },
     },
-  },
-  plugins: [react()],
+    plugins: [react()],
+  }
 })

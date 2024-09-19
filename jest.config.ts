@@ -32,7 +32,30 @@ export const config: JestConfigWithTsJest = {
   moduleDirectories: ['node_modules', 'src'],
   modulePathIgnorePatterns: ['dist'],
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {tsconfig: 'tsconfig.jest.json'}],
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.jest.json',
+        diagnostics: {
+          ignoreCodes: [1343], // Ignore TypeScript error code for import.meta
+        },
+        astTransformers: {
+          before: [
+            {
+              path: 'ts-jest-mock-import-meta',
+              options: {
+                metaObjectReplacement: {
+                  env: {
+                    VITE_API_PORT: '5000',
+                    VITE_PORT: '3000',
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    ],
   },
   testMatch: ['**/*.test.ts*'],
   testEnvironment: 'jsdom',

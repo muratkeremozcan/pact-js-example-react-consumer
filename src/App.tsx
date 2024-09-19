@@ -10,6 +10,7 @@ function App() {
   useEffect(() => {
     fetchMovies()
       .then(data => {
+        console.log(data)
         if ('error' in data) setError(data)
         else setMovies(data)
       })
