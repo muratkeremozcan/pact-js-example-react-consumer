@@ -9,13 +9,13 @@ require('dotenv').config({
 })
 
 const PORT = process.env.VITE_PORT
-const API_PORT = process.env.VITE_API_PORT
+const API_URL = process.env.VITE_API_URL
 
 const config: Cypress.ConfigOptions = {
   e2e: {
     env: {
       ENVIRONMENT: 'local',
-      apiUrl: `http://localhost:${API_PORT}`, // Cypress.env
+      apiUrl: `${API_URL}`, // Cypress.env
     },
     baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },

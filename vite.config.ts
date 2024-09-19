@@ -8,16 +8,6 @@ export default defineConfig(({mode}) => {
     server: {
       port: Number(env.VITE_PORT),
       host: true,
-      proxy: {
-        '/movies': {
-          target: `http://localhost:${env.API_PORT}`,
-          changeOrigin: true,
-        },
-        '/movie': {
-          target: `http://localhost:${env.API_PORT}`,
-          changeOrigin: true,
-        },
-      },
     },
     plugins: [react()],
   }

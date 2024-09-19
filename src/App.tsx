@@ -1,41 +1,73 @@
-import {useEffect, useState} from 'react'
-import './App.css'
-import type {Movie, ErrorResponse} from './consumer'
-import {fetchMovies} from './consumer' // Importing necessary types and functions
+import {useMovies, useAddMovie, useDeleteMovie} from './hooks/useMovies'
+import {useState} from 'react'
+import {
+  AppContainer,
+  Title,
+  MovieList,
+  MovieItem,
+  Button,
+  Input,
+  Subtitle,
+} from './styles/styled-components'
 
 function App() {
-  const [movies, setMovies] = useState<Movie[] | null>(null)
-  const [error, setError] = useState<ErrorResponse | null>(null)
+  const {data: movies, error, isLoading: moviesLoading} = useMovies()
+  const {status, mutate} = useAddMovie()
+  const movieLoading = status === 'pending'
+  const deleteMovieMutation = useDeleteMovie()
 
-  useEffect(() => {
-    fetchMovies()
-      .then(data => {
-        console.log(data)
-        if ('error' in data) setError(data)
-        else setMovies(data)
-      })
-      .catch(err => {
-        console.error(`Error fetching movies: ${err} `)
-      })
-  })
+  const [movieName, setMovieName] = useState('')
+  const [movieYear, setMovieYear] = useState(2023)
+
+  const handleAddMovie = () => {
+    mutate({name: movieName, year: movieYear})
+    setMovieName('')
+    setMovieYear(2023)
+  }
+
+  const handleDeleteMovie = (id: number) => {
+    deleteMovieMutation.mutate(id)
+  }
 
   return (
-    <div className="App">
-      <h1>Movie List</h1>
-      {error ? (
-        <p style={{color: 'red'}}>{error.error}</p>
-      ) : movies ? (
-        <ul>
-          {movies.map(movie => (
-            <li key={movie.id}>
-              {movie.name} ({movie.year})
-            </li>
-          ))}
-        </ul>
+    <AppContainer>
+      <Title>Movie List</Title>
+
+      {moviesLoading ? (
+        <p>Loading movies...</p>
+      ) : error ? (
+        <p style={{color: 'red'}}>{error.message}</p>
       ) : (
-        <p>Loading movies</p>
+        <MovieList>
+          {Array.isArray(movies) &&
+            movies.map(movie => (
+              <MovieItem key={movie.id}>
+                {movie.name} ({movie.year})
+                <Button onClick={() => handleDeleteMovie(movie.id)}>
+                  Delete
+                </Button>
+              </MovieItem>
+            ))}
+        </MovieList>
       )}
-    </div>
+
+      <Subtitle>Add a New Movie</Subtitle>
+      <Input
+        type="text"
+        placeholder="Movie name"
+        value={movieName}
+        onChange={e => setMovieName(e.target.value)}
+      />
+      <Input
+        type="number"
+        placeholder="Movie year"
+        value={movieYear}
+        onChange={e => setMovieYear(Number(e.target.value))}
+      />
+      <Button onClick={handleAddMovie} disabled={movieLoading}>
+        {movieLoading ? 'Adding...' : 'Add Movie'}
+      </Button>
+    </AppContainer>
   )
 }
 

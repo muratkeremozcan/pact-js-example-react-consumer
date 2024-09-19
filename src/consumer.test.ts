@@ -12,7 +12,7 @@ import {
 import type {Movie, ErrorResponse, SuccessResponse} from './consumer'
 
 // @ts-expect-error okay
-const API_PORT = import.meta.env.VITE_API_PORT
+const API_URL = import.meta.env.VITE_API_URL
 
 // Nock can be used to test modules that make HTTP requests to external APIs in isolation.
 // For example, if a module sends HTTP requests to an external API, you can test that module independently of the actual API.
@@ -38,7 +38,6 @@ Key differences between Nock and Pact:
 
 // baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
 // and Nock must intercept that exact URL for the tests to work.
-const MOCKSERVER_URL = `http://localhost:${API_PORT}`
 
 describe('Consumer API functions', () => {
   afterEach(() => {
@@ -54,7 +53,7 @@ describe('Consumer API functions', () => {
         year: 1999,
       }
 
-      nock(MOCKSERVER_URL).get('/movies').reply(200, [EXPECTED_BODY])
+      nock(API_URL).get('/movies').reply(200, [EXPECTED_BODY])
 
       const res = (await fetchMovies()) as Movie[]
       expect(res[0]).toEqual(EXPECTED_BODY)
@@ -65,7 +64,7 @@ describe('Consumer API functions', () => {
     // but our code can handle an error, so we can test it...
     it('should handle errors correctly', async () => {
       const errorRes: ErrorResponse = {error: 'Not found'}
-      nock(MOCKSERVER_URL).get('/movies').reply(404, errorRes)
+      nock(API_URL).get('/movies').reply(404, errorRes)
 
       const res = await fetchMovies()
       expect(res).toEqual(errorRes)
@@ -84,7 +83,7 @@ describe('Consumer API functions', () => {
       }
 
       // in pact the provider state would be specified here
-      nock(MOCKSERVER_URL).get('/movie/1').reply(200, EXPECTED_BODY)
+      nock(API_URL).get('/movie/1').reply(200, EXPECTED_BODY)
 
       const res = await fetchSingleMovie(1)
       expect(res).toEqual(EXPECTED_BODY)
@@ -93,7 +92,7 @@ describe('Consumer API functions', () => {
     it('should handle errors when movie not found', async () => {
       const testId = 999
       const errorRes: ErrorResponse = {error: 'Movie not found'}
-      nock(MOCKSERVER_URL).get(`/movie/${testId}`).reply(404, errorRes)
+      nock(API_URL).get(`/movie/${testId}`).reply(404, errorRes)
 
       const result = await fetchSingleMovie(testId)
       expect(result).toEqual(errorRes)
@@ -109,7 +108,7 @@ describe('Consumer API functions', () => {
       }
       // with pact we can keep the response generic
       // with nock it has to be concrete response
-      nock(MOCKSERVER_URL).post('/movies', {name, year}).reply(200, {
+      nock(API_URL).post('/movies', {name, year}).reply(200, {
         id: 1,
         name,
         year,
@@ -135,7 +134,7 @@ describe('Consumer API functions', () => {
       }
 
       // in pact the provider state would be specified here
-      nock(MOCKSERVER_URL).post('/movies', movie).reply(409, errorRes)
+      nock(API_URL).post('/movies', movie).reply(409, errorRes)
 
       const res = await addNewMovie(movie.name, movie.year)
       expect(res).toEqual(errorRes)
@@ -152,7 +151,7 @@ describe('Consumer API functions', () => {
       }
 
       // in pact the provider state would be specified here
-      nock(MOCKSERVER_URL).delete(`/movie/${testId}`).reply(200, successRes)
+      nock(API_URL).delete(`/movie/${testId}`).reply(200, successRes)
 
       const res = await deleteMovie(testId)
       expect(res).toEqual(successRes)
@@ -165,7 +164,7 @@ describe('Consumer API functions', () => {
       }
 
       // in pact the provider state would be specified here
-      nock(MOCKSERVER_URL).delete(`/movie/${testId}`).reply(404, errorRes)
+      nock(API_URL).delete(`/movie/${testId}`).reply(404, errorRes)
 
       const res = await deleteMovie(testId)
       expect(res).toEqual(errorRes)

@@ -17,13 +17,14 @@
     "cy:open-ct": "cypress open --component --browser chrome --config-file cypress/config/local.config.ts",
     "cy:run-ct": "cypress run --component --browser chrome --config-file cypress/config/local.config.ts",
     "cy:run-ct-fast": "npm run cy:run-ct --config video=false screenshot=false cypress/config/local.config.ts",
-    "mock:server": ". ./scripts/env-setup.sh && npx mockoon-cli start --data ./mockoon/provider-mock.json --port ${VITE_API_PORT}"
+    "mock:server": ". ./scripts/env-setup.sh && npx mockoon-cli start --data ./mockoon/provider-mock.json --port ${API_PORT}"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.7.7",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "^2.2.6",
