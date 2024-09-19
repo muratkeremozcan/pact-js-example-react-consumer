@@ -3,6 +3,13 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  VITE_PORT: 3000
+  VITE_API_PORT: 3001
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # if you want to enable parallelization
+  # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
 concurrency:
   group: ${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -15,19 +22,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-
-      # Note: when wanting to cache Cypress as well as node_modules, use cypress-io/github-action
-      # with it, there is no need to setup node, and Cypress is cached.
-      # if it's a non-Cypress install, use bahmutov/npm-install
-
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     cache: 'npm run'
-      #     node-version: 16.10.0
-      # - uses: bahmutov/npm-install@v1.8.25
-      #   with: {useRollingCache: true} # recommended for large projects
-      #   env:
-      #     CYPRESS_INSTALL_BINARY: 0 # no need to install the Cypress binary, we are already using the docker image in the e2e job
 
       # Install NPM dependencies, cache node-modules and Cypress correctly
       # https://github.com/cypress-io/github-action
@@ -44,31 +38,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      # - uses: bahmutov/npm-install@v1.8.25
-      #   with: {useRollingCache: true}
-      #   env:
-      #     CYPRESS_INSTALL_BINARY: 0
       - name: Install dependencies
         uses: cypress-io/github-action@v6.7.3
         with:
           runTests: false
       - name: unit-test
         run: npm run test:coverage
-
-      # if you want to enable codecov
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v3.1.0
-      #   with:
-      #     name: coverage
-      #     path: coverage/
-      #     retention-days: 1
-
-      # - name: ✅ Upload Jest coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     directory: coverage/
-      #     flags: unit-test-coverage
-      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     needs: install-dependencies
@@ -78,10 +53,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      # - uses: bahmutov/npm-install@v1.8.25
-      #   with: {useRollingCache: true}
-      #   env:
-      #     CYPRESS_INSTALL_BINARY: 0
       - name: Install dependencies
         uses: cypress-io/github-action@v6.7.3
         with:
@@ -97,10 +68,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      # - uses: bahmutov/npm-install@v1.8.25
-      #   with: {useRollingCache: true}
-      #   env:
-      #     CYPRESS_INSTALL_BINARY: 0
       - name: Install dependencies
         uses: cypress-io/github-action@v6.7.3
         with:
@@ -122,9 +89,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      # - uses: bahmutov/npm-install@v1.8.25 # save time on dependencies
-      #   with: {useRollingCache: true}
-
       - name: Cypress e2e tests 🧪
         uses: cypress-io/github-action@v6.7.3
         with:
@@ -138,25 +102,6 @@ jobs:
           # parallel: true
           # group: e2e-tests
           # tag: e2e-tests
-        env:
-          # if you want to enable parallelization
-          # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # if you want to enable codecov
-      # - name: Upload artifacts (Coverage_step3)
-      #   uses: actions/upload-artifact@v3.1.0
-      #   with:
-      #     name: coverage-cy-e2e
-      #     path: coverage-cy/
-      #     retention-days: 1
-
-      # - name: ✅ Upload e2e coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     directory: coverage-cy/
-      #     flags: cypress-e2e-coverage
-      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   cypress-ct-test:
     # if you want to enable parallelization
@@ -171,9 +116,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-
-      # - uses: bahmutov/npm-install@v1.8.25 # save time on dependencies
-      #   with: {useRollingCache: true}
 
       - name: Cypress component tests 🧪
         uses: cypress-io/github-action@v6.7.3
@@ -192,18 +134,3 @@ jobs:
           # if you want to enable parallelization
           # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # if you want to enable codecov
-      # - name: Upload artifacts (Coverage_step3)
-      #   uses: actions/upload-artifact@v3.1.0
-      #   with:
-      #     name: coverage-cy-ct
-      #     path: coverage-cy/
-      #     retention-days: 1
-
-      # - name: ✅ Upload CT coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     directory: coverage-cy/
-      #     flags: cypress-ct-coverage
-      #     token: ${{ secrets.CODECOV_TOKEN }}

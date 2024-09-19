@@ -46,7 +46,7 @@ export const config: JestConfigWithTsJest = {
               options: {
                 metaObjectReplacement: {
                   env: {
-                    VITE_API_PORT: '5000',
+                    VITE_API_PORT: '3001',
                     VITE_PORT: '3000',
                   },
                 },

@@ -4,5 +4,5 @@
   "compilerOptions": {
     "types": ["@types/jest"]
   },
-  "include": ["**/*.test.ts*", "**/*.pacttest.ts*"]
+  "include": ["**/*.test.ts*", "**/*.pacttest.ts*", "vite-env.d.ts"]
 }
