@@ -11,6 +11,9 @@ import {
 } from './consumer'
 import type {Movie, ErrorResponse, SuccessResponse} from './consumer'
 
+// @ts-expect-error okay
+const API_PORT = import.meta.env.VITE_API_PORT
+
 // Nock can be used to test modules that make HTTP requests to external APIs in isolation.
 // For example, if a module sends HTTP requests to an external API, you can test that module independently of the actual API.
 
@@ -35,7 +38,7 @@ Key differences between Nock and Pact:
 
 // baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
 // and Nock must intercept that exact URL for the tests to work.
-const MOCKSERVER_URL = 'http://localhost:3001'
+const MOCKSERVER_URL = `http://localhost:${API_PORT}`
 
 describe('Consumer API functions', () => {
   afterEach(() => {

@@ -1,6 +1,8 @@
 import type {AxiosResponse, AxiosError} from 'axios'
 import axios from 'axios'
 
+const API_PORT = import.meta.env.VITE_API_PORT
+
 // Movie type from the provider, in the real world this would come from a published package
 export type Movie = {
   id: number
@@ -18,7 +20,6 @@ export type SuccessResponse = {
   message: string
 }
 
-const API_PORT = import.meta.env.VITE_API_PORT
 // baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
 // and Nock must intercept that exact URL for the tests to work
 const axiosInstance = axios.create({
