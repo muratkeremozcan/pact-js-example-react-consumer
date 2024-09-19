@@ -1,6 +1,14 @@
-import './App.css'
 import {useMovies, useAddMovie, useDeleteMovie} from './hooks/useMovies'
 import {useState} from 'react'
+import {
+  AppContainer,
+  Title,
+  MovieList,
+  MovieItem,
+  Button,
+  Input,
+  Subtitle,
+} from './styles/styled-components'
 
 function App() {
   const {data: movies, error, isLoading: moviesLoading} = useMovies()
@@ -22,44 +30,44 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>Movie List</h1>
+    <AppContainer>
+      <Title>Movie List</Title>
 
       {moviesLoading ? (
         <p>Loading movies...</p>
       ) : error ? (
         <p style={{color: 'red'}}>{error.message}</p>
       ) : (
-        <ul>
+        <MovieList>
           {Array.isArray(movies) &&
             movies.map(movie => (
-              <li key={movie.id}>
+              <MovieItem key={movie.id}>
                 {movie.name} ({movie.year})
-                <button onClick={() => handleDeleteMovie(movie.id)}>
+                <Button onClick={() => handleDeleteMovie(movie.id)}>
                   Delete
-                </button>
-              </li>
+                </Button>
+              </MovieItem>
             ))}
-        </ul>
+        </MovieList>
       )}
 
-      <h2>Add a New Movie</h2>
-      <input
+      <Subtitle>Add a New Movie</Subtitle>
+      <Input
         type="text"
         placeholder="Movie name"
         value={movieName}
         onChange={e => setMovieName(e.target.value)}
       />
-      <input
+      <Input
         type="number"
         placeholder="Movie year"
         value={movieYear}
         onChange={e => setMovieYear(Number(e.target.value))}
       />
-      <button onClick={handleAddMovie} disabled={movieLoading}>
+      <Button onClick={handleAddMovie} disabled={movieLoading}>
         {movieLoading ? 'Adding...' : 'Add Movie'}
-      </button>
-    </div>
+      </Button>
+    </AppContainer>
   )
 }
 
