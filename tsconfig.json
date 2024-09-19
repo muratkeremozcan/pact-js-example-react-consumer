@@ -1,13 +1,14 @@
 {
   "include": [
     "src",
-    "./jest.config.ts",
-    "./jest.setup.ts",
-    "./jest-pact.config.ts",
+    "jest.config.ts",
+    "jest.setup.ts",
+    "jest-pact.config.ts",
     ".eslintrc.cjs",
-    "./vite.config.ts",
+    "vite.config.ts",
+    "vite-env.d.ts",
     "cypress",
-    "./cypress.d.ts"
+    "cypress.d.ts"
   ],
   "exclude": ["node_modules", "coverage", "dist", "**/*.*test.ts*"],
   "compilerOptions": {
@@ -40,7 +41,9 @@
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
-    // "types",                                          /* Specify type package names to be included without being referenced in a source file. */ // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
+    "types": [
+      "vite/client"
+    ] /* Specify type package names to be included without being referenced in a source file. */, // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     "resolveJsonModule": true /* Enable importing .json files. */,
     // "allowImportingTsExtensions": true                /* Allow importing .ts files even when they cannot be resolved. */

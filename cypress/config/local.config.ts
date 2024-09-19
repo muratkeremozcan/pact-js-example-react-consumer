@@ -8,15 +8,20 @@ require('dotenv').config({
   path: path.resolve(__dirname, '../../.env'),
 })
 
-const config = {
+const PORT = process.env.VITE_PORT
+const API_PORT = process.env.VITE_API_PORT
+
+const config: Cypress.ConfigOptions = {
   e2e: {
     env: {
       ENVIRONMENT: 'local',
+      apiUrl: `http://localhost:${API_PORT}`, // Cypress.env
     },
-    baseUrl: 'http://localhost:3000', // can set to ${process.env.PORT} later
+    baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },
   component: {
     experimentalJustInTimeCompile: true,
+    experimentalSingleTabRunMode: true,
     specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
     devServer: {
       framework: 'react',

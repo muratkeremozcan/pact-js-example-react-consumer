@@ -3,7 +3,7 @@ import 'cypress-map'
 import '@bahmutov/cy-api'
 import type {Movie} from '../../src/consumer'
 
-const apiUrl = Cypress.config('baseUrl') || 'http://localhost:3000'
+const apiUrl = Cypress.env('apiUrl')
 
 Cypress.Commands.add('getAllMovies', (url = apiUrl) => {
   cy.log('**getAllMovies**')
