@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import {defineConfig} from 'cypress'
-import {baseConfig} from './base.config'
-import path from 'node:path'
 import merge from 'lodash/merge'
+import path from 'node:path'
+import {baseConfig} from './base.config'
+// eslint-disable-next-line import/named
+import {defineConfig} from 'cypress'
 
 require('dotenv').config({
   path: path.resolve(__dirname, '../../.env'),

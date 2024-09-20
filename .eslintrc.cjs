@@ -20,7 +20,9 @@ module.exports = {
   plugins: ['@typescript-eslint', 'implicit-dependencies', 'no-only-tests'],
   settings: {
     'import/resolver': {
-      typescript: {},
+      typescript: {
+        alwaysTryTypes: true, // Always try to resolve types under `@types` directory even if it's not in `package.json`
+      },
     },
   },
   ignorePatterns: ['dist', 'node_modules', 'scripts', '**/*.d.ts'],
@@ -37,5 +39,6 @@ module.exports = {
     'import/default': 'off',
     '@typescript-eslint/no-require-imports': 'off',
     'cypress/unsafe-to-chain-command': 'off',
+    'import/no-named-as-default': 'off',
   },
 }

@@ -1,5 +1,4 @@
 import './commands'
-import 'cypress-map'
 import '@bahmutov/cy-api'
 import type {Movie} from '../../src/consumer'
 

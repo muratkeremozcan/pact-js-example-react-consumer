@@ -22,14 +22,15 @@
   "dependencies": {
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.7.7",
+    "cy-spok": "^1.6.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-error-boundary": "^4.0.13",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "^2.2.6",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.3",
-    "@cypress/grep": "4.1.0",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@faker-js/faker": "8.4.1",
@@ -53,7 +54,7 @@
     "dotenv": "^16.4.5",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
-    "eslint-import-resolver-typescript": "3.6.3",
+    "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-cypress": "3.5.0",
     "eslint-plugin-implicit-dependencies": "1.1.1",
     "eslint-plugin-import": "2.30.0",

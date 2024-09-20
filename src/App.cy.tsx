@@ -1,16 +1,13 @@
 import App from './App'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 describe('CT sanity', () => {
   it('passes sanity', () => {
-    cy.intercept('/movies', [{id: 1, name: 'Inception', year: 2010}])
+    cy.intercept('/movies', {
+      delay: 1000,
+      body: [{id: 1, name: 'Inception', year: 2010}],
+    })
 
-    const queryClient = new QueryClient()
-    cy.mount(
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>,
-    )
+    cy.wrappedMount(<App />)
 
     cy.contains('Movie List')
   })
