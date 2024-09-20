@@ -12,7 +12,7 @@ export default function MovieItem({id, name, year, onDelete}: MovieItemProps) {
   return (
     <SMovieItem data-cy="movie-item-comp">
       {name} ({year})
-      <SButton data-cy="delete-movie-item" onClick={() => onDelete(id)}>
+      <SButton data-cy={`delete-movie-${name}`} onClick={() => onDelete(id)}>
         Delete
       </SButton>
     </SMovieItem>

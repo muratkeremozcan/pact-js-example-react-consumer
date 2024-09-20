@@ -13,7 +13,7 @@ describe('<MovieItem />', () => {
 
     cy.getByCy('movie-item-comp').contains('my movie (2023)')
 
-    cy.getByCy('delete-movie-item').click()
+    cy.getByCyLike('delete-movie').click()
     cy.get('@onDelete').should('have.been.calledOnce')
   })
 })

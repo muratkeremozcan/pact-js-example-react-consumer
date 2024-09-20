@@ -1,4 +1,4 @@
-import {generateMovie} from '../../../cypress/support/factories'
+import {generateMovie} from '@support/factories'
 import MovieList from './movie-list'
 
 describe('<MovieList />', () => {
@@ -14,5 +14,23 @@ describe('<MovieList />', () => {
 
     cy.getByCy('movie-list-comp').should('be.visible')
     cy.getByCy('movie-item-comp').should('have.length', 2)
+  })
+
+  it('should show nothing with no movies', () => {
+    cy.mount(<MovieList movies={[]} onDelete={cy.stub().as('onDelete')} />)
+
+    cy.getByCy('movie-list-comp').should('not.exist')
+  })
+
+  it('should show error with error', () => {
+    cy.mount(
+      <MovieList
+        movies={{error: 'boom'}}
+        onDelete={cy.stub().as('onDelete')}
+      />,
+    )
+
+    cy.getByCy('movie-list-comp').should('not.exist')
+    cy.getByCy('error').should('be.visible')
   })
 })

@@ -1,7 +1,4 @@
-import ErrorComponent from '@components/error-component'
-import LoadingMessage from '@components/loading-message'
-import {Suspense} from 'react'
-import {ErrorBoundary} from 'react-error-boundary'
+import ErrorComp from '@components/error-component'
 import styled from 'styled-components'
 import type {ErrorResponse, Movie} from '../../consumer'
 import MovieItem from './movie-item'
@@ -12,17 +9,21 @@ type MovieListProps = Readonly<{
 }>
 
 export default function MovieList({movies, onDelete}: MovieListProps) {
+  if (Array.isArray(movies) && movies.length === 0) {
+    return null
+  }
+
+  if (movies && 'error' in movies) {
+    return <ErrorComp />
+  }
+
   return (
-    <ErrorBoundary fallback={<ErrorComponent />}>
-      <Suspense fallback={<LoadingMessage />}>
-        <SMovieList data-cy="movie-list-comp">
-          {Array.isArray(movies) &&
-            movies.map(movie => (
-              <MovieItem key={movie.id} {...movie} onDelete={onDelete} />
-            ))}
-        </SMovieList>
-      </Suspense>
-    </ErrorBoundary>
+    <SMovieList data-cy="movie-list-comp">
+      {Array.isArray(movies) &&
+        movies.map(movie => (
+          <MovieItem key={movie.id} {...movie} onDelete={onDelete} />
+        ))}
+    </SMovieList>
   )
 }
 

@@ -9,7 +9,7 @@ describe('<MovieForm />', () => {
     cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
     cy.getByCy('movie-input-comp-number')
       .clear()
-      .type(`${String(year)}{backspace}`, {delay: 0})
+      .type(`${year}{backspace}`, {delay: 0})
 
     cy.intercept('POST', '/movies', {statusCode: 200, delay: 50}).as('addMovie')
     cy.getByCy('add-movie-button').contains('Add Movie').click()

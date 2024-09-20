@@ -14,7 +14,7 @@ export default function MovieForm() {
   } = useMovieForm()
 
   return (
-    <>
+    <div data-cy="movie-form-comp">
       <SSubtitle>Add a New Movie</SSubtitle>
       <MovieInput
         type="text"
@@ -35,7 +35,7 @@ export default function MovieForm() {
       >
         {movieLoading ? 'Adding...' : 'Add Movie'}
       </SButton>
-    </>
+    </div>
   )
 }
 
