@@ -1,4 +1,4 @@
-describe('Movie crud', () => {
+describe('movie crud e2e', () => {
   const {name, year} = {name: 'Inception', year: 2010}
   const movie = {id: 1, name, year}
 
