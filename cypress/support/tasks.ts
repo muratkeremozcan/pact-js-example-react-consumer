@@ -1,4 +1,5 @@
-import log from './log'
+import log from './tasks/log'
+import isCi from './tasks/is-ci'
 
 /**
  * The collection of tasks to use with `cy.task()`
@@ -6,6 +7,6 @@ import log from './log'
  */
 export default function tasks(on: Cypress.PluginEvents) {
   on('task', {log})
-
+  on('task', {isCi})
   // add tasks here
 }

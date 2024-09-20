@@ -38,3 +38,6 @@ jobs:
           file_pattern: README.md
           push_options: '--force'
           skip_fetch: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Updated the token to use GITHUB_TOKEN
+

@@ -94,7 +94,7 @@ jobs:
         uses: cypress-io/github-action@v6.7.3
         with:
           # install: false # Cypress gha will take care of install instead of bahmutov/installs
-          start: npm run mock:server, npm run start
+          start: npm run start
           wait-on: 'http://localhost:3000'
           browser: chrome
           config-file: cypress/config/local.config.ts

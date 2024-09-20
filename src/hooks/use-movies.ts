@@ -1,4 +1,8 @@
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
 import type {Movie} from '../consumer'
 import {
   fetchMovies,
@@ -8,10 +12,15 @@ import {
 } from '../consumer'
 
 export const useMovies = () =>
-  useQuery({queryKey: ['movies'], queryFn: fetchMovies})
+  useSuspenseQuery({
+    queryKey: ['movies'],
+    queryFn: fetchMovies,
+    staleTime: 5000, // data considered fresh for 5 seconds
+    retry: 2, // retry failed requests up to 2 times
+  })
 
 export const useMovie = (id: number) =>
-  useQuery({
+  useSuspenseQuery({
     queryKey: ['movie', id],
     queryFn: () => fetchSingleMovie(id), // Correcting the use of id in queryFn
   })

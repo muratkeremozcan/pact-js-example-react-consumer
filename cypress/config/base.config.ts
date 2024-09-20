@@ -13,5 +13,6 @@ export const baseConfig: Cypress.ConfigOptions = {
       tasks(on)
       return plugins(on, config)
     },
+    specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}',
   },
 }
