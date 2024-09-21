@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import {SButton} from '../../styles/styled-components'
 import {useMovieForm} from './use-movie-form'
 import MovieInput from './movie-input'
+import ValidationErrorDisplay from './validation-error-display'
 
 export default function MovieForm() {
   const {
@@ -11,11 +12,16 @@ export default function MovieForm() {
     setMovieYear,
     handleAddMovie,
     movieLoading,
+    validationError,
   } = useMovieForm()
 
   return (
     <div data-cy="movie-form-comp">
       <SSubtitle>Add a New Movie</SSubtitle>
+
+      {/* Zod key feature 4: use the validation state at the component  */}
+      <ValidationErrorDisplay validationError={validationError} />
+
       <MovieInput
         type="text"
         value={movieName}
@@ -39,7 +45,7 @@ export default function MovieForm() {
   )
 }
 
-export const SSubtitle = styled.h2`
+const SSubtitle = styled.h2`
   color: #333;
   font-size: 2rem;
   margin-bottom: 10px;
