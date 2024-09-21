@@ -19,6 +19,7 @@ export default defineConfig(({mode}) => {
         '@support': path.resolve(__dirname, 'cypress', 'support'),
         '@fixtures': path.resolve(__dirname, 'cypress', 'fixtures'),
         '@cypress': path.resolve(__dirname, 'cypress'),
+        '@provider-schema': path.resolve(__dirname, 'src', 'provider-schema'),
       },
     },
   }
