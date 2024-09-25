@@ -26,6 +26,14 @@ const axiosInstance = axios.create({
   baseURL: API_URL, // this is really the API url where the requests are going to
 })
 
+// function to override the baseURL, used during pact tests
+// It allows to change the baseURL of axiosInstance dynamically
+// By changing the baseURL during tests, we can direct the requests
+// to the Pact mock server instead of the actual API
+export const setApiUrl = (url: string) => {
+  axiosInstance.defaults.baseURL = url
+}
+
 // Helper function to extract data from Axios response
 const yieldData = <T>(res: AxiosResponse<T>): T => res.data
 
