@@ -1,4 +1,5 @@
 import type {JestConfigWithTsJest} from 'ts-jest'
+import {transform} from './jest.config'
 
 export const config: JestConfigWithTsJest = {
   clearMocks: true,
@@ -6,9 +7,7 @@ export const config: JestConfigWithTsJest = {
   collectCoverage: false, // You can disable coverage for pact tests if needed
   moduleDirectories: ['node_modules', 'src'],
   modulePathIgnorePatterns: ['dist'],
-  transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {tsconfig: 'tsconfig.jest.json'}],
-  },
+  transform: transform(),
   testMatch: ['**/*.pacttest.ts'], // Pact test file match
   testEnvironment: 'node',
 }

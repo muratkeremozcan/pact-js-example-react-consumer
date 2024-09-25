@@ -1,0 +1,50 @@
+name: Run contract tests
+
+on: push
+
+# if this branch is pushed back to back, cancel the older branch's workflow
+concurrency:
+  group: ${{ github.ref }} && ${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_BRANCH: ${{ github.head_ref }}
+
+jobs:
+  contract-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }} # Ensure you're on the correct branch
+
+      - name: Read Node version from .nvmrc
+        id: node_version
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run consumer contract tests
+        run: npm run test:consumer
+
+      - name: Publish contract to Pactflow
+        run: npm run publish:pact
+
+      # in CDCT, a web hook is triggered on the provider
+      # which executes the provider tests
+      # in BDCT, we do not need such a thing
+
+      - name: Can I deploy consumer?
+        run: npm run can:i:deploy:consumer
+
+      - name: Record web consumer deployment
+        if: github.ref == 'refs/heads/main'
+        run: npm run record:consumer:deployment --env=dev

@@ -16,7 +16,11 @@
     "cy:run-local": "cypress run --e2e --browser chrome --config-file cypress/config/local.config.ts",
     "cy:open-ct": "cypress open --component --browser chrome --config-file cypress/config/local.config.ts",
     "cy:run-ct": "cypress run --component --browser chrome --config-file cypress/config/local.config.ts",
-    "cy:run-ct-fast": "npm run cy:run-ct --config video=false screenshot=false cypress/config/local.config.ts"
+    "cy:run-ct-fast": "npm run cy:run-ct --config video=false screenshot=false cypress/config/local.config.ts",
+    "test:consumer": "rm -rf ./pacts && jest --config jest-pact.config.ts",
+    "publish:pact": ". ./scripts/env-setup.sh && pact-broker publish ./pacts --consumer-app-version=$GITHUB_SHA --branch=$GITHUB_BRANCH --broker-base-url=$PACT_BROKER_BASE_URL --broker-token=$PACT_BROKER_TOKEN",
+    "can:i:deploy:consumer": ". ./scripts/env-setup.sh && pact-broker can-i-deploy --pacticipant ReactConsumer --version=$GITHUB_SHA --to-environment dev --retry-while-unknown=10",
+    "record:consumer:deployment": ". ./scripts/env-setup.sh && if [ \"$GITHUB_BRANCH\" = \"main\" ]; then pact-broker record-deployment --pacticipant ReactConsumer --version $GITHUB_SHA --environment $npm_config_env; fi"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.1",
@@ -35,6 +39,8 @@
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "0.2.2",
     "@faker-js/faker": "9.0.2",
+    "@pact-foundation/pact": "13.1.3",
+    "@pact-foundation/pact-cli": "16.0.0",
     "@testing-library/cypress": "10.0.2",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "5.17.0",
