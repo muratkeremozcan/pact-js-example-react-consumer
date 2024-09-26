@@ -45,9 +45,9 @@ npm run test # run unit tests with jest
 
 ### Consumer flow for Pact
 
-Unlike traditional consumer driven contract testing, there is no need for a specific order of executions between the consumer and the provider. The provider only has to publish their OpenAPI spec, and consumer tests vs the OpenAPI spec is verified at the Pact broker.
+Unlike traditional consumer driven contract testing, there is no need for a specific order of executions between the consumer and the provider. The provider only has to publish their OpenAPI spec and at the Pact broker, consumer tests are verified against the OpenAPI spec.
 
-We only verify against what's published at dev of the provider; the provider can make any changes to their OpenAPI spec, merge to main unimpeded, and we always have to ensure we're aligned with that at the consumer.
+We only verify against what's published at dev of the provider; the provider can make any changes to their OpenAPI spec, merge to main unimpeded, and we always have to ensure we're aligned with that at the consumer. The provider's only responsibility is ensuring that their OpenAPI spec is correct; and they can do schema testing for that - which in our case is done during api e2e.
 
 ```bash
 npm run test:consumer 
@@ -65,13 +65,13 @@ npm run publish:pact-openapi # publishes the open api spec to Pact Broker for BD
 npm run record:provider:bidirectional:deployment --env=dev # we still have to record the provider deployment
 ```
 
-On the provider side, the generation of the OpenAPI spec happens automatically with every PR and gets committed to the repo if there are any changes in the spec file.
+On the provider side, the generation of the OpenAPI spec happens automatically with every PR and gets committed to the repo, if there are any changes in the spec file.
 
-All non-pact-bi-directional related testing happens in PRs (including schema testing), so we are 100% confident of the commit quality.
+All non-pact-bi-directional related testing happens in PRs (including schema testing during api e2e), so we are 100% confident of the commit quality.
 
 The merge to main happens on a passing PR.
 
-Finally, on main. we have `contract-publish-openapi.yml` , which publishes the OpenAPI spec to Pact broker with `npm run publish:pact-openapi` and records the bi-directional provider deployment with `npm run npm run record:provider:bidirectional:deployment --env=dev`.
+Finally, on main. we have `contract-publish-openapi.yml` , which publishes the OpenAPI spec to Pact broker with `npm run publish:pact-openapi` and records the bi-directional provider deployment with `npm run record:provider:bidirectional:deployment --env=dev`.
 
 ### Bi-directional contract testing details
 
