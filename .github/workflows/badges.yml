@@ -12,10 +12,14 @@ on:
   schedule:
     # update badges every night
     # because we have a few badges that are linked
-    ## to the external repositories
+    # to the external repositories
     - cron: '0 3 * * *'
 
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   badges:
@@ -27,17 +31,13 @@ jobs:
 
       - name: Update version badges 🏷
         run:
-          npx -p dependency-version-badge update-badge react cypress jest
-          typescript
+          npx -p dependency-version-badge update-badge @pact-foundation/pact
+          jest cypress
 
-      - name: Commit any changed files 💾
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
         with:
-          commit_message: Updated badges
-          branch: main
-          file_pattern: README.md
-          push_options: '--force'
-          skip_fetch: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Updated the token to use GITHUB_TOKEN
-
+          commit-message: 'Update badges'
+          branch: 'update-badges'
+          title: 'Automated Badge Update'
+          body: 'This PR updates the badges in README.md.'
