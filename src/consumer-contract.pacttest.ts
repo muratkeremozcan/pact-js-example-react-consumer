@@ -59,6 +59,22 @@ describe('Movies API', () => {
           expect(res[0]).toEqual(EXPECTED_BODY)
         })
     })
+
+    it('should return empty when no movies exist', async () => {
+      const EXPECTED_BODY: Movie[] = []
+
+      await pact
+        .addInteraction()
+        .given('No movies exist')
+        .uponReceiving('a request to get all movies')
+        .withRequest('GET', '/movies')
+        .willRespondWith(200, setJsonBody(EXPECTED_BODY))
+        .executeTest(async (mockServer: V3MockServer) => {
+          setApiUrl(mockServer.url)
+          const res = (await fetchMovies()) as Movie[]
+          expect(res).toEqual(EXPECTED_BODY)
+        })
+    })
   })
 
   // PROVIDER STATES: we can simulate certain states of the api (like an empty or non-empty db)
