@@ -49,7 +49,7 @@ const fetchMovies = (): Promise<Movie[] | ErrorResponse> =>
 
 // Fetch a single movie by ID
 const fetchSingleMovie = (id: number): Promise<Movie | ErrorResponse> =>
-  axiosInstance.get(`/movie/${id}`).then(yieldData).catch(handleError)
+  axiosInstance.get(`/movies/${id}`).then(yieldData).catch(handleError)
 
 // Add a new movie (don't specify id)
 const addNewMovie = async (
@@ -71,6 +71,6 @@ const addNewMovie = async (
 
 // Delete a movie by ID
 const deleteMovie = (id: number): Promise<SuccessResponse | ErrorResponse> =>
-  axiosInstance.delete(`/movie/${id}`).then(yieldData).catch(handleError)
+  axiosInstance.delete(`/movies/${id}`).then(yieldData).catch(handleError)
 
 export {fetchMovies, fetchSingleMovie, addNewMovie, deleteMovie}
