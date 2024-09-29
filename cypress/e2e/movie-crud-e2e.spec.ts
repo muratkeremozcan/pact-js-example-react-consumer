@@ -42,9 +42,9 @@ describe('movie crud e2e', () => {
       )
 
     cy.log('**delete a movie**')
-    cy.intercept('DELETE', '/movies/*').as('deleteMovie')
+    cy.intercept('DELETE', '/movies/*').as('deleteMovieById')
     cy.getByCy(`delete-movie-${name}`).click()
-    cy.wait('@deleteMovie')
+    cy.wait('@deleteMovieById')
     cy.getByCy(`delete-movie-${name}`).should('not.exist')
   })
 })

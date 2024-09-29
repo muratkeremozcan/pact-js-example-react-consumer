@@ -4,7 +4,7 @@ import path from 'path'
 import type {ErrorResponse, Movie, SuccessResponse} from './consumer'
 import {
   addNewMovie,
-  deleteMovie,
+  deleteMovieById,
   fetchMovies,
   fetchSingleMovie,
   setApiUrl,
@@ -208,7 +208,7 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await deleteMovie(testId)
+          const res = await deleteMovieById(testId)
           expect(res).toEqual(successRes)
         })
     })
@@ -227,7 +227,7 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await deleteMovie(testId)
+          const res = await deleteMovieById(testId)
           expect(res).toEqual(errorRes)
         })
     })

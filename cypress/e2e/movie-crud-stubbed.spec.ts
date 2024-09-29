@@ -29,11 +29,11 @@ describe('movie crud e2e', () => {
     cy.contains('Movie List')
     cy.wait('@getMovies')
 
-    cy.intercept('DELETE', '/movies/*', {statusCode: 200}).as('deleteMovie')
+    cy.intercept('DELETE', '/movies/*', {statusCode: 200}).as('deleteMovieById')
     cy.intercept('GET', '**/movies', {body: []}).as('getMoviesEmpty')
 
     cy.getByCy(`delete-movie-${name}`).click()
-    cy.wait('@deleteMovie')
+    cy.wait('@deleteMovieById')
     cy.wait('@getMoviesEmpty')
     cy.getByCy(`delete-movie-${name}`).should('not.exist')
   })
