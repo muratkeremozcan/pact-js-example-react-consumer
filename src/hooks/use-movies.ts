@@ -7,7 +7,7 @@ import type {Movie} from '../consumer'
 import {
   fetchMovies,
   addNewMovie,
-  deleteMovie,
+  deleteMovieById,
   fetchSingleMovie,
 } from '../consumer'
 
@@ -41,7 +41,7 @@ export const useDeleteMovie = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: number) => deleteMovie(id),
+    mutationFn: (id: number) => deleteMovieById(id),
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['movies']}),
   })
 }
