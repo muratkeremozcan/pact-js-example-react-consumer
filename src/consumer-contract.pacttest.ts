@@ -94,7 +94,9 @@ describe('Movies API', () => {
         .addInteraction()
         .given(stateName, stateParams)
         .uponReceiving('a request to get a movie by name')
-        .withRequest('GET', `/movies?name=${EXPECTED_BODY.name}`)
+        .withRequest('GET', '/movies', builder => {
+          builder.query({name: EXPECTED_BODY.name}) // Use query to specify query parameters
+        })
         .willRespondWith(
           200,
           setJsonBody({
@@ -105,7 +107,6 @@ describe('Movies API', () => {
         )
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
-
           const res = await getMovieByName(EXPECTED_BODY.name)
           expect(res).toEqual(EXPECTED_BODY)
         })
