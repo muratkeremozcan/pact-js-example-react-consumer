@@ -5,16 +5,16 @@ import {
 } from '@tanstack/react-query'
 import type {Movie} from '../consumer'
 import {
-  fetchMovies,
+  getMovies,
   addNewMovie,
   deleteMovieById,
-  fetchSingleMovie,
+  getMovieById,
 } from '../consumer'
 
 export const useMovies = () =>
   useSuspenseQuery({
     queryKey: ['movies'],
-    queryFn: fetchMovies,
+    queryFn: getMovies,
     staleTime: 5000, // data considered fresh for 5 seconds
     retry: 2, // retry failed requests up to 2 times
   })
@@ -22,7 +22,7 @@ export const useMovies = () =>
 export const useMovie = (id: number) =>
   useSuspenseQuery({
     queryKey: ['movie', id],
-    queryFn: () => fetchSingleMovie(id), // Correcting the use of id in queryFn
+    queryFn: () => getMovieById(id), // Correcting the use of id in queryFn
   })
 
 export const useAddMovie = () => {
