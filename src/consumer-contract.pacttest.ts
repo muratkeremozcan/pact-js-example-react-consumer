@@ -5,8 +5,9 @@ import type {ErrorResponse, Movie, SuccessResponse} from './consumer'
 import {
   addNewMovie,
   deleteMovieById,
-  fetchMovies,
-  fetchSingleMovie,
+  getMovies,
+  getMovieById,
+  getMovieByName,
   setApiUrl,
 } from './consumer'
 import {createProviderState, setJsonBody} from './test-helpers/helpers'
@@ -54,7 +55,7 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = (await fetchMovies()) as Movie[]
+          const res = (await getMovies()) as Movie[]
           // 4) Verify the consumer test and generate the contract
           expect(res[0]).toEqual(EXPECTED_BODY)
         })
@@ -71,7 +72,42 @@ describe('Movies API', () => {
         .willRespondWith(200, setJsonBody(EXPECTED_BODY))
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
-          const res = (await fetchMovies()) as Movie[]
+          const res = (await getMovies()) as Movie[]
+          expect(res).toEqual(EXPECTED_BODY)
+        })
+    })
+
+    it('should return a movie by name when requested with query parameters', async () => {
+      const EXPECTED_BODY = {
+        id: 1,
+        name: 'My movie',
+        year: 1999,
+      }
+
+      // we want to ensure at least 1 movie is returned in the array of movies
+      const [stateName, stateParams] = createProviderState({
+        name: 'An existing movie exists',
+        params: EXPECTED_BODY,
+      })
+
+      await pact
+        .addInteraction()
+        .given(stateName, stateParams)
+        .uponReceiving('a request to get a movie by name')
+        .withRequest('GET', '/movies', builder => {
+          builder.query({name: EXPECTED_BODY.name}) // Use query to specify query parameters
+        })
+        .willRespondWith(
+          200,
+          setJsonBody({
+            id: integer(EXPECTED_BODY.id),
+            name: string(EXPECTED_BODY.name),
+            year: integer(EXPECTED_BODY.year),
+          }),
+        )
+        .executeTest(async (mockServer: V3MockServer) => {
+          setApiUrl(mockServer.url)
+          const res = await getMovieByName(EXPECTED_BODY.name)
           expect(res).toEqual(EXPECTED_BODY)
         })
     })
@@ -114,7 +150,7 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await fetchSingleMovie(testId)
+          const res = await getMovieById(testId)
           expect(res).toEqual(EXPECTED_BODY)
         })
     })
