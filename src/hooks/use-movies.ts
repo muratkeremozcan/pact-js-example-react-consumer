@@ -1,5 +1,6 @@
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query'
@@ -9,6 +10,7 @@ import {
   addNewMovie,
   deleteMovieById,
   getMovieById,
+  getMovieByName,
 } from '../consumer'
 
 export const useMovies = () =>
@@ -19,10 +21,20 @@ export const useMovies = () =>
     retry: 2, // retry failed requests up to 2 times
   })
 
-export const useMovie = (id: number) =>
-  useSuspenseQuery({
-    queryKey: ['movie', id],
-    queryFn: () => getMovieById(id), // Correcting the use of id in queryFn
+export const useMovie = (identifier: number | string) =>
+  useQuery({
+    queryKey: ['movie', identifier],
+    queryFn: () => {
+      if (!identifier) return Promise.resolve(null)
+      const isNumericOnly = /^\d+$/.test(String(identifier))
+
+      return isNumericOnly
+        ? getMovieById(Number(identifier))
+        : getMovieByName(String(identifier))
+    },
+    enabled: !!identifier, // Only enable the query when an identifier is set
+    staleTime: 5000,
+    retry: 2,
   })
 
 export const useAddMovie = () => {
@@ -114,4 +126,14 @@ that help manage server-state in React applications.
 
 These utilities collectively provide a robust framework for managing server-state in React applications,
 making data fetching, caching, synchronization, and mutations efficient and easy to implement.
+
+notes:
+
+useSuspenseQuery: integrates directly with React's Suspense.
+It doesn't return isLoading or isError states; instead, 
+React Suspense automatically shows the fallback component when the query is loading 
+and throws an error boundary when an error occurs.
+
+useQuery: you are responsible for managing the loading, error, and data states in your component.
+Has more control on when he query is executed, with options like 'enabled'
 */

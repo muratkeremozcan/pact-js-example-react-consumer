@@ -41,6 +41,20 @@ declare global {
         options?: MountOptions,
       ): Cypress.Chainable<MountReturn>
 
+      /** Mounts a React node with the specified route and path
+       * @param component React Node to mount
+       * @param route Route of the component
+       * @param path Path of the component
+       * @param options Additional options to pass into mount */
+      routeWrappedMount(
+        component: React.ReactNode,
+        options?: {
+          route?: string
+          path?: string
+          cypressOptions?: MountOptions
+        },
+      ): Cypress.Chainable<MountReturn>
+
       /** https://www.npmjs.com/package/@cypress/skip-test
        * `cy.skipOn('localhost')` */
       skipOn(
