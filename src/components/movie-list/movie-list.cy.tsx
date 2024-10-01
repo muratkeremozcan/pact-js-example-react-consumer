@@ -5,7 +5,7 @@ describe('<MovieList />', () => {
   it('should verify the movie and delete', () => {
     const movie1 = {id: 1, ...generateMovie()}
     const movie2 = {id: 2, ...generateMovie()}
-    cy.mount(
+    cy.routeWrappedMount(
       <MovieList
         movies={[movie1, movie2]}
         onDelete={cy.stub().as('onDelete')}
@@ -17,13 +17,15 @@ describe('<MovieList />', () => {
   })
 
   it('should show nothing with no movies', () => {
-    cy.mount(<MovieList movies={[]} onDelete={cy.stub().as('onDelete')} />)
+    cy.routeWrappedMount(
+      <MovieList movies={[]} onDelete={cy.stub().as('onDelete')} />,
+    )
 
     cy.getByCy('movie-list-comp').should('not.exist')
   })
 
   it('should show error with error', () => {
-    cy.mount(
+    cy.routeWrappedMount(
       <MovieList
         movies={{error: 'boom'}}
         onDelete={cy.stub().as('onDelete')}
