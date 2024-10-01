@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom'
 import {SButton} from '@styles/styled-components'
 import styled from 'styled-components'
 
@@ -11,7 +12,9 @@ type MovieItemProps = Readonly<{
 export default function MovieItem({id, name, year, onDelete}: MovieItemProps) {
   return (
     <SMovieItem data-cy="movie-item-comp">
-      {name} ({year})
+      <Link to={`/movies/${id}`} data-cy={`link-${id}`}>
+        {name} ({year})
+      </Link>
       <SButton data-cy={`delete-movie-${name}`} onClick={() => onDelete(id)}>
         Delete
       </SButton>
