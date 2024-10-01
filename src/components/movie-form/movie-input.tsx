@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import {SInput} from '@styles/styled-components'
 
 type MovieInputProps = Readonly<{
   type: 'text' | 'number'
@@ -23,15 +23,3 @@ export default function MovieInput({
     />
   )
 }
-
-const SInput = styled.input`
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  font-size: 1rem;
-
-  &[type='number'] {
-    width: 100px;
-  }
-`
