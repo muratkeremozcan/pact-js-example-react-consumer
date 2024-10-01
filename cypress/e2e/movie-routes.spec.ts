@@ -18,6 +18,9 @@ describe('App routes', () => {
 
     cy.location('pathname').should('eq', '/movies')
     cy.wait('@getMovies').its('response.body').should('deep.eq', movies)
+
+    cy.getByCy('movie-list-comp').should('be.visible')
+    cy.getByCy('movie-form-comp').should('be.visible')
     cy.getByCy('movie-item-comp').should('have.length', movies.length)
   })
 

@@ -1,7 +1,7 @@
 import ErrorComp from '@components/error-component'
 import styled from 'styled-components'
 import type {ErrorResponse, Movie} from '../../consumer'
-import MovieItem from '../movie-item/movie-item'
+import MovieItem from '../movie-item'
 
 type MovieListProps = Readonly<{
   movies: Movie[] | ErrorResponse | undefined
