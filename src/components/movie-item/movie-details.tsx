@@ -1,23 +1,14 @@
 import LoadingMessage from '@components/loading-message'
-import {useMovie} from '@hooks/use-movies'
 import {STitle} from '@styles/styled-components'
-import {useParams, useSearchParams} from 'react-router-dom'
 import type {ErrorResponse} from 'src/consumer'
 import styled from 'styled-components'
 import MovieInfo from './movie-info'
+import {useMovieDetails} from '@hooks/use-movie-detail'
 
 export default function MovieDetails() {
-  // Get the id from the route params or query parameters
-  const {id} = useParams<{id: string}>()
-  const [searchParams] = useSearchParams()
-  const movieName = searchParams.get('name')
+  const {movie, isLoading, hasIdentifier} = useMovieDetails()
 
-  const identifier =
-    movieName ?? (id && !isNaN(Number(id)) ? parseInt(id, 10) : null)
-  if (!identifier) return <p>No movie selected</p>
-
-  const {data: movie, isLoading} = useMovie(identifier)
-
+  if (!hasIdentifier) return <p>No movie selected</p>
   if (isLoading) return <LoadingMessage />
 
   return (
