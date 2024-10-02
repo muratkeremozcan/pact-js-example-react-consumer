@@ -3,7 +3,7 @@ import {STitle} from '@styles/styled-components'
 import type {ErrorResponse} from 'src/consumer'
 import styled from 'styled-components'
 import MovieInfo from './movie-info'
-import {useMovieDetails} from './use-movie-detail'
+import {useMovieDetails} from '@hooks/use-movie-detail'
 
 export default function MovieDetails() {
   const {movie, isLoading, hasIdentifier} = useMovieDetails()

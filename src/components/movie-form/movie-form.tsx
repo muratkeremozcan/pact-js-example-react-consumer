@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import {SButton} from '../../styles/styled-components'
-import {useMovieForm} from './use-movie-form'
 import MovieInput from './movie-input'
 import ValidationErrorDisplay from './validation-error-display'
+import {useMovieForm} from '@hooks/use-movie-form'
+import {SButton} from '@styles/styled-components'
 
 export default function MovieForm() {
   const {
