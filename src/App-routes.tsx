@@ -1,13 +1,14 @@
+import MovieForm from '@components/movie-form'
+import MovieDetails from '@components/movie-item/movie-details'
+import MovieList from '@components/movie-list'
 import {
   BrowserRouter,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
   useSearchParams,
 } from 'react-router-dom'
 import type {ErrorResponse, Movie} from './consumer'
-import MovieList from '@components/movie-list'
-import MovieDetails from '@components/movie-item/movie-details'
 
 type AppRoutesProps = Readonly<{
   movies: Movie[] | ErrorResponse | undefined
@@ -20,7 +21,7 @@ export default function AppRoutes({movies, onDelete}: AppRoutesProps) {
       <Routes>
         <Route
           path="/movies"
-          element={<MovieListWrapper movies={movies} onDelete={onDelete} />}
+          element={<MovieListWithForm movies={movies} onDelete={onDelete} />}
         />
         <Route path="/" element={<Navigate to="/movies" replace />} />
         <Route path="/movies/:id" element={<MovieDetails />} />
@@ -30,28 +31,28 @@ export default function AppRoutes({movies, onDelete}: AppRoutesProps) {
 }
 
 /**
- * Conditionally renders either the list of movies or the details of a specific movie.
- *
- * If the "name" query parameter is present in the URL, it renders the MovieDetails component.
- * Otherwise, it renders the MovieList component, displaying a list of all available movies.
+ * Renders both MovieList and MovieForm on the "/movies" route.
  *
  * @component
  * @param {Object} props - The properties passed to the component.
  * @param {Movie[] | ErrorResponse | undefined} props.movies - The list of movies or an error response.
  * @param {function} props.onDelete - A callback function for deleting a movie by its ID.
- * @returns {JSX.Element} - The rendered MovieList or MovieDetails component.
+ * @returns {JSX.Element} - The rendered MovieList and MovieForm components.
  *
  * @example
  * // Example usage:
- * <MovieListWrapper movies={movieArray} onDelete={handleDeleteMovie} />
+ * <MovieListWithForm movies={movieArray} onDelete={handleDeleteMovie} />
  */
-function MovieListWrapper({movies, onDelete}: AppRoutesProps) {
+function MovieListWithForm({movies, onDelete}: AppRoutesProps) {
   const [searchParams] = useSearchParams()
   const movieName = searchParams.get('name')
 
   return movieName ? (
     <MovieDetails />
   ) : (
-    <MovieList movies={movies} onDelete={onDelete} />
+    <>
+      <MovieList movies={movies} onDelete={onDelete} />
+      <MovieForm />
+    </>
   )
 }

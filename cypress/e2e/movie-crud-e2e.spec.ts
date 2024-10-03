@@ -70,14 +70,13 @@ describe('movie crud e2e', () => {
         editMovie(editedName, editedYear)
 
         cy.log('**check on the movie list**')
-        cy.visit('/')
-        cy.scrollTo('bottom')
+        cy.getByCy('back').click()
+        cy.location('pathname').should('eq', '/movies')
         cy.contains(editedName)
 
         cy.visit(`/movies/${id}`)
         cy.getByCy('delete-movie').click()
 
-        cy.visit('/')
         cy.contains(editedName).should('not.exist')
       })
   })

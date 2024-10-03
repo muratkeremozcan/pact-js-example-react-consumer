@@ -56,15 +56,4 @@ describe('<MovieDetails />', () => {
 
     cy.contains(error)
   })
-
-  it('should, delete a movie from MovieDetails', () => {
-    cy.intercept('GET', '/movies/*', {body: movie}).as('getMovieById')
-    cy.intercept('DELETE', `/movies/${id}`, {statusCode: 200}).as('deleteMovie')
-
-    cy.routeWrappedMount(<MovieDetails />, {path: '/:id', route: `/${id}`})
-    cy.wait('@getMovieById')
-
-    cy.getByCy('delete-movie').click()
-    cy.wait('@deleteMovie')
-  })
 })
