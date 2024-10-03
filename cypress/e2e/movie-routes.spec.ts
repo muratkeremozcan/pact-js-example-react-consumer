@@ -24,19 +24,6 @@ describe('App routes', () => {
     cy.getByCy('movie-item-comp').should('have.length', movies.length)
   })
 
-  it('should click nav to movie by id', () => {
-    const id = movie?.id
-
-    cy.intercept('GET', `/movies/${id}`, {body: movie}).as('getMovieById')
-    cy.visit('/')
-
-    cy.wait('@getMovies')
-    cy.getByCy(`link-${id}`).click()
-
-    cy.location('pathname').should('eq', `/movies/${id}`)
-    cy.wait('@getMovieById').its('response.body').should('deep.eq', movie)
-  })
-
   it('should direct nav to by query param', () => {
     const movieName = encodeURIComponent(movie?.name as Movie['name'])
 

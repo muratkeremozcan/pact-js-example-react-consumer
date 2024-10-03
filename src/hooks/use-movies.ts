@@ -11,6 +11,7 @@ import {
   deleteMovieById,
   getMovieById,
   getMovieByName,
+  updateMovie,
 } from '../consumer'
 
 export const useMovies = () =>
@@ -46,6 +47,22 @@ export const useAddMovie = () => {
 
     // Invalidate cache when a new movie is added
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['movies']}),
+  })
+}
+
+export const useUpdateMovie = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({id, name, year}: {id: number; name: string; year: number}) =>
+      updateMovie(id, name, year),
+    // handles both error and success scenarios
+    onSettled: () => queryClient.invalidateQueries({queryKey: ['movies']}),
+    // Optional: Handle errors globally if needed
+    onError: error => {
+      console.error('Update failed', error)
+      // Optionally, display a toast or log the error somewhere
+    },
   })
 }
 

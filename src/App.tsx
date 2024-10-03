@@ -1,6 +1,5 @@
-import MovieForm from '@components/movie-form'
 import {useDeleteMovie, useMovies} from '@hooks/use-movies'
-import {SAppContainer, STitle} from '@styles/styled-components'
+import {SAppContainer} from '@styles/styled-components'
 import LoadingMessage from '@components/loading-message'
 import {Suspense} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -17,11 +16,7 @@ function App() {
     <ErrorBoundary fallback={<ErrorComponent />}>
       <Suspense fallback={<LoadingMessage />}>
         <SAppContainer>
-          <STitle>Movie List</STitle>
-
           <AppRoutes movies={movies} onDelete={handleDeleteMovie} />
-
-          <MovieForm />
         </SAppContainer>
       </Suspense>
     </ErrorBoundary>

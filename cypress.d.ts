@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {MountOptions, MountReturn} from 'cypress/react'
+import type {Movie} from './src/consumer'
 
 export {}
 declare global {
@@ -68,6 +69,16 @@ declare global {
         nameOrFlag: string | boolean | (() => boolean),
         cb?: () => void,
       ): Chainable<Subject>
+
+      /** Creates a movie
+       * ```js
+       * cy.addMovie({name: 'The Great Gatsby', year: 1925  })
+       * ```
+       */
+      addMovie(
+        body: Omit<Movie, 'id'>,
+        allowedToFail?: boolean,
+      ): Chainable<Response<Omit<Movie, 'id'>>>
     }
   }
 }

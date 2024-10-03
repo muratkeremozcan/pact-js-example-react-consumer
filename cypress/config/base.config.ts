@@ -6,8 +6,11 @@ export const baseConfig: Cypress.ConfigOptions = {
   projectId: 'kdr2hm',
   viewportHeight: 1280,
   viewportWidth: 1280,
-
   e2e: {
+    env: {
+      // map .env to Cypress.env
+      ...process.env,
+    },
     setupNodeEvents(on, config) {
       esbuildPreprocessor(on)
       tasks(on)

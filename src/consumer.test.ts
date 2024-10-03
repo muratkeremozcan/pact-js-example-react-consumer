@@ -9,14 +9,12 @@ import {
   getMovieByName,
   addNewMovie,
   deleteMovieById,
+  updateMovie,
 } from './consumer'
 import type {Movie, ErrorResponse, SuccessResponse} from './consumer'
 
 // @ts-expect-error okay
 const API_URL = import.meta.env.VITE_API_URL
-
-// Nock can be used to test modules that make HTTP requests to external APIs in isolation.
-// For example, if a module sends HTTP requests to an external API, you can test that module independently of the actual API.
 
 // Nock can be used to test modules that make HTTP requests to external APIs in isolation.
 // For example, if a module sends HTTP requests to an external API, you can test that module independently of the actual API.
@@ -161,6 +159,51 @@ describe('Consumer API functions', () => {
       nock(API_URL).post('/movies', movie).reply(409, errorRes)
 
       const res = await addNewMovie(movie.name, movie.year)
+      expect(res).toEqual(errorRes)
+    })
+  })
+
+  describe('updateMovie', () => {
+    it('should update an existing movie successfully', async () => {
+      const testId = 1
+      const updatedMovieData = {name: 'Updated movie', year: 2000}
+
+      const EXPECTED_BODY: Movie = {
+        id: testId,
+        name: updatedMovieData.name,
+        year: updatedMovieData.year,
+      }
+
+      nock(API_URL)
+        .put(`/movies/${testId}`, updatedMovieData)
+        .reply(200, {status: 200, movie: EXPECTED_BODY})
+
+      const res = await updateMovie(
+        testId,
+        updatedMovieData.name,
+        updatedMovieData.year,
+      )
+
+      expect(res).toEqual({status: 200, movie: EXPECTED_BODY})
+    })
+
+    it('should return an error if movie to update does not exist', async () => {
+      const testId = 999
+      const updatedMovieData = {name: 'Updated movie', year: 2000}
+      const errorRes: ErrorResponse = {
+        error: `Movie with ID ${testId} no found`,
+      }
+
+      nock(API_URL)
+        .put(`/movies/${testId}`, updatedMovieData)
+        .reply(404, errorRes)
+
+      const res = await updateMovie(
+        testId,
+        updatedMovieData.name,
+        updatedMovieData.year,
+      )
+
       expect(res).toEqual(errorRes)
     })
   })

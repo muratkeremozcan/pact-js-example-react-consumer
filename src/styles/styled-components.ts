@@ -16,6 +16,7 @@ export const SButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 3px;
+  margin: 10px;
   padding: 5px 10px;
   cursor: pointer;
   font-size: 1rem;

@@ -4,20 +4,20 @@ type MovieInputProps = Readonly<{
   type: 'text' | 'number'
   value: string | number
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  placeHolder: string
+  placeholder: string
 }>
 
 export default function MovieInput({
   type,
   value,
-  placeHolder,
+  placeholder,
   onChange,
 }: MovieInputProps) {
   return (
     <SInput
       data-cy={`movie-input-comp-${type}`}
       type={type}
-      placeholder={placeHolder}
+      placeholder={placeholder}
       value={value}
       onChange={onChange}
     />

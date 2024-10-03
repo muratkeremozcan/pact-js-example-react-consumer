@@ -2,6 +2,7 @@ import ErrorComp from '@components/error-component'
 import styled from 'styled-components'
 import type {ErrorResponse, Movie} from '../../consumer'
 import MovieItem from '../movie-item'
+import {STitle} from '@styles/styled-components'
 
 type MovieListProps = Readonly<{
   movies: Movie[] | ErrorResponse | undefined
@@ -18,12 +19,15 @@ export default function MovieList({movies, onDelete}: MovieListProps) {
   }
 
   return (
-    <SMovieList data-cy="movie-list-comp">
-      {Array.isArray(movies) &&
-        movies.map(movie => (
-          <MovieItem key={movie.id} {...movie} onDelete={onDelete} />
-        ))}
-    </SMovieList>
+    <>
+      <STitle>Movie List</STitle>
+      <SMovieList data-cy="movie-list-comp">
+        {Array.isArray(movies) &&
+          movies.map(movie => (
+            <MovieItem key={movie.id} {...movie} onDelete={onDelete} />
+          ))}
+      </SMovieList>
+    </>
   )
 }
 

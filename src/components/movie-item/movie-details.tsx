@@ -1,12 +1,21 @@
 import LoadingMessage from '@components/loading-message'
-import {STitle} from '@styles/styled-components'
+import {SButton, STitle} from '@styles/styled-components'
 import type {ErrorResponse} from 'src/consumer'
 import styled from 'styled-components'
-import MovieInfo from './movie-info'
+import MovieManager from './movie-manager'
 import {useMovieDetails} from '@hooks/use-movie-detail'
+import {useDeleteMovie} from '@hooks/use-movies'
+import {useNavigate} from 'react-router-dom'
 
 export default function MovieDetails() {
   const {movie, isLoading, hasIdentifier} = useMovieDetails()
+  const deleteMovieMutation = useDeleteMovie()
+  const navigate = useNavigate()
+
+  const handleDeleteMovie = (id: number) =>
+    deleteMovieMutation.mutate(id, {
+      onSuccess: () => navigate('/movies'), // Redirect to /movies after delete success
+    })
 
   if (!hasIdentifier) return <p>No movie selected</p>
   if (isLoading) return <LoadingMessage />
@@ -16,10 +25,14 @@ export default function MovieDetails() {
       <STitle>Movie Details</STitle>
 
       {movie && 'name' in movie ? (
-        <MovieInfo movie={movie} />
+        <MovieManager movie={movie} onDelete={handleDeleteMovie} />
       ) : (
         <p>{(movie as ErrorResponse).error}</p>
       )}
+
+      <SButton onClick={() => navigate(-1)} data-cy="back">
+        Back
+      </SButton>
     </SMovieDetails>
   )
 }

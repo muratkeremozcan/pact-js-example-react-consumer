@@ -1,4 +1,4 @@
-import MovieInfo from './movie-info'
+import MovieManager from './movie-info'
 
 describe('<MovieInfo />', () => {
   it('should', () => {
@@ -12,7 +12,7 @@ describe('<MovieInfo />', () => {
         year,
       },
     }
-    cy.wrappedMount(<MovieInfo {...props} />)
+    cy.mount(<MovieManager {...props} />)
 
     cy.contains(id)
     cy.contains(name)
