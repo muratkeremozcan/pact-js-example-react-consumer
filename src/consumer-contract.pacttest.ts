@@ -9,6 +9,7 @@ import {
   getMovieById,
   getMovieByName,
   setApiUrl,
+  updateMovie,
 } from './consumer'
 import {createProviderState, setJsonBody} from './test-helpers/helpers'
 
@@ -219,6 +220,54 @@ describe('Movies API', () => {
           setApiUrl(mockServer.url)
           const res = await addNewMovie(movie.name, movie.year)
           expect(res).toEqual(errorRes)
+        })
+    })
+  })
+
+  describe('When a PUT request is made to a specific movie ID', () => {
+    it('should update an existing movie', async () => {
+      const testId = 99
+      const updatedMovieData = {name: 'Updated movie', year: 2000}
+
+      const [stateName, stateParams] = createProviderState({
+        name: 'Has a movie with a specific ID',
+        params: {id: testId},
+      })
+
+      await pact
+        .addInteraction()
+        .given(stateName, stateParams)
+        .uponReceiving('a request to update a specific movie')
+        .withRequest('PUT', `/movies/${testId}`, setJsonBody(updatedMovieData))
+        .willRespondWith(
+          200,
+          setJsonBody({
+            status: 200,
+            movie: {
+              id: integer(testId),
+              name: updatedMovieData.name,
+              year: updatedMovieData.year,
+            },
+          }),
+        )
+        .executeTest(async (mockServer: V3MockServer) => {
+          // Override the API URL to point to the mock server
+          setApiUrl(mockServer.url)
+
+          const res = await updateMovie(
+            testId,
+            updatedMovieData.name,
+            updatedMovieData.year,
+          )
+
+          expect(res).toEqual({
+            status: 200,
+            movie: {
+              id: testId,
+              name: updatedMovieData.name,
+              year: updatedMovieData.year,
+            },
+          })
         })
     })
   })
