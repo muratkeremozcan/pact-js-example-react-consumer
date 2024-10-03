@@ -9,12 +9,12 @@ import type {ErrorResponse, Movie} from './consumer'
 import MovieList from '@components/movie-list'
 import MovieDetails from '@components/movie-item/movie-details'
 
-type Props = {
+type AppRoutesProps = Readonly<{
   movies: Movie[] | ErrorResponse | undefined
   onDelete: (id: number) => void
-}
+}>
 
-export default function AppRoutes({movies, onDelete}: Props) {
+export default function AppRoutes({movies, onDelete}: AppRoutesProps) {
   return (
     <BrowserRouter>
       <Routes>
@@ -45,7 +45,7 @@ export default function AppRoutes({movies, onDelete}: Props) {
  * // Example usage:
  * <MovieListWrapper movies={movieArray} onDelete={handleDeleteMovie} />
  */
-function MovieListWrapper({movies, onDelete}: Props) {
+function MovieListWrapper({movies, onDelete}: AppRoutesProps) {
   const [searchParams] = useSearchParams()
   const movieName = searchParams.get('name')
 

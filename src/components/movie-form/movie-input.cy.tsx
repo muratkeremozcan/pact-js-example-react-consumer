@@ -11,7 +11,7 @@ describe('<MovieInput />', () => {
       <MovieInput
         type="text"
         value={name}
-        placeHolder="place holder"
+        placeholder="place holder"
         onChange={cy.stub().as('onChange')}
       />,
     )
@@ -56,7 +56,7 @@ describe('<MovieInput />', () => {
       <MovieInput
         type="number"
         value={year}
-        placeHolder="place holder"
+        placeholder="place holder"
         onChange={cy.stub().as('onChange')}
       />,
     )

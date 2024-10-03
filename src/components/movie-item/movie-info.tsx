@@ -1,28 +1,15 @@
-import styled from 'styled-components'
 import type {Movie} from 'src/consumer'
 
 type MovieInfoProps = {
-  movie: Movie
+  readonly movie: Movie
 }
 
 export default function MovieInfo({movie}: MovieInfoProps) {
   return (
-    <SMovieInfo>
+    <div data-cy="movie-info-comp">
       <h2>{movie.name}</h2>
       <p>ID: {movie.id}</p>
       <p>Year: {movie.year}</p>
-    </SMovieInfo>
+    </div>
   )
 }
-
-const SMovieInfo = styled.div`
-  h2 {
-    margin-top: 20px;
-    color: #333;
-    font-size: 24px;
-  }
-  p {
-    font-size: 18px;
-    color: #555;
-  }
-`

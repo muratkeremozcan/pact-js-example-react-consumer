@@ -1,6 +1,11 @@
+import {generateMovie} from '@support/factories'
+import {editMovie} from '@support/helpers/edit-movie'
+
 describe('movie crud e2e', () => {
   const {name, year} = {name: 'Inception', year: 2010}
-  const movie = {id: 1, name, year}
+  const id = 1
+  const movie = {id, name, year}
+  const {name: editedName, year: editedYear} = generateMovie()
 
   it('should add a movie', () => {
     cy.intercept('GET', '**/movies', {body: []}).as('noMovies')
@@ -21,6 +26,30 @@ describe('movie crud e2e', () => {
     cy.getByCy('add-movie-button').click()
     cy.wait('@getMovies')
     cy.wait('@addMovie')
+  })
+
+  it('should edit a movie', () => {
+    cy.intercept('GET', '**/movies', {body: [movie]}).as('getMovies')
+    cy.intercept('GET', '**/movies/*', {body: movie}).as('getMovieById')
+    cy.visit('/')
+    cy.wait('@getMovies')
+
+    cy.getByCy(`link-${id}`).click()
+
+    cy.location('pathname').should('eq', `/movies/${id}`)
+    cy.wait('@getMovieById').its('response.body').should('deep.eq', movie)
+
+    cy.intercept('PUT', `/movies/${id}`, {
+      body: {
+        id: movie.id,
+        name: editedName,
+        year: editedYear,
+      },
+    }).as('updateMovieById')
+
+    editMovie(editedName, editedYear)
+
+    cy.wait('@updateMovieById')
   })
 
   it('should delete movie', () => {

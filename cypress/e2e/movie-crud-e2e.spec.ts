@@ -1,5 +1,6 @@
 import '@cypress/skip-test/support'
 import {generateMovie} from '@support/factories'
+import {editMovie} from '@support/helpers/edit-movie'
 import {retryableBefore} from '@support/retryable-before'
 import spok from 'cy-spok'
 
@@ -8,19 +9,24 @@ describe('movie crud e2e', () => {
     // skip in CI, for sure the server is not running
     cy.task('isCi').then(val => cy.skipOn(val === true))
     // when local, skip if the server is not running
-    cy.exec(`curl -s -o /dev/null -w "%{http_code}" ${Cypress.env('apiUrl')}`, {
-      failOnNonZeroExit: false,
-    }).then(res => cy.skipOn(res.stdout !== '200'))
+    cy.exec(
+      `curl -s -o /dev/null -w "%{http_code}" ${Cypress.env('VITE_API_URL')}`,
+      {
+        failOnNonZeroExit: false,
+      },
+    ).then(res => cy.skipOn(res.stdout !== '200'))
   })
 
-  it('should add and delete a movie', () => {
+  beforeEach(() => {
     cy.intercept('GET', '/movies').as('getMovies')
     cy.visit('/')
     cy.contains('Movie List')
     cy.wait('@getMovies')
       .its('response.statusCode')
       .should('be.within', 200, 399)
+  })
 
+  it('should add and delete a movie from movie list', () => {
     cy.log('**add a movie**')
     const {name, year} = generateMovie()
     cy.getByCy('movie-input-comp-text').type(name)
@@ -48,5 +54,31 @@ describe('movie crud e2e', () => {
     cy.getByCy(`delete-movie-${name}`).click()
     cy.wait('@deleteMovieById')
     cy.getByCy(`delete-movie-${name}`).should('not.exist')
+  })
+
+  it('should update and delete a movie at movie manager', () => {
+    const {name, year} = generateMovie()
+    const {name: editedName, year: editedYear} = generateMovie()
+
+    cy.addMovie({name, year})
+      .its('body.movie.id')
+      .then(id => {
+        cy.log('**direct-nav by id**')
+
+        cy.visit(`/movies/${id}`)
+
+        editMovie(editedName, editedYear)
+
+        cy.log('**check on the movie list**')
+        cy.visit('/')
+        cy.scrollTo('bottom')
+        cy.contains(editedName)
+
+        cy.visit(`/movies/${id}`)
+        cy.getByCy('delete-movie').click()
+
+        cy.visit('/')
+        cy.contains(editedName).should('not.exist')
+      })
   })
 })
