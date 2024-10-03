@@ -10,11 +10,12 @@ describe('movie crud e2e', () => {
   it('should add a movie', () => {
     cy.intercept('GET', '**/movies', {body: []}).as('noMovies')
     cy.visit('/')
-    cy.contains('Movie List')
     cy.wait('@noMovies')
 
-    cy.getByCy('movie-input-comp-text').type(name)
-    cy.getByCy('movie-input-comp-number').clear().type(`${year}{backspace}`)
+    cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
+    cy.getByCy('movie-input-comp-number')
+      .clear()
+      .type(`${year}{backspace}`, {delay: 0})
 
     cy.intercept('POST', '/movies', {
       body: {

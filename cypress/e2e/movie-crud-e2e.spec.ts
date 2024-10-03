@@ -1,11 +1,10 @@
 import '@cypress/skip-test/support'
 import {generateMovie} from '@support/factories'
 import {editMovie} from '@support/helpers/edit-movie'
-import {retryableBefore} from '@support/retryable-before'
 import spok from 'cy-spok'
 
 describe('movie crud e2e', () => {
-  retryableBefore(() => {
+  before(() => {
     // skip in CI, for sure the server is not running
     cy.task('isCi').then(val => cy.skipOn(val === true))
     // when local, skip if the server is not running

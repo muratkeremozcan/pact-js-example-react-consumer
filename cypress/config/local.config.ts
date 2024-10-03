@@ -3,19 +3,20 @@ import path from 'node:path'
 import {baseConfig} from './base.config'
 // eslint-disable-next-line import/named
 import {defineConfig} from 'cypress'
+import {config as dotenvConfig} from 'dotenv'
 
-require('dotenv').config({
+dotenvConfig({
   path: path.resolve(__dirname, '../../.env'),
 })
 
 const PORT = process.env.VITE_PORT
-const API_URL = process.env.VITE_API_URL
 
 const config: Cypress.ConfigOptions = {
   e2e: {
     env: {
       ENVIRONMENT: 'local',
-      apiUrl: `${API_URL}`, // Cypress.env
+      // map .env to Cypress.env
+      ...process.env,
     },
     baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },
