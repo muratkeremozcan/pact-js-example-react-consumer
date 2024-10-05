@@ -194,7 +194,7 @@ describe('Movies API', () => {
           200,
           setJsonBody({
             status: 200,
-            movie: {
+            data: {
               id: integer(), // if the example value is omitted, a random number is used
               name: string(name),
               year: integer(year),
@@ -207,7 +207,7 @@ describe('Movies API', () => {
           const res = await addNewMovie(name, year)
           expect(res).toEqual({
             status: 200,
-            movie: {
+            data: {
               id: expect.any(Number),
               name,
               year,
