@@ -15,6 +15,7 @@ import {createProviderState, setJsonBody} from './test-helpers/helpers'
 import type {
   DeleteMovieResponse,
   GetMovieResponse,
+  MovieNotFoundResponse,
 } from './provider-schema/movie-types'
 
 // full list of matchers:
@@ -329,8 +330,8 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = (await deleteMovieById(testId)) as DeleteMovieResponse
-          expect(res.message).toEqual(error)
+          const res = (await deleteMovieById(testId)) as MovieNotFoundResponse
+          expect(res.error).toEqual(error)
         })
     })
   })
