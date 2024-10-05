@@ -319,18 +319,18 @@ describe('Movies API', () => {
 
     it('should throw an error if movie to delete does not exist', async () => {
       const testId = 123456789
-      const message = `Movie with ID ${testId} not found`
+      const error = `Movie with ID ${testId} not found`
 
       await pact
         .addInteraction()
         .uponReceiving('a request to delete a non-existing movie')
         .withRequest('DELETE', `/movies/${testId}`)
-        .willRespondWith(404, setJsonBody({message, status: 404}))
+        .willRespondWith(404, setJsonBody({error, status: 404}))
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
           const res = (await deleteMovieById(testId)) as DeleteMovieResponse
-          expect(res.message).toEqual(message)
+          expect(res.message).toEqual(error)
         })
     })
   })
