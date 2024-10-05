@@ -11,7 +11,7 @@ import {
   deleteMovieById,
   updateMovie,
 } from './consumer'
-import type {Movie, ErrorResponse, SuccessResponse} from './consumer'
+import type {Movie, ErrorResponse} from './consumer'
 
 // @ts-expect-error okay
 const API_URL = import.meta.env.VITE_API_URL
@@ -52,10 +52,13 @@ describe('Consumer API functions', () => {
         year: 1999,
       }
 
-      nock(API_URL).get('/movies').reply(200, [EXPECTED_BODY])
+      nock(API_URL)
+        .get('/movies')
+        .reply(200, {status: 200, data: [EXPECTED_BODY]})
 
-      const res = (await getMovies()) as Movie[]
-      expect(res[0]).toEqual(EXPECTED_BODY)
+      const res = await getMovies()
+      // @ts-expect-error ts should chill
+      expect(res.data).toEqual([EXPECTED_BODY])
     })
 
     // a key difference in nock vs pact is covering the error cases in our code
@@ -78,10 +81,11 @@ describe('Consumer API functions', () => {
 
       nock(API_URL)
         .get(`/movies?name=${EXPECTED_BODY.name}`)
-        .reply(200, EXPECTED_BODY)
+        .reply(200, {status: 200, data: EXPECTED_BODY})
 
       const res = await getMovieByName(EXPECTED_BODY.name)
-      expect(res).toEqual(EXPECTED_BODY)
+      // @ts-expect-error ts should chill
+      expect(res.data).toEqual(EXPECTED_BODY)
     })
   })
 
@@ -97,10 +101,13 @@ describe('Consumer API functions', () => {
       }
 
       // in pact the provider state would be specified here
-      nock(API_URL).get('/movies/1').reply(200, EXPECTED_BODY)
+      nock(API_URL)
+        .get('/movies/1')
+        .reply(200, {status: 200, data: EXPECTED_BODY})
 
       const res = await getMovieById(1)
-      expect(res).toEqual(EXPECTED_BODY)
+      // @ts-expect-error ts should chill
+      expect(res.data).toEqual(EXPECTED_BODY)
     })
 
     it('should handle errors when movie not found', async () => {
@@ -126,7 +133,7 @@ describe('Consumer API functions', () => {
         .post('/movies', {name, year})
         .reply(200, {
           status: 200,
-          movie: {
+          data: {
             id: 1,
             name,
             year,
@@ -136,7 +143,7 @@ describe('Consumer API functions', () => {
       const res = await addNewMovie(name, year)
       expect(res).toEqual({
         status: 200,
-        movie: {
+        data: {
           id: expect.any(Number),
           name,
           year,
@@ -213,28 +220,30 @@ describe('Consumer API functions', () => {
     // a key difference in pact is using provider states, to fully simulate the provider side
     it('should delete an existing movie successfully', async () => {
       const testId = 100
-      const successRes: SuccessResponse = {
-        message: `Movie ${testId} has been deleted`,
-      }
+      const message = `Movie ${testId} has been deleted`
 
       // in pact the provider state would be specified here
-      nock(API_URL).delete(`/movies/${testId}`).reply(200, successRes)
+      nock(API_URL)
+        .delete(`/movies/${testId}`)
+        .reply(200, {message, status: 200})
 
       const res = await deleteMovieById(testId)
-      expect(res).toEqual(successRes)
+      // @ts-expect-error ts should chill
+      expect(res.message).toEqual(message)
     })
 
     it('should throw an error if movie to delete does not exist', async () => {
       const testId = 123456789
-      const errorRes: ErrorResponse = {
-        error: `Movie ${testId} not found`,
-      }
+      const message = `Movie with ID ${testId} not found`
 
       // in pact the provider state would be specified here
-      nock(API_URL).delete(`/movies/${testId}`).reply(404, errorRes)
+      nock(API_URL)
+        .delete(`/movies/${testId}`)
+        .reply(404, {message, status: 404})
 
       const res = await deleteMovieById(testId)
-      expect(res).toEqual(errorRes)
+      // @ts-expect-error ts should chill
+      expect(res.message).toEqual(message)
     })
   })
 })
