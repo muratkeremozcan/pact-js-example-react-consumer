@@ -1,5 +1,13 @@
 import type {AxiosResponse, AxiosError} from 'axios'
 import axios from 'axios'
+import type {
+  ConflictMovieResponse,
+  CreateMovieResponse,
+  DeleteMovieResponse,
+  GetMovieResponse,
+  MovieNotFoundResponse,
+  UpdateMovieResponse,
+} from './provider-schema/movie-types'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -13,11 +21,6 @@ export type Movie = {
 // Error response type
 export type ErrorResponse = {
   error: string
-}
-
-// Success response type
-export type SuccessResponse = {
-  message: string
 }
 
 // baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
@@ -44,21 +47,25 @@ const handleError = (err: AxiosError): ErrorResponse => {
 }
 
 // Fetch all movies
-export const getMovies = (): Promise<Movie[] | ErrorResponse> =>
+export const getMovies = (): Promise<GetMovieResponse> =>
   axiosInstance.get('/movies').then(yieldData).catch(handleError)
 
 // Fetch a single movie by ID
-export const getMovieById = (id: number): Promise<Movie | ErrorResponse> =>
+export const getMovieById = (
+  id: number,
+): Promise<GetMovieResponse | MovieNotFoundResponse> =>
   axiosInstance.get(`/movies/${id}`).then(yieldData).catch(handleError)
 
-export const getMovieByName = (name: string): Promise<Movie | ErrorResponse> =>
+export const getMovieByName = (
+  name: string,
+): Promise<GetMovieResponse | MovieNotFoundResponse> =>
   axiosInstance.get(`/movies?name=${name}`).then(yieldData).catch(handleError)
 
 // Add a new movie (don't specify id)
 export const addNewMovie = async (
   movieName: string,
   movieYear: number,
-): Promise<Movie | ErrorResponse> => {
+): Promise<CreateMovieResponse | ConflictMovieResponse> => {
   const data: Omit<Movie, 'id'> = {
     name: movieName,
     year: movieYear,
@@ -75,14 +82,16 @@ export const addNewMovie = async (
 // Delete a movie by ID
 export const deleteMovieById = (
   id: number,
-): Promise<SuccessResponse | ErrorResponse> =>
+): Promise<DeleteMovieResponse | MovieNotFoundResponse> =>
   axiosInstance.delete(`/movies/${id}`).then(yieldData).catch(handleError)
 
 export const updateMovie = async (
   id: number,
   movieName: string,
   movieYear: number,
-): Promise<Movie | ErrorResponse> => {
+): Promise<
+  UpdateMovieResponse | MovieNotFoundResponse | ConflictMovieResponse
+> => {
   const data: Omit<Movie, 'id'> = {
     name: movieName,
     year: movieYear,
