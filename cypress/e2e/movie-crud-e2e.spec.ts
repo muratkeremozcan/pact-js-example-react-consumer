@@ -39,7 +39,7 @@ describe('movie crud e2e', () => {
         spok({
           statusCode: 200,
           body: {
-            movie: {
+            data: {
               id: spok.number,
               name,
               year: spok.number,
