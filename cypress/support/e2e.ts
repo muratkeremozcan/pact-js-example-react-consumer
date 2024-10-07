@@ -1,6 +1,11 @@
 import type {Movie} from '../../src/consumer'
 import './commands'
+import './get-token'
 import '@bahmutov/cy-api'
+
+const commonHeaders = (token: string) => ({
+  Authorization: token,
+})
 
 Cypress.Commands.add(
   'addMovie',
@@ -10,12 +15,15 @@ Cypress.Commands.add(
     allowedToFail = false,
   ) => {
     cy.log('**addMovie**')
-    return cy.request({
-      method: 'POST',
-      url: `${baseUrl}/movies`,
-      body: body,
-      retryOnStatusCodeFailure: !allowedToFail,
-      failOnStatusCode: !allowedToFail,
-    })
+    return cy.maybeGetToken('token-session').then(token =>
+      cy.request({
+        method: 'POST',
+        url: `${baseUrl}/movies`,
+        body: body,
+        headers: commonHeaders(token),
+        retryOnStatusCodeFailure: !allowedToFail,
+        failOnStatusCode: !allowedToFail,
+      }),
+    )
   },
 )

@@ -10,14 +10,14 @@ describe('App routes', () => {
   const movie = movies[0]
 
   beforeEach(() => {
-    cy.intercept('GET', '/movies', {body: movies}).as('getMovies')
+    cy.intercept('GET', '/movies', {body: {data: movies}}).as('getMovies')
   })
 
   it('should redirect to /movies', () => {
     cy.visit('/')
 
     cy.location('pathname').should('eq', '/movies')
-    cy.wait('@getMovies').its('response.body').should('deep.eq', movies)
+    cy.wait('@getMovies').its('response.body.data').should('deep.eq', movies)
 
     cy.getByCy('movie-list-comp').should('be.visible')
     cy.getByCy('movie-form-comp').should('be.visible')

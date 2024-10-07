@@ -39,7 +39,7 @@ describe('movie crud e2e', () => {
         spok({
           statusCode: 200,
           body: {
-            movie: {
+            data: {
               id: spok.number,
               name,
               year: spok.number,
@@ -60,7 +60,7 @@ describe('movie crud e2e', () => {
     const {name: editedName, year: editedYear} = generateMovie()
 
     cy.addMovie({name, year})
-      .its('body.movie.id')
+      .its('body.data.id')
       .then(id => {
         cy.log('**direct-nav by id**')
 

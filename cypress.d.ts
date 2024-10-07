@@ -79,6 +79,12 @@ declare global {
         body: Omit<Movie, 'id'>,
         allowedToFail?: boolean,
       ): Chainable<Response<Omit<Movie, 'id'>>>
+
+      /**
+       * If the token exists, reuses it
+       * If no token is exists, gets a token
+       */
+      maybeGetToken(sessionName: string): Chainable<string>
     }
   }
 }
