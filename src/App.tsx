@@ -5,9 +5,11 @@ import {Suspense} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import ErrorComponent from '@components/error-component'
 import AppRoutes from './App-routes'
+import type {Movie} from './consumer'
 
 function App() {
-  const {data: movies} = useMovies()
+  const {data} = useMovies()
+  const moviesData = (data as unknown as {data: Movie[]}).data
 
   const deleteMovieMutation = useDeleteMovie()
   const handleDeleteMovie = (id: number) => deleteMovieMutation.mutate(id)
@@ -16,7 +18,7 @@ function App() {
     <ErrorBoundary fallback={<ErrorComponent />}>
       <Suspense fallback={<LoadingMessage />}>
         <SAppContainer>
-          <AppRoutes movies={movies} onDelete={handleDeleteMovie} />
+          <AppRoutes movies={moviesData} onDelete={handleDeleteMovie} />
         </SAppContainer>
       </Suspense>
     </ErrorBoundary>

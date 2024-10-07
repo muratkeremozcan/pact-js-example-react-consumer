@@ -8,17 +8,17 @@ describe('<MovieDetails />', () => {
   const movie = {id, ...generateMovie(), name: movieName}
 
   it('should make a unique network call when the route takes an id', () => {
-    cy.intercept('GET', '/movies/*', {body: movie}).as('getMovieById')
+    cy.intercept('GET', '/movies/*', {body: {data: movie}}).as('getMovieById')
     cy.routeWrappedMount(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
     cy.wait('@getMovieById')
-      .its('response.body')
+      .its('response.body.data')
       .should(spok({...movie}))
   })
 
   it('should make a unique network call when the route takes a query parameter', () => {
     cy.intercept('GET', `/movies?name=${encodeURIComponent(movieName)}`, {
-      body: movie,
+      body: {data: movie},
     }).as('getMoviesByName')
 
     cy.routeWrappedMount(<MovieDetails />, {
@@ -27,18 +27,21 @@ describe('<MovieDetails />', () => {
     })
 
     cy.wait('@getMoviesByName')
-      .its('response.body')
+      .its('response.body.data')
       .should(spok({...movie}))
   })
 
   it('should display the default error with delay', () => {
-    cy.intercept('GET', '/movies/*', {statusCode: 400, delay: 20}).as(
-      'networkErr',
-    )
+    const error = 'Unexpected error occurred'
+    cy.intercept('GET', '/movies/*', {
+      statusCode: 400,
+      delay: 20,
+      body: {error},
+    }).as('networkErr')
     cy.routeWrappedMount(<MovieDetails />, {path: '/:id', route: `/${id}`})
     cy.getByCy('loading-message-comp').should('be.visible')
 
-    cy.wait('@networkErr').its('response.body').should('eq', '')
+    cy.wait('@networkErr').its('response.body.error').should('eq', error)
 
     cy.contains('Unexpected error occurred')
   })
@@ -47,12 +50,16 @@ describe('<MovieDetails />', () => {
     const error = 'Movie not found'
     cy.intercept('GET', '/movies/*', {
       statusCode: 400,
-      body: {error},
+      body: {
+        error: {
+          error,
+        },
+      },
     }).as('networkErr')
 
     cy.routeWrappedMount(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
-    cy.wait('@networkErr').its('response.body.error').should('eq', error)
+    cy.wait('@networkErr').its('response.body.error.error').should('eq', error)
 
     cy.contains(error)
   })

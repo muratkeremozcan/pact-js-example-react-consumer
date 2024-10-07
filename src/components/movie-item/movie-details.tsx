@@ -1,6 +1,6 @@
 import LoadingMessage from '@components/loading-message'
 import {SButton, STitle} from '@styles/styled-components'
-import type {ErrorResponse} from 'src/consumer'
+import type {ErrorResponse, Movie} from 'src/consumer'
 import styled from 'styled-components'
 import MovieManager from './movie-manager'
 import {useMovieDetails} from '@hooks/use-movie-detail'
@@ -8,7 +8,7 @@ import {useDeleteMovie} from '@hooks/use-movies'
 import {useNavigate} from 'react-router-dom'
 
 export default function MovieDetails() {
-  const {movie, isLoading, hasIdentifier} = useMovieDetails()
+  const {data, isLoading, hasIdentifier} = useMovieDetails()
   const deleteMovieMutation = useDeleteMovie()
   const navigate = useNavigate()
 
@@ -20,14 +20,17 @@ export default function MovieDetails() {
   if (!hasIdentifier) return <p>No movie selected</p>
   if (isLoading) return <LoadingMessage />
 
+  const movieData = (data as unknown as {data: Movie}).data
+  const movieError = (data as unknown as {error: ErrorResponse}).error?.error
+
   return (
     <SMovieDetails data-cy="movie-details-comp">
       <STitle>Movie Details</STitle>
 
-      {movie && 'name' in movie ? (
-        <MovieManager movie={movie} onDelete={handleDeleteMovie} />
+      {movieData && 'name' in movieData ? (
+        <MovieManager movie={movieData} onDelete={handleDeleteMovie} />
       ) : (
-        <p>{(movie as ErrorResponse).error}</p>
+        <p>{movieError || 'Unexpected error occurred'}</p>
       )}
 
       <SButton onClick={() => navigate(-1)} data-cy="back">

@@ -11,7 +11,7 @@ export function useMovieDetails() {
     movieName ?? (id && !isNaN(Number(id)) ? parseInt(id, 10) : null)
   if (!identifier) return {movie: null, isLoading: false, hasIdentifier: false}
 
-  const {data: movie, isLoading} = useMovie(identifier)
+  const {data, isLoading} = useMovie(identifier)
 
-  return {movie, isLoading, hasIdentifier: true}
+  return {data, isLoading, hasIdentifier: true}
 }
