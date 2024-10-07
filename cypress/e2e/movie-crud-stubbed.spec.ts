@@ -30,15 +30,15 @@ describe('movie crud e2e', () => {
   })
 
   it('should edit a movie', () => {
-    cy.intercept('GET', '**/movies', {body: [movie]}).as('getMovies')
-    cy.intercept('GET', '**/movies/*', {body: movie}).as('getMovieById')
+    cy.intercept('GET', '**/movies', {body: {data: [movie]}}).as('getMovies')
+    cy.intercept('GET', '**/movies/*', {body: {data: movie}}).as('getMovieById')
     cy.visit('/')
     cy.wait('@getMovies')
 
     cy.getByCy(`link-${id}`).click()
 
     cy.location('pathname').should('eq', `/movies/${id}`)
-    cy.wait('@getMovieById').its('response.body').should('deep.eq', movie)
+    cy.wait('@getMovieById').its('response.body.data').should('deep.eq', movie)
 
     cy.intercept('PUT', `/movies/${id}`, {
       body: {
@@ -54,7 +54,7 @@ describe('movie crud e2e', () => {
   })
 
   it('should delete movie', () => {
-    cy.intercept('GET', '**/movies', {body: [movie]}).as('getMovies')
+    cy.intercept('GET', '**/movies', {body: {data: [movie]}}).as('getMovies')
     cy.visit('/')
     cy.contains('Movie List')
     cy.wait('@getMovies')

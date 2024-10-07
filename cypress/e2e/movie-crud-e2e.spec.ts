@@ -60,7 +60,7 @@ describe('movie crud e2e', () => {
     const {name: editedName, year: editedYear} = generateMovie()
 
     cy.addMovie({name, year})
-      .its('body.movie.id')
+      .its('body.data.id')
       .then(id => {
         cy.log('**direct-nav by id**')
 
