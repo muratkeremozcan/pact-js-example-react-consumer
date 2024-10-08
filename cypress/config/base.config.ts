@@ -6,13 +6,14 @@ export const baseConfig: Cypress.ConfigOptions = {
   projectId: 'kdr2hm',
   viewportHeight: 1280,
   viewportWidth: 1280,
+  env: {
+    // map .env to Cypress.env
+    ...process.env,
+    ENVIRONMENT: 'local',
+    grepFilterSpecs: true,
+    grepOmitFiltered: true,
+  },
   e2e: {
-    env: {
-      // map .env to Cypress.env
-      ...process.env,
-      grepFilterSpecs: true,
-      grepOmitFiltered: true,
-    },
     setupNodeEvents(on, config) {
       esbuildPreprocessor(on)
       tasks(on)

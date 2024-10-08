@@ -15,11 +15,6 @@ const PORT = process.env.VITE_PORT
 
 const config: Cypress.ConfigOptions = {
   e2e: {
-    env: {
-      ENVIRONMENT: 'local',
-      // map .env to Cypress.env
-      ...process.env,
-    },
     baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },
   component: {

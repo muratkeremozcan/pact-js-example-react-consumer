@@ -21,8 +21,8 @@
     "publish:pact": ". ./scripts/env-setup.sh && pact-broker publish ./pacts --consumer-app-version=$GITHUB_SHA --branch=$GITHUB_BRANCH --broker-base-url=$PACT_BROKER_BASE_URL --broker-token=$PACT_BROKER_TOKEN",
     "can:i:deploy:consumer": ". ./scripts/env-setup.sh && pact-broker can-i-deploy --pacticipant ReactConsumer --version=$GITHUB_SHA --to-environment dev --retry-while-unknown=10",
     "record:consumer:deployment": ". ./scripts/env-setup.sh && if [ \"$GITHUB_BRANCH\" = \"main\" ]; then pact-broker record-deployment --pacticipant ReactConsumer --version $GITHUB_SHA --environment $npm_config_env; fi",
-    "last:failed-ct": "npx cypress-plugin-last-failed run --component --browser chrome --config-file cypress/config/local.config.ts",
-    "last:failed-e2e": "npx cypress-plugin-last-failed run --e2e --browser chrome --config-file cypress/config/local.config.ts"
+    "last:failed-ct": "LAST_FAILED_RESULTS_PATH=cypress/config npx cypress-plugin-last-failed run --component --browser chrome --config-file cypress/config/local.config.ts --config video=false screenshot=false cypress/config/local.config.ts",
+    "last:failed-e2e": "LAST_FAILED_RESULTS_PATH=cypress/config npx cypress-plugin-last-failed run --e2e --browser chrome --config-file cypress/config/local.config.ts --config video=false screenshot=false cypress/config/local.config.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.1",
@@ -62,7 +62,7 @@
     "cypress": "13.15.0",
     "cypress-data-session": "2.8.5",
     "cypress-map": "1.40.0",
-    "cypress-plugin-last-failed": "^1.2.0",
+    "cypress-plugin-last-failed": "2.0.1",
     "dotenv": "16.4.5",
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",

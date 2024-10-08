@@ -3,7 +3,6 @@ import 'cypress-map'
 
 // @ts-expect-error per plugin docs
 import registerCypressGrep from '@bahmutov/cy-grep'
-// @ts-expect-error per plugin docs
 import {failedTestToggle} from 'cypress-plugin-last-failed'
 
 registerCypressGrep()
