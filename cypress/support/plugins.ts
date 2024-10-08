@@ -1,4 +1,5 @@
 const cyDataSession = require('cypress-data-session/src/plugin')
+const {collectFailingTests} = require('cypress-plugin-last-failed')
 
 /**
  * The collection of plugins to use with Cypress
@@ -12,5 +13,6 @@ export default function plugins(
   return {
     // add plugins here
     ...cyDataSession(on, config),
+    ...collectFailingTests(on, config),
   }
 }

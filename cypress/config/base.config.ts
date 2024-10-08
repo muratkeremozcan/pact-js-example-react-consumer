@@ -10,6 +10,8 @@ export const baseConfig: Cypress.ConfigOptions = {
     env: {
       // map .env to Cypress.env
       ...process.env,
+      grepFilterSpecs: true,
+      grepOmitFiltered: true,
     },
     setupNodeEvents(on, config) {
       esbuildPreprocessor(on)

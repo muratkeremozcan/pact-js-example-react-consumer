@@ -4,6 +4,8 @@ import {baseConfig} from './base.config'
 // eslint-disable-next-line import/named
 import {defineConfig} from 'cypress'
 import {config as dotenvConfig} from 'dotenv'
+import tasks from '@support/tasks'
+import plugins from '@support/plugins'
 
 dotenvConfig({
   path: path.resolve(__dirname, '../../.env'),
@@ -27,6 +29,10 @@ const config: Cypress.ConfigOptions = {
     devServer: {
       framework: 'react',
       bundler: 'vite',
+    },
+    setupNodeEvents(on, config) {
+      tasks(on)
+      return plugins(on, config)
     },
   },
 }

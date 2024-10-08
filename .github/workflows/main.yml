@@ -104,6 +104,18 @@ jobs:
           # group: e2e-tests
           # tag: e2e-tests
 
+      - name: Output the file contents 📝
+        if: failure()
+        run: |
+          cat ./cypress/config/test-results/last-run.json
+
+      - name: rerun failed tests 🧪
+        if: failure()
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run last:failed-e2e
+          working-directory: ${{ github.workspace }}
+
   cypress-ct-test:
     # if you want to enable parallelization
     # strategy:
@@ -135,3 +147,15 @@ jobs:
           # if you want to enable parallelization
           # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output the file contents 📝
+        if: failure()
+        run: |
+          cat ./cypress/config/test-results/last-run.json
+
+      - name: rerun failed tests 🧪
+        if: failure()
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run last:failed-ct
+          working-directory: ${{ github.workspace }}
