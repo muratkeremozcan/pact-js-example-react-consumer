@@ -1,6 +1,6 @@
-[![unit-lint-typecheck-e2e-ct](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml)
+[![unit-lint-typecheck-e2e-ct](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml) ![@pact-foundation/pact version](https://img.shields.io/badge/@pact--foundation/pact-13.1.4-brightgreen)
 ![react version](https://img.shields.io/badge/react-18.3.1-brightgreen)
-![cypress version](https://img.shields.io/badge/cypress-13.14.2-brightgreen)
+![cypress version](https://img.shields.io/badge/cypress-13.15.0-brightgreen)
 ![typescript version](https://img.shields.io/badge/typescript-5.6.2-brightgreen)
 ![jest version](https://img.shields.io/badge/jest-29.7.0-brightgreen)
 [![renovate-app badge][renovate-badge]][renovate-app]
