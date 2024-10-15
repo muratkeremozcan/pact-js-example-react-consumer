@@ -1,15 +1,12 @@
-[![unit-lint-typecheck-e2e-ct](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/muratkeremozcan/react-cypress-ts-vite-template/actions/workflows/main.yml)
-![react version](https://img.shields.io/badge/react-18.3.1-brightgreen)
-![cypress version](https://img.shields.io/badge/cypress-13.14.2-brightgreen)
-![typescript version](https://img.shields.io/badge/typescript-5.6.2-brightgreen)
-![jest version](https://img.shields.io/badge/jest-29.7.0-brightgreen)
-[![renovate-app badge][renovate-badge]][renovate-app]
+# PactJS Bi-directional Contract Testing Example
 
-[renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
-[renovate-app]: https://renovateapp.com/
+- [PactJS Bi-directional Contract Testing Example](#pactjs-bi-directional-contract-testing-example) -
+  [Consumer flow for Pact Bi-directional contract testing](#consumer-flow-for-pact-bi-directional-contract-testing)
+  - [Provider flow for Pact Bi-directional contract testing](#provider-flow-for-pact-bi-directional-contract-testing)
+  - [Bi-directional contract testing details](#bi-directional-contract-testing-details)
 
 This repo is a mirror of
-[pact-js-react-consumer](https://github.com/muratkeremozcan/pact-js-example-consumer),
+[pact-js-consumer](https://github.com/muratkeremozcan/pact-js-example-consumer),
 but it includes a real react UI.
 
 The Axios calls to the backend (`consumer.ts`) and the pact tests
@@ -50,7 +47,7 @@ npm run cy:run-e2e  # headless version
 npm run test # run unit tests with jest
 ```
 
-### Consumer flow for Pact
+#### Consumer flow for Pact Bi-directional contract testing
 
 Unlike traditional consumer driven contract testing, there is no need for a
 specific order of executions between the consumer and the provider. The provider
@@ -64,19 +61,19 @@ responsibility is ensuring that their OpenAPI spec is correct; and they can do
 schema testing for that - which in our case is done during api e2e.
 
 ```bash
-npm run test:consumer
-npm run publish:pact
-npm run can:i:deploy:consumer
+npm run test:consumer # (4)
+npm run publish:pact # (5)
+npm run can:i:deploy:consumer #(6)
 # only on main
-npm run record:consumer:deployment --env=dev # change the env param as needed
+npm run record:consumer:deployment --env=dev # (7) change the env param as needed
 ```
 
-### Provider flow for Pact (Bi-directional contract testing)
+### Provider flow for Pact Bi-directional contract testing
 
 ```bash
-npm run generate:openapi # generates an OpenAPI doc from Zod schemas
-npm run publish:pact-openapi # publishes the open api spec to Pact Broker for BDCT
-npm run record:provider:bidirectional:deployment --env=dev # we still have to record the provider deployment
+npm run generate:openapi # (1) generates an OpenAPI doc from Zod schemas
+npm run publish:pact-openapi # (2) on main, publish the open api spec to Pact Broker for BDCT
+npm run record:provider:bidirectional:deployment --env=dev # (3) on main record the bi-directional provider deployment
 ```
 
 On the provider side, the generation of the OpenAPI spec happens automatically
@@ -122,28 +119,13 @@ Here is how it goes:
    Dredd: executes its own tests (magic!) against your openapi spec (needs your
    local server, has hooks for things like auth.)
 
-3. **Publish the OpenAPI spec to the pact broker**.
+3. **Publish the OpenAPI spec to the pact broker at the provider**.
 
    ```bash
-   pactflow publish-provider-contract
-     src/api-docs/openapi.json # path to OpenAPI spec
-     # if you also have classic CDCT in the same provider,
-     # make sure to label the Bi-directional provider name differently
-     --provider MoviesAPI-bi-directional
-     --provider-app-version=$GITHUB_SHA # best practice
-     --branch=$GITHUB_BRANCH # best practice
-     --content-type application/json # yml ok too if you prefer
-     --verification-exit-code=0 # needs it
-      # can be anything, we just generate a file on e2e success to make Pact happy
-     --verification-results ./cypress/verification-result.txt
-     --verification-results-content-type text/plain # can be anything
-     --verifier cypress # can be anything
+      npm run publish:pact-openapi
    ```
 
-   Note that verification arguments are optional, and without them you get a
-   warning at Pact broker that the OpenAPI spec is untested.
-
-4. **Record the provider bi-directional deployment**.
+4. **Record the provider bi-directional deployment at the provider **.
 
    We still have to record the provider bi-directional, similar to how we do it
    in CDCT. Otherwise the consumers will have nothing to compare against.
@@ -152,9 +134,17 @@ Here is how it goes:
    npm run record:provider:bidirectional:deployment --env=dev
    ```
 
-5. **Execute the consumer contract tests**
+5. **Execute the consumer contract tests at the consumer**
 
    Execution on the Consumer side works exactly the same as classic CDCT.
+
+   ```bash
+    npm run test:consumer
+    npm run publish:pact
+    npm run can:i:deploy:consumer
+    # only on main
+    npm run record:consumer:deployment --env=dev
+   ```
 
 As you can notice, there is nothing about running the consumer tests on the
 provider side ( `test:provider`), can-i-deploy checks
