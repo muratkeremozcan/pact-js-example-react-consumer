@@ -17,6 +17,7 @@ const config: Cypress.ConfigOptions = {
       ENVIRONMENT: 'local',
       // map .env to Cypress.env
       ...process.env,
+      ignoreDefaultBlocklist: true, // for pact-cypress-adapter to ignore cypress auto-generated headers
     },
     baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },
