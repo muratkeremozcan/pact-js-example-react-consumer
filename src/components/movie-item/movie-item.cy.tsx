@@ -7,6 +7,7 @@ describe('<MovieItem />', () => {
         id={3}
         name={'my movie'}
         year={2023}
+        rating={8.5}
         onDelete={cy.stub().as('onDelete')}
       />,
     )

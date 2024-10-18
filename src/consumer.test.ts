@@ -50,6 +50,7 @@ describe('Consumer API functions', () => {
         id: 1,
         name: 'My movie',
         year: 1999,
+        rating: 8.5,
       }
 
       nock(API_URL)
@@ -77,6 +78,7 @@ describe('Consumer API functions', () => {
         id: 1,
         name: 'My movie',
         year: 1999,
+        rating: 8.5,
       }
 
       nock(API_URL)
@@ -98,6 +100,7 @@ describe('Consumer API functions', () => {
         id: 1,
         name: 'My movie',
         year: 1999,
+        rating: 8.5,
       }
 
       // in pact the provider state would be specified here
@@ -123,30 +126,33 @@ describe('Consumer API functions', () => {
   describe('addNewMovie', () => {
     // this is similar to its pacttest version
     it('should add a new movie', async () => {
-      const {name, year}: Omit<Movie, 'id'> = {
+      const {name, year, rating}: Omit<Movie, 'id'> = {
         name: 'New movie',
         year: 1999,
+        rating: 8.5,
       }
       // with pact we can keep the response generic
       // with nock it has to be concrete response
       nock(API_URL)
-        .post('/movies', {name, year})
+        .post('/movies', {name, year, rating})
         .reply(200, {
           status: 200,
           data: {
             id: 1,
             name,
             year,
+            rating,
           },
         })
 
-      const res = await addNewMovie(name, year)
+      const res = await addNewMovie(name, year, rating)
       expect(res).toEqual({
         status: 200,
         data: {
           id: expect.any(Number),
           name,
           year,
+          rating,
         },
       })
     })
@@ -157,6 +163,7 @@ describe('Consumer API functions', () => {
       const movie: Omit<Movie, 'id'> = {
         name: 'My existing movie',
         year: 2001,
+        rating: 8.5,
       }
       const errorRes: ErrorResponse = {
         error: `Movie ${movie.name} already exists`,
@@ -165,7 +172,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(API_URL).post('/movies', movie).reply(409, errorRes)
 
-      const res = await addNewMovie(movie.name, movie.year)
+      const res = await addNewMovie(movie.name, movie.year, movie.rating)
       expect(res).toEqual(errorRes)
     })
   })
@@ -173,12 +180,13 @@ describe('Consumer API functions', () => {
   describe('updateMovie', () => {
     it('should update an existing movie successfully', async () => {
       const testId = 1
-      const updatedMovieData = {name: 'Updated movie', year: 2000}
+      const updatedMovieData = {name: 'Updated movie', year: 2000, rating: 8.5}
 
       const EXPECTED_BODY: Movie = {
         id: testId,
         name: updatedMovieData.name,
         year: updatedMovieData.year,
+        rating: updatedMovieData.rating,
       }
 
       nock(API_URL)
@@ -189,6 +197,7 @@ describe('Consumer API functions', () => {
         testId,
         updatedMovieData.name,
         updatedMovieData.year,
+        updatedMovieData.rating,
       )
 
       expect(res).toEqual({status: 200, movie: EXPECTED_BODY})
@@ -196,7 +205,11 @@ describe('Consumer API functions', () => {
 
     it('should return an error if movie to update does not exist', async () => {
       const testId = 999
-      const updatedMovieData = {name: 'Updated movie', year: 2000}
+      const updatedMovieData = {
+        name: 'Updated movie',
+        year: 2000,
+        rating: 8.5,
+      }
       const errorRes: ErrorResponse = {
         error: `Movie with ID ${testId} no found`,
       }
@@ -209,6 +222,7 @@ describe('Consumer API functions', () => {
         testId,
         updatedMovieData.name,
         updatedMovieData.year,
+        updatedMovieData.rating,
       )
 
       expect(res).toEqual(errorRes)

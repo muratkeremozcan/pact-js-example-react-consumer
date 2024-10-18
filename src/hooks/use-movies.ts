@@ -43,7 +43,7 @@ export const useAddMovie = () => {
 
   return useMutation({
     mutationFn: (movie: Omit<Movie, 'id'>) =>
-      addNewMovie(movie.name, movie.year),
+      addNewMovie(movie.name, movie.year, movie.rating),
 
     // Invalidate cache when a new movie is added
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['movies']}),
@@ -54,8 +54,17 @@ export const useUpdateMovie = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({id, name, year}: {id: number; name: string; year: number}) =>
-      updateMovie(id, name, year),
+    mutationFn: ({
+      id,
+      name,
+      year,
+      rating,
+    }: {
+      id: number
+      name: string
+      year: number
+      rating: number
+    }) => updateMovie(id, name, year, rating),
     // handles both error and success scenarios
     onSettled: () => queryClient.invalidateQueries({queryKey: ['movies']}),
     // Optional: Handle errors globally if needed

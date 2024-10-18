@@ -16,6 +16,8 @@ export default function MovieEditForm({movie, onCancel}: MovieEditFormProps) {
     setMovieName,
     movieYear,
     setMovieYear,
+    movieRating,
+    setMovieRating,
     handleUpdateMovie,
     movieLoading,
     validationError,
@@ -38,6 +40,12 @@ export default function MovieEditForm({movie, onCancel}: MovieEditFormProps) {
         value={movieYear}
         placeholder="Movie year"
         onChange={e => setMovieYear(Number(e.target.value))}
+      />
+      <MovieInput
+        type="number"
+        value={movieRating}
+        placeholder="Movie rating"
+        onChange={e => setMovieRating(Number(e.target.value))}
       />
       <SButton
         data-cy="update-movie"

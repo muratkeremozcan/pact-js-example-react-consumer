@@ -3,20 +3,28 @@ import MovieForm from './movie-form'
 import spok from 'cy-spok'
 
 describe('<MovieForm />', () => {
+  const getByPlaceHolder = (placeholder: string) =>
+    cy.get(`[placeholder="${placeholder}"]`)
+
   const fillYear = (year: number) =>
-    cy
-      .getByCy('movie-input-comp-number')
-      .clear()
-      .type(`${year}backspace}`, {delay: 0})
+    getByPlaceHolder('Movie year')
+      .clear({force: true})
+      .type(`${year}{backspace}`, {delay: 0})
 
   const fillName = (name: string) =>
-    cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
+    getByPlaceHolder('Movie name').type(name, {delay: 0})
+
+  const fillRating = (rating: number) =>
+    getByPlaceHolder('Movie rating')
+      .clear({force: true})
+      .type(`${rating}`, {delay: 0})
 
   it('should fill the form and add the movie', () => {
-    const {name, year} = generateMovie()
+    const {name, year, rating} = generateMovie()
     cy.wrappedMount(<MovieForm />)
     fillName(name)
     fillYear(year)
+    fillRating(rating)
 
     cy.intercept('POST', '/movies', {statusCode: 200, delay: 50}).as('addMovie')
     cy.getByCy('add-movie-button').contains('Add Movie').click()
@@ -34,8 +42,9 @@ describe('<MovieForm />', () => {
       )
 
     cy.log('**check the form reset**')
-    cy.getByCy('movie-input-comp-text').should('have.value', '')
-    cy.getByCy('movie-input-comp-number').should('have.value', 2023)
+    getByPlaceHolder('Movie name').should('have.value', '')
+    getByPlaceHolder('Movie year').should('have.value', 2023)
+    getByPlaceHolder('Movie rating').should('have.value', 0)
   })
 
   it('should exercise validation errors', () => {
@@ -43,7 +52,7 @@ describe('<MovieForm />', () => {
 
     fillYear(2025)
     cy.getByCy('add-movie-button').click()
-    cy.getByCy('validation-error').should('have.length', 2)
+    cy.getByCy('validation-error').should('have.length', 1)
 
     fillYear(1899)
     cy.getByCy('add-movie-button').click()

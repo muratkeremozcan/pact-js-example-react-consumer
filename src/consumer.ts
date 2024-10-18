@@ -8,6 +8,7 @@ export type Movie = {
   id: number
   name: string
   year: number
+  rating: number
 }
 
 // Error response type
@@ -70,10 +71,12 @@ export const getMovieByName = (name: string): Promise<Movie | ErrorResponse> =>
 export const addNewMovie = async (
   movieName: string,
   movieYear: number,
+  movieRating: number,
 ): Promise<Movie | ErrorResponse> => {
   const data: Omit<Movie, 'id'> = {
     name: movieName,
     year: movieYear,
+    rating: movieRating,
   }
 
   const response = await axiosInstance
@@ -97,10 +100,12 @@ export const updateMovie = async (
   id: number,
   movieName: string,
   movieYear: number,
+  movieRating: number,
 ): Promise<Movie | ErrorResponse> => {
   const data: Omit<Movie, 'id'> = {
     name: movieName,
     year: movieYear,
+    rating: movieRating,
   }
   const response = await axiosInstance
     .put(`/movies/${id}`, data, commonHeaders)
