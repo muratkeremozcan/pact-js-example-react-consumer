@@ -1,4 +1,6 @@
 const cyDataSession = require('cypress-data-session/src/plugin')
+const pactCypressPlugin = require('@pactflow/pact-cypress-adapter/dist/plugin')
+const fs = require('fs')
 
 /**
  * The collection of plugins to use with Cypress
@@ -12,5 +14,6 @@ export default function plugins(
   return {
     // add plugins here
     ...cyDataSession(on, config),
+    ...pactCypressPlugin(on, config, fs),
   }
 }
