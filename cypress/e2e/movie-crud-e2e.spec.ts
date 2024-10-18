@@ -19,7 +19,6 @@ describe('movie crud e2e', () => {
   beforeEach(() => {
     cy.intercept('GET', '/movies').as('getMovies')
     cy.visit('/')
-    cy.contains('Movie List')
     cy.wait('@getMovies')
       .its('response.statusCode')
       .should('be.within', 200, 399)
@@ -29,7 +28,7 @@ describe('movie crud e2e', () => {
     cy.log('**add a movie**')
     const {name, year} = generateMovie()
     cy.getByCy('movie-input-comp-text').type(name)
-    cy.getByCy('movie-input-comp-number').clear().type(`${year}{backspace}`)
+    cy.get('[placeholder="Movie rating"]').clear().type(`${year}{backspace}`)
 
     cy.intercept('POST', '/movies').as('addMovie')
     cy.getByCy('add-movie-button').click()
@@ -56,17 +55,21 @@ describe('movie crud e2e', () => {
   })
 
   it('should update and delete a movie at movie manager', () => {
-    const {name, year} = generateMovie()
-    const {name: editedName, year: editedYear} = generateMovie()
+    const {name, year, rating} = generateMovie()
+    const {
+      name: editedName,
+      year: editedYear,
+      rating: editedRating,
+    } = generateMovie()
 
-    cy.addMovie({name, year})
+    cy.addMovie({name, year, rating})
       .its('body.data.id')
       .then(id => {
         cy.log('**direct-nav by id**')
 
         cy.visit(`/movies/${id}`)
 
-        editMovie(editedName, editedYear)
+        editMovie(editedName, editedYear, editedRating)
 
         cy.log('**check on the movie list**')
         cy.getByCy('back').click()

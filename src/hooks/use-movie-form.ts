@@ -6,6 +6,7 @@ import type {ZodError} from 'zod'
 export function useMovieForm() {
   const [movieName, setMovieName] = useState('')
   const [movieYear, setMovieYear] = useState(2023)
+  const [movieRating, setMovieRating] = useState(0)
   const [validationError, setValidationError] = useState<ZodError | null>(null)
 
   const {status, mutate} = useAddMovie()
@@ -27,17 +28,20 @@ export function useMovieForm() {
       return
     }
 
-    mutate({name: movieName, year: movieYear})
+    mutate({name: movieName, year: movieYear, rating: movieRating})
     setMovieName('')
     setMovieYear(2023)
+    setMovieRating(0)
     setValidationError(null)
   }
 
   return {
     movieName,
     movieYear,
+    movieRating,
     setMovieName,
     setMovieYear,
+    setMovieRating,
     handleAddMovie,
     movieLoading,
     validationError, // for Zod key feature 4: expose the validation state

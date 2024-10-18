@@ -10,6 +10,8 @@ export default function MovieForm() {
     setMovieName,
     movieYear,
     setMovieYear,
+    movieRating,
+    setMovieRating,
     handleAddMovie,
     movieLoading,
     validationError,
@@ -33,6 +35,12 @@ export default function MovieForm() {
         value={movieYear}
         placeholder="Movie year"
         onChange={e => setMovieYear(Number(e.target.value))}
+      />
+      <MovieInput
+        type="number"
+        value={movieRating}
+        placeholder="Movie rating"
+        onChange={e => setMovieRating(Number(e.target.value))}
       />
       <SButton
         data-cy="add-movie-button"

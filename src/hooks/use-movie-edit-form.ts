@@ -7,6 +7,7 @@ import type {Movie} from 'src/consumer'
 export function useMovieEditForm(initialMovie: Movie) {
   const [movieName, setMovieName] = useState(initialMovie.name)
   const [movieYear, setMovieYear] = useState(initialMovie.year)
+  const [movieRating, setMovieRating] = useState(initialMovie.rating)
   const [validationError, setValidationError] = useState<ZodError | null>(null)
 
   const {status, mutate} = useUpdateMovie()
@@ -20,6 +21,7 @@ export function useMovieEditForm(initialMovie: Movie) {
     const result = UpdateMovieSchema.safeParse({
       name: movieName,
       year: movieYear,
+      rating: movieRating,
     })
 
     // Zod key feature 4: you can utilize
@@ -29,15 +31,22 @@ export function useMovieEditForm(initialMovie: Movie) {
       return
     }
 
-    mutate({id: initialMovie.id, name: movieName, year: movieYear})
+    mutate({
+      id: initialMovie.id,
+      name: movieName,
+      year: movieYear,
+      rating: movieRating,
+    })
     setValidationError(null)
   }
 
   return {
     movieName,
     movieYear,
+    movieRating,
     setMovieName,
     setMovieYear,
+    setMovieRating,
     handleUpdateMovie,
     movieLoading,
     validationError,

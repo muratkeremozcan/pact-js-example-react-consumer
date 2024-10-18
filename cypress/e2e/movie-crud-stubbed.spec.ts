@@ -2,10 +2,14 @@ import {generateMovie} from '@support/factories'
 import {editMovie} from '@support/helpers/edit-movie'
 
 describe('movie crud e2e', () => {
-  const {name, year} = {name: 'Inception', year: 2010}
+  const {name, year, rating} = generateMovie()
   const id = 1
-  const movie = {id, name, year}
-  const {name: editedName, year: editedYear} = generateMovie()
+  const movie = {id, name, year, rating}
+  const {
+    name: editedName,
+    year: editedYear,
+    rating: editedRating,
+  } = generateMovie()
 
   it('should add a movie', () => {
     cy.intercept('GET', '**/movies', {body: []}).as('noMovies')
@@ -13,10 +17,12 @@ describe('movie crud e2e', () => {
     cy.wait('@noMovies')
 
     cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
-    cy.getByCy('movie-input-comp-number')
+    cy.get('[placeholder="Movie year"]')
       .clear()
       .type(`${year}{backspace}`, {delay: 0})
-
+    cy.get('[placeholder="Movie rating"]').clear().type(`${rating}`, {
+      delay: 0,
+    })
     cy.intercept('POST', '/movies', {
       body: {
         ...movie,
@@ -45,10 +51,11 @@ describe('movie crud e2e', () => {
         id: movie.id,
         name: editedName,
         year: editedYear,
+        rating: editedRating,
       },
     }).as('updateMovieById')
 
-    editMovie(editedName, editedYear)
+    editMovie(editedName, editedYear, editedRating)
 
     cy.wait('@updateMovieById')
   })
