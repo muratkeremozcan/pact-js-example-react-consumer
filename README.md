@@ -6,8 +6,17 @@
   - [Bi-directional contract testing details](#bi-directional-contract-testing-details)
 
 This repo is a mirror of
-[pact-js-consumer](https://github.com/muratkeremozcan/pact-js-example-consumer),
+[pact-js-consumer / Consumer service](https://github.com/muratkeremozcan/pact-js-example-consumer),
 but it includes a real react UI.
+
+Provider service: https://github.com/muratkeremozcan/pact-js-example-provider
+
+Consumer service: https://github.com/muratkeremozcan/pact-js-example-consumer
+
+React consumer app for bi-directional contract testing (this repo):
+https://github.com/muratkeremozcan/pact-js-example-react-consumer
+
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/lxvhm3whvq36023haozh.png)
 
 The Axios calls to the backend (`consumer.ts`) and the pact tests
 `consumer-contract.pacttest.ts` are 99% similar.
