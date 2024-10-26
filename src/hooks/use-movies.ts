@@ -7,7 +7,7 @@ import {
 import type {Movie} from '../consumer'
 import {
   getMovies,
-  addNewMovie,
+  addMovie,
   deleteMovieById,
   getMovieById,
   getMovieByName,
@@ -42,7 +42,7 @@ export const useAddMovie = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (movie: Omit<Movie, 'id'>) => addNewMovie(movie),
+    mutationFn: (movie: Omit<Movie, 'id'>) => addMovie(movie),
 
     // Invalidate cache when a new movie is added
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['movies']}),
