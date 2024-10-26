@@ -68,24 +68,13 @@ export const getMovieByName = (name: string): Promise<Movie | ErrorResponse> =>
     .catch(handleError)
 
 // Add a new movie (don't specify id)
-export const addNewMovie = async (
-  movieName: string,
-  movieYear: number,
-  movieRating: number,
-): Promise<Movie | ErrorResponse> => {
-  const data: Omit<Movie, 'id'> = {
-    name: movieName,
-    year: movieYear,
-    rating: movieRating,
-  }
-
-  const response = await axiosInstance
+export const addNewMovie = (
+  data: Partial<Omit<Movie, 'id'>>,
+): Promise<Movie | ErrorResponse> =>
+  axiosInstance
     .post('/movies', data, commonHeaders)
     .then(yieldData)
     .catch(handleError)
-
-  return response
-}
 
 // Delete a movie by ID
 export const deleteMovieById = (
@@ -96,21 +85,11 @@ export const deleteMovieById = (
     .then(yieldData)
     .catch(handleError)
 
-export const updateMovie = async (
+export const updateMovie = (
   id: number,
-  movieName: string,
-  movieYear: number,
-  movieRating: number,
-): Promise<Movie | ErrorResponse> => {
-  const data: Omit<Movie, 'id'> = {
-    name: movieName,
-    year: movieYear,
-    rating: movieRating,
-  }
-  const response = await axiosInstance
+  data: Partial<Omit<Movie, 'id'>>,
+): Promise<Movie | ErrorResponse> =>
+  axiosInstance
     .put(`/movies/${id}`, data, commonHeaders)
     .then(yieldData)
     .catch(handleError)
-
-  return response
-}
