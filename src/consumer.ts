@@ -68,7 +68,7 @@ export const getMovieByName = (name: string): Promise<Movie | ErrorResponse> =>
     .catch(handleError)
 
 // Add a new movie (don't specify id)
-export const addNewMovie = (
+export const addMovie = (
   data: Partial<Omit<Movie, 'id'>>,
 ): Promise<Movie | ErrorResponse> =>
   axiosInstance
