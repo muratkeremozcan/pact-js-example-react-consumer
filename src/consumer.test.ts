@@ -126,7 +126,7 @@ describe('Consumer API functions', () => {
   describe('addNewMovie', () => {
     // this is similar to its pacttest version
     it('should add a new movie', async () => {
-      const {name, year, rating}: Omit<Movie, 'id'> = {
+      const movie: Omit<Movie, 'id'> = {
         name: 'New movie',
         year: 1999,
         rating: 8.5,
@@ -134,25 +134,25 @@ describe('Consumer API functions', () => {
       // with pact we can keep the response generic
       // with nock it has to be concrete response
       nock(API_URL)
-        .post('/movies', {name, year, rating})
+        .post('/movies', movie)
         .reply(200, {
           status: 200,
           data: {
             id: 1,
-            name,
-            year,
-            rating,
+            name: movie.name,
+            year: movie.year,
+            rating: movie.rating,
           },
         })
 
-      const res = await addNewMovie(name, year, rating)
+      const res = await addNewMovie(movie)
       expect(res).toEqual({
         status: 200,
         data: {
           id: expect.any(Number),
-          name,
-          year,
-          rating,
+          name: movie.name,
+          year: movie.year,
+          rating: movie.rating,
         },
       })
     })
@@ -172,7 +172,7 @@ describe('Consumer API functions', () => {
       // in pact the provider state would be specified here
       nock(API_URL).post('/movies', movie).reply(409, errorRes)
 
-      const res = await addNewMovie(movie.name, movie.year, movie.rating)
+      const res = await addNewMovie(movie)
       expect(res).toEqual(errorRes)
     })
   })
@@ -193,12 +193,7 @@ describe('Consumer API functions', () => {
         .put(`/movies/${testId}`, updatedMovieData)
         .reply(200, {status: 200, movie: EXPECTED_BODY})
 
-      const res = await updateMovie(
-        testId,
-        updatedMovieData.name,
-        updatedMovieData.year,
-        updatedMovieData.rating,
-      )
+      const res = await updateMovie(testId, updatedMovieData)
 
       expect(res).toEqual({status: 200, movie: EXPECTED_BODY})
     })
@@ -218,12 +213,7 @@ describe('Consumer API functions', () => {
         .put(`/movies/${testId}`, updatedMovieData)
         .reply(404, errorRes)
 
-      const res = await updateMovie(
-        testId,
-        updatedMovieData.name,
-        updatedMovieData.year,
-        updatedMovieData.rating,
-      )
+      const res = await updateMovie(testId, updatedMovieData)
 
       expect(res).toEqual(errorRes)
     })

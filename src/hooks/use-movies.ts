@@ -42,8 +42,7 @@ export const useAddMovie = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (movie: Omit<Movie, 'id'>) =>
-      addNewMovie(movie.name, movie.year, movie.rating),
+    mutationFn: (movie: Omit<Movie, 'id'>) => addNewMovie(movie),
 
     // Invalidate cache when a new movie is added
     onSuccess: () => queryClient.invalidateQueries({queryKey: ['movies']}),
@@ -53,18 +52,15 @@ export const useAddMovie = () => {
 export const useUpdateMovie = () => {
   const queryClient = useQueryClient()
 
+  // note: react query expects a single argument for the mutationFn
   return useMutation({
     mutationFn: ({
       id,
-      name,
-      year,
-      rating,
+      movie,
     }: {
       id: number
-      name: string
-      year: number
-      rating: number
-    }) => updateMovie(id, name, year, rating),
+      movie: Partial<Omit<Movie, 'id'>>
+    }) => updateMovie(id, movie),
     // handles both error and success scenarios
     onSettled: () => queryClient.invalidateQueries({queryKey: ['movies']}),
     // Optional: Handle errors globally if needed

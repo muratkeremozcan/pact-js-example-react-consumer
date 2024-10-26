@@ -33,9 +33,11 @@ export function useMovieEditForm(initialMovie: Movie) {
 
     mutate({
       id: initialMovie.id,
-      name: movieName,
-      year: movieYear,
-      rating: movieRating,
+      movie: {
+        name: movieName,
+        year: movieYear,
+        rating: movieRating,
+      },
     })
     setValidationError(null)
   }

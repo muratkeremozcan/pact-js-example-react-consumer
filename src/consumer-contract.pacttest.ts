@@ -187,7 +187,7 @@ describe('Movies API', () => {
 
   describe('When a POST request is made to /movies', () => {
     it('should add a new movie', async () => {
-      const {name, year, rating}: Omit<Movie, 'id'> = {
+      const movie: Omit<Movie, 'id'> = {
         name: 'New movie',
         year: 1999,
         rating: 8.5,
@@ -197,30 +197,30 @@ describe('Movies API', () => {
         .addInteraction()
         .given('No movies exist')
         .uponReceiving('a request to add a new movie')
-        .withRequest('POST', '/movies', setJsonBody({name, year, rating}))
+        .withRequest('POST', '/movies', setJsonBody(movie))
         .willRespondWith(
           200,
           setJsonBody({
             status: 200,
             data: {
               id: integer(), // if the example value is omitted, a random number is used
-              name: string(name),
-              year: integer(year),
-              rating: decimal(rating),
+              name: string(movie.name),
+              year: integer(movie.year),
+              rating: decimal(movie.rating),
             },
           }),
         )
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await addNewMovie(name, year, rating)
+          const res = await addNewMovie(movie)
           expect(res).toEqual({
             status: 200,
             data: {
               id: expect.any(Number),
-              name,
-              year,
-              rating,
+              name: movie.name,
+              year: movie.year,
+              rating: movie.rating,
             },
           })
         })
@@ -250,7 +250,7 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await addNewMovie(movie.name, movie.year, movie.rating)
+          const res = await addNewMovie(movie)
           expect(res).toEqual(errorRes)
         })
     })
@@ -259,7 +259,11 @@ describe('Movies API', () => {
   describe('When a PUT request is made to a specific movie ID', () => {
     it('should update an existing movie', async () => {
       const testId = 99
-      const updatedMovieData = {name: 'Updated movie', year: 2000, rating: 8.5}
+      const updatedMovieData = {
+        name: 'Updated movie',
+        year: 2000,
+        rating: 8.5,
+      }
 
       const [stateName, stateParams] = createProviderState({
         name: 'Has a movie with a specific ID',
@@ -287,12 +291,7 @@ describe('Movies API', () => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
 
-          const res = await updateMovie(
-            testId,
-            updatedMovieData.name,
-            updatedMovieData.year,
-            updatedMovieData.rating,
-          )
+          const res = await updateMovie(testId, updatedMovieData)
 
           expect(res).toEqual({
             status: 200,
