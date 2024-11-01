@@ -1,6 +1,15 @@
 import type {AxiosResponse, AxiosError} from 'axios'
 import axios from 'axios'
 
+import type {
+  ConflictMovieResponse,
+  CreateMovieResponse,
+  DeleteMovieResponse,
+  GetMovieResponse,
+  MovieNotFoundResponse,
+  UpdateMovieResponse,
+} from './provider-schema/movie-types'
+
 const API_URL = import.meta.env.VITE_API_URL
 
 // Movie type from the provider, in the real world this would come from a published package
@@ -11,16 +20,9 @@ export type Movie = {
   rating: number
 }
 
-// Error response type
 export type ErrorResponse = {
   error: string
 }
-
-// Success response type
-export type SuccessResponse = {
-  message: string
-}
-
 // baseURL in axiosInstance: Axios uses a fixed base URL for all requests,
 // and Nock must intercept that exact URL for the tests to work
 const axiosInstance = axios.create({
@@ -51,44 +53,49 @@ const commonHeaders = {
 }
 
 // Fetch all movies
-export const getMovies = (): Promise<Movie[] | ErrorResponse> =>
+export const getMovies = (): Promise<GetMovieResponse> =>
   axiosInstance.get('/movies', commonHeaders).then(yieldData).catch(handleError)
 
 // Fetch a single movie by ID
-export const getMovieById = (id: number): Promise<Movie | ErrorResponse> =>
+export const getMovieById = (
+  id: number,
+): Promise<GetMovieResponse | MovieNotFoundResponse> =>
   axiosInstance
     .get(`/movies/${id}`, commonHeaders)
     .then(yieldData)
     .catch(handleError)
 
-export const getMovieByName = (name: string): Promise<Movie | ErrorResponse> =>
+export const getMovieByName = (
+  name: string,
+): Promise<GetMovieResponse | MovieNotFoundResponse> =>
   axiosInstance
     .get(`/movies?name=${name}`, commonHeaders)
     .then(yieldData)
     .catch(handleError)
 
-// Add a new movie (don't specify id)
+// Create a new movie
 export const addMovie = (
-  data: Partial<Omit<Movie, 'id'>>,
-): Promise<Movie | ErrorResponse> =>
+  data: Omit<Movie, 'id'>,
+): Promise<CreateMovieResponse | ConflictMovieResponse> =>
   axiosInstance
     .post('/movies', data, commonHeaders)
     .then(yieldData)
     .catch(handleError)
 
-// Delete a movie by ID
+// Delete movie by ID
 export const deleteMovieById = (
   id: number,
-): Promise<SuccessResponse | ErrorResponse> =>
+): Promise<DeleteMovieResponse | MovieNotFoundResponse> =>
   axiosInstance
     .delete(`/movies/${id}`, commonHeaders)
     .then(yieldData)
     .catch(handleError)
 
+// Update movie by ID
 export const updateMovie = (
   id: number,
   data: Partial<Omit<Movie, 'id'>>,
-): Promise<Movie | ErrorResponse> =>
+): Promise<UpdateMovieResponse | MovieNotFoundResponse> =>
   axiosInstance
     .put(`/movies/${id}`, data, commonHeaders)
     .then(yieldData)

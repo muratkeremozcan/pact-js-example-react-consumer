@@ -65,7 +65,6 @@ describe('Movies API', () => {
           setApiUrl(mockServer.url)
           const res = await getMovies()
           // 4) Verify the consumer test and generate the contract
-          // @ts-expect-error ts should chill
           expect(res.data).toEqual([EXPECTED_BODY])
         })
     })
@@ -85,7 +84,6 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
           const res = await getMovies()
-          // @ts-expect-error ts should chill
           expect(res.data).toEqual(EXPECTED_BODY)
         })
     })
@@ -126,7 +124,6 @@ describe('Movies API', () => {
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
           const res = await getMovieByName(EXPECTED_BODY.name)
-          // @ts-expect-error ts should chill
           expect(res.data).toEqual(EXPECTED_BODY)
         })
     })
@@ -179,7 +176,6 @@ describe('Movies API', () => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
           const res = await getMovieById(testId)
-          // @ts-expect-error ts should chill
           expect(res.data).toEqual(EXPECTED_BODY)
         })
     })
@@ -321,7 +317,7 @@ describe('Movies API', () => {
         .given(...state)
         .uponReceiving('a request to delete a movie that exists')
         .withRequest('DELETE', `/movies/${testId}`)
-        .willRespondWith(200, setJsonBody({message, status: 200}))
+        .willRespondWith(200, setJsonBody({status: 200, message}))
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
@@ -344,7 +340,6 @@ describe('Movies API', () => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
           const res = await deleteMovieById(testId)
-          // @ts-expect-error ts should chill
           expect(res.error).toEqual(error)
         })
     })

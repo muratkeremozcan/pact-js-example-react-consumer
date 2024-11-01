@@ -58,7 +58,6 @@ describe('Consumer API functions', () => {
         .reply(200, {status: 200, data: [EXPECTED_BODY]})
 
       const res = await getMovies()
-      // @ts-expect-error ts should chill
       expect(res.data).toEqual([EXPECTED_BODY])
     })
 
@@ -86,7 +85,6 @@ describe('Consumer API functions', () => {
         .reply(200, {status: 200, data: EXPECTED_BODY})
 
       const res = await getMovieByName(EXPECTED_BODY.name)
-      // @ts-expect-error ts should chill
       expect(res.data).toEqual(EXPECTED_BODY)
     })
   })
@@ -109,7 +107,6 @@ describe('Consumer API functions', () => {
         .reply(200, {status: 200, data: EXPECTED_BODY})
 
       const res = await getMovieById(1)
-      // @ts-expect-error ts should chill
       expect(res.data).toEqual(EXPECTED_BODY)
     })
 
@@ -216,7 +213,6 @@ describe('Consumer API functions', () => {
         .reply(200, {message, status: 200})
 
       const res = await deleteMovieById(testId)
-      // @ts-expect-error ts should chill
       expect(res.message).toEqual(message)
     })
 
@@ -230,7 +226,6 @@ describe('Consumer API functions', () => {
         .reply(404, {message, status: 404})
 
       const res = await deleteMovieById(testId)
-      // @ts-expect-error ts should chill
       expect(res.message).toEqual(message)
     })
   })
