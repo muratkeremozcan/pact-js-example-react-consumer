@@ -12,6 +12,10 @@ import {
   updateMovie,
 } from './consumer'
 import type {Movie, ErrorResponse} from './consumer'
+import type {
+  DeleteMovieResponse,
+  GetMovieResponse,
+} from './provider-schema/movie-types'
 
 // @ts-expect-error okay
 const API_URL = import.meta.env.VITE_API_URL
@@ -58,7 +62,6 @@ describe('Consumer API functions', () => {
         .reply(200, {status: 200, data: [EXPECTED_BODY]})
 
       const res = await getMovies()
-      // @ts-expect-error ts should chill
       expect(res.data).toEqual([EXPECTED_BODY])
     })
 
@@ -85,8 +88,7 @@ describe('Consumer API functions', () => {
         .get(`/movies?name=${EXPECTED_BODY.name}`)
         .reply(200, {status: 200, data: EXPECTED_BODY})
 
-      const res = await getMovieByName(EXPECTED_BODY.name)
-      // @ts-expect-error ts should chill
+      const res = (await getMovieByName(EXPECTED_BODY.name)) as GetMovieResponse
       expect(res.data).toEqual(EXPECTED_BODY)
     })
   })
@@ -108,8 +110,7 @@ describe('Consumer API functions', () => {
         .get(`/movies/${EXPECTED_BODY.id}`)
         .reply(200, {status: 200, data: EXPECTED_BODY})
 
-      const res = await getMovieById(1)
-      // @ts-expect-error ts should chill
+      const res = (await getMovieById(1)) as GetMovieResponse
       expect(res.data).toEqual(EXPECTED_BODY)
     })
 
@@ -215,8 +216,7 @@ describe('Consumer API functions', () => {
         .delete(`/movies/${testId}`)
         .reply(200, {message, status: 200})
 
-      const res = await deleteMovieById(testId)
-      // @ts-expect-error ts should chill
+      const res = (await deleteMovieById(testId)) as DeleteMovieResponse
       expect(res.message).toEqual(message)
     })
 
@@ -229,8 +229,7 @@ describe('Consumer API functions', () => {
         .delete(`/movies/${testId}`)
         .reply(404, {message, status: 404})
 
-      const res = await deleteMovieById(testId)
-      // @ts-expect-error ts should chill
+      const res = (await deleteMovieById(testId)) as DeleteMovieResponse
       expect(res.message).toEqual(message)
     })
   })
