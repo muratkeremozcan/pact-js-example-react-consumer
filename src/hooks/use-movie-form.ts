@@ -19,6 +19,7 @@ export function useMovieForm() {
     const result = CreateMovieSchema.safeParse({
       name: movieName,
       year: movieYear,
+      rating: movieRating,
     })
 
     // Zod key feature 4: you can utilize

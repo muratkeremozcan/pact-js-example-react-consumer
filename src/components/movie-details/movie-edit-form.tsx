@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import {useMovieEditForm} from '@hooks/use-movie-edit-form'
 import {SButton} from '@styles/styled-components'
 import type {Movie} from 'src/consumer'
-import ValidationErrorDisplay from '@components/movie-form/validation-error-display'
+import ValidationErrorDisplay from '@components/validation-error-display'
 import {MovieInput} from '@components/movie-form'
 
 type MovieEditFormProps = Readonly<{
