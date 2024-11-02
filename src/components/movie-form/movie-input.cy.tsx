@@ -21,7 +21,7 @@ describe('<MovieInput />', () => {
       .should('have.attr', 'placeholder', 'place holder')
     cy.getByCy('movie-input-comp-text').type('a')
 
-    // difference ways of checking the call
+    // different ways of checking the call
     // 1
     cy.get('@onChange')
       .tap()

@@ -34,6 +34,8 @@ export const useMovie = (identifier: number | string) =>
         : getMovieByName(String(identifier))
     },
     enabled: !!identifier, // Only enable the query when an identifier is set
+    // By default, React Query will execute the query as soon as the component mounts
+    // However, in this case, you only want to fetch data when there’s a valid identifier (either a non-empty string or a number)
     staleTime: 5000,
     retry: 2,
   })
