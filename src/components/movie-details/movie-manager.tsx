@@ -3,7 +3,7 @@ import type {Movie} from 'src/consumer'
 import {useState} from 'react'
 import MovieEditForm from './movie-edit-form'
 import {SButton} from '@styles/styled-components'
-import MovieInfo from './movie-info'
+import {MovieInfo} from '@components/movie-item'
 
 export type MovieManagerProps = {
   readonly movie: Movie

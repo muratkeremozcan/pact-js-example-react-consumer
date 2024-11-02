@@ -1,5 +1,5 @@
 import MovieForm from '@components/movie-form'
-import MovieDetails from '@components/movie-item/movie-details'
+import MovieDetails from '@components/movie-details'
 import MovieList from '@components/movie-list'
 import {
   BrowserRouter,

@@ -1,4 +1,4 @@
-import MovieManager from './movie-info'
+import MovieInfo from './movie-info'
 
 describe('<MovieInfo />', () => {
   it('should', () => {
@@ -6,15 +6,10 @@ describe('<MovieInfo />', () => {
     const name = 'Inception'
     const year = 2010
     const rating = 8.5
-    const props = {
-      movie: {
-        id,
-        name,
-        year,
-        rating,
-      },
-    }
-    cy.mount(<MovieManager {...props} />)
+    const movie = {id, name, year, rating}
+    // const props = {movie}
+    // cy.mount(<MovieInfo {...props} />)
+    cy.mount(<MovieInfo movie={movie} />)
 
     cy.contains(id)
     cy.contains(name)
