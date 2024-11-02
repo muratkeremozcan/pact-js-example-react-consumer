@@ -56,8 +56,8 @@ describe('<MovieForm />', () => {
 
     fillYear(1899)
     cy.getByCy('add-movie-button').click()
+    cy.getByCy('validation-error').should('have.length', 2)
 
-    cy.intercept('POST', '/movies', {statusCode: 200})
     fillYear(2024)
     fillName('4')
     cy.getByCy('add-movie-button').click()
