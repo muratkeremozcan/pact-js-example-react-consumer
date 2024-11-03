@@ -7,7 +7,7 @@ import ErrorComponent from '@components/error-component'
 import AppRoutes from './App-routes'
 import type {Movie} from './consumer'
 
-function App() {
+export default function App() {
   const {data} = useMovies()
   const moviesData = (data as unknown as {data: Movie[]}).data
 
@@ -24,5 +24,3 @@ function App() {
     </ErrorBoundary>
   )
 }
-
-export default App
