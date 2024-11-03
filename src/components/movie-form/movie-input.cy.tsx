@@ -1,3 +1,4 @@
+import 'cypress-map'
 import {generateMovie} from '../../../cypress/support/factories'
 import MovieInput from './movie-input'
 import spok from 'cy-spok'
@@ -19,12 +20,12 @@ describe('<MovieInput />', () => {
     cy.getByCy('movie-input-comp-text')
       .should('have.value', name)
       .should('have.attr', 'placeholder', 'place holder')
+
     cy.getByCy('movie-input-comp-text').type('a')
 
     // different ways of checking the call
     // 1
     cy.get('@onChange')
-      .tap()
       .should('have.been.calledOnce')
       .its('firstCall.args.0.nativeEvent.data')
       .should('eq', 'a')
