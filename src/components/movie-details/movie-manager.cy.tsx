@@ -16,6 +16,7 @@ describe('<MovieManager />', () => {
       },
       onDelete: cy.stub().as('onDelete'),
     }
+
     cy.wrappedMount(<MovieManager {...props} />)
 
     cy.getByCy('delete-movie').click()

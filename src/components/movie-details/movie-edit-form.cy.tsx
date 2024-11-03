@@ -4,10 +4,9 @@ import {generateMovie} from '@cypress/support/factories'
 import spok from 'cy-spok'
 
 describe('<MovieEditForm />', () => {
+  const id = 7
+  const movie: Movie = {id, ...generateMovie()}
   it('should cancel and submit a movie update', () => {
-    const id = 7
-    const movie: Movie = {id, ...generateMovie()}
-
     cy.intercept('PUT', `/movies/${id}`, {status: 200}).as('updateMovie')
     cy.wrappedMount(
       <MovieEditForm movie={movie} onCancel={cy.stub().as('onCancel')} />,

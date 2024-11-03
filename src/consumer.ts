@@ -1,6 +1,5 @@
 import type {AxiosResponse, AxiosError} from 'axios'
 import axios from 'axios'
-
 import type {
   ConflictMovieResponse,
   CreateMovieResponse,

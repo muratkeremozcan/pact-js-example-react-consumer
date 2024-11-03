@@ -10,16 +10,16 @@ type MovieInputProps = Readonly<{
 export default function MovieInput({
   type,
   value,
-  placeholder,
   onChange,
+  placeholder,
 }: MovieInputProps) {
   return (
     <SInput
       data-cy={`movie-input-comp-${type}`}
       type={type}
-      placeholder={placeholder}
       value={value}
       onChange={onChange}
+      placeholder={placeholder}
     />
   )
 }
