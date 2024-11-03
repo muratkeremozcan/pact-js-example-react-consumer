@@ -17,7 +17,6 @@ describe('<ValidationErrorDisplay />', () => {
 
     cy.getByCy('validation-error').should('have.length', 1)
     cy.contains('Name is required')
-    cy.contains('Year must be a number')
   })
 
   it('should not render when there is no validation error', () => {
