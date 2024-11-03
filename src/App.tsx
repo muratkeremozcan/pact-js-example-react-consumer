@@ -12,7 +12,7 @@ function App() {
   const moviesData = (data as unknown as {data: Movie[]}).data
 
   const deleteMovieMutation = useDeleteMovie()
-  const handleDeleteMovie = (id: number) => deleteMovieMutation.mutate(id)
+  const handleDeleteMovie = deleteMovieMutation.mutate
 
   return (
     <ErrorBoundary fallback={<ErrorComponent />}>
