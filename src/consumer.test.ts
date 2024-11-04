@@ -47,22 +47,27 @@ describe('Consumer API functions', () => {
     cleanAll()
   })
 
+  const movieWithId: Movie = {
+    id: 1,
+    name: 'My movie',
+    year: 1999,
+    rating: 8.5,
+  }
+  const movieWithoutId: Omit<Movie, 'id'> = {
+    name: 'New movie',
+    year: 1999,
+    rating: 8.5,
+  }
+
   describe('getMovies, getMovieByName', () => {
     // this is 1:1 with the pacttest version
     it('should return all movies', async () => {
-      const EXPECTED_BODY: Movie = {
-        id: 1,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       nock(API_URL)
         .get('/movies')
-        .reply(200, {status: 200, data: [EXPECTED_BODY]})
+        .reply(200, {status: 200, data: [movieWithId]})
 
       const res = await getMovies()
-      expect(res.data).toEqual([EXPECTED_BODY])
+      expect(res.data).toEqual([movieWithId])
     })
 
     // a key difference in nock vs pact is covering the error cases in our code
@@ -77,19 +82,12 @@ describe('Consumer API functions', () => {
     })
 
     it('should return a specific movie by name', async () => {
-      const EXPECTED_BODY: Movie = {
-        id: 1,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       nock(API_URL)
-        .get(`/movies?name=${EXPECTED_BODY.name}`)
-        .reply(200, {status: 200, data: EXPECTED_BODY})
+        .get(`/movies?name=${movieWithId.name}`)
+        .reply(200, {status: 200, data: movieWithId})
 
-      const res = (await getMovieByName(EXPECTED_BODY.name)) as GetMovieResponse
-      expect(res.data).toEqual(EXPECTED_BODY)
+      const res = (await getMovieByName(movieWithId.name)) as GetMovieResponse
+      expect(res.data).toEqual(movieWithId)
     })
   })
 
@@ -98,20 +96,13 @@ describe('Consumer API functions', () => {
     // a key difference in pact is using provider states, to fully simulate the provider side
     // in nock, we are not concerned with running our tests against the provider...
     it('should return a specific movie by id', async () => {
-      const EXPECTED_BODY: Movie = {
-        id: 1,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       // in pact the provider state would be specified here
       nock(API_URL)
-        .get(`/movies/${EXPECTED_BODY.id}`)
-        .reply(200, {status: 200, data: EXPECTED_BODY})
+        .get(`/movies/${movieWithId.id}`)
+        .reply(200, {status: 200, data: movieWithId})
 
       const res = (await getMovieById(1)) as GetMovieResponse
-      expect(res.data).toEqual(EXPECTED_BODY)
+      expect(res.data).toEqual(movieWithId)
     })
 
     it('should handle errors when movie not found', async () => {
@@ -125,31 +116,26 @@ describe('Consumer API functions', () => {
   })
 
   describe('addMovie', () => {
-    const movie: Omit<Movie, 'id'> = {
-      name: 'New movie',
-      year: 1999,
-      rating: 8.5,
-    }
     // this is similar to its pacttest version
     it('should add a new movie', async () => {
       // with pact we can keep the response generic
       // with nock it has to be concrete response
       nock(API_URL)
-        .post('/movies', movie)
+        .post('/movies', movieWithoutId)
         .reply(200, {
           status: 200,
           data: {
             id: 1,
-            ...movie,
+            ...movieWithoutId,
           },
         })
 
-      const res = await addMovie(movie)
+      const res = await addMovie(movieWithoutId)
       expect(res).toEqual({
         status: 200,
         data: {
           id: expect.any(Number),
-          ...movie,
+          ...movieWithoutId,
         },
       })
     })
@@ -158,13 +144,13 @@ describe('Consumer API functions', () => {
     // a key difference in pact is using provider states, to fully simulate the provider side
     it('should not add a movie that already exists', async () => {
       const errorRes: ErrorResponse = {
-        error: `Movie ${movie.name} already exists`,
+        error: `Movie ${movieWithoutId.name} already exists`,
       }
 
       // in pact the provider state would be specified here
-      nock(API_URL).post('/movies', movie).reply(409, errorRes)
+      nock(API_URL).post('/movies', movieWithoutId).reply(409, errorRes)
 
-      const res = await addMovie(movie)
+      const res = await addMovie(movieWithoutId)
       expect(res).toEqual(errorRes)
     })
   })
