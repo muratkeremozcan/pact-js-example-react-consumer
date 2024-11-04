@@ -36,20 +36,31 @@ const pact = new PactV4({
 })
 
 describe('Movies API', () => {
+  const movieWithId: Movie = {
+    id: 1,
+    name: 'My movie',
+    year: 1999,
+    rating: 8.5,
+  }
+  const testId = 100
+  const movieWithTestId100: Movie = {
+    id: testId,
+    name: 'My movie',
+    year: 1999,
+    rating: 8.5,
+  }
+  const movieWithoutId: Omit<Movie, 'id'> = {
+    name: 'New movie',
+    year: 1999,
+    rating: 8.5,
+  }
+
   describe('When a GET request is made to /movies', () => {
     it('should return all movies', async () => {
-      // loose matching: the consumer should care more about the shape of the data
-      const EXPECTED_BODY: Movie = {
-        id: 1,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       // we want to ensure at least 1 movie is returned in the array of movies
       const [stateName, stateParams] = createProviderState({
         name: 'An existing movie exists',
-        params: EXPECTED_BODY,
+        params: movieWithId,
       })
 
       // 2) Register the consumer's expectations against the (mock) provider
@@ -62,7 +73,7 @@ describe('Movies API', () => {
           200,
           setJsonBody({
             status: 200,
-            data: eachLike(EXPECTED_BODY),
+            data: eachLike(movieWithId),
           }),
         )
         .executeTest(async (mockServer: V3MockServer) => {
@@ -70,41 +81,31 @@ describe('Movies API', () => {
           setApiUrl(mockServer.url)
           const res = await getMovies()
           // 4) Verify the consumer test and generate the contract
-          expect(res.data).toEqual([EXPECTED_BODY])
+          expect(res.data).toEqual([movieWithId])
         })
     })
 
     it('should return empty when no movies exist', async () => {
-      const EXPECTED_BODY: Movie[] = []
+      const noMovies: Movie[] = []
 
       await pact
         .addInteraction()
         .given('No movies exist')
         .uponReceiving('a request to get all movies')
         .withRequest('GET', '/movies')
-        .willRespondWith(
-          200,
-          setJsonBody({status: 200, data: like(EXPECTED_BODY)}),
-        )
+        .willRespondWith(200, setJsonBody({status: 200, data: like(noMovies)}))
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
           const res = await getMovies()
-          expect(res.data).toEqual(EXPECTED_BODY)
+          expect(res.data).toEqual(noMovies)
         })
     })
 
     it('should return a movie by name when requested with query parameters', async () => {
-      const EXPECTED_BODY: Movie = {
-        id: 1,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       // we want to ensure at least 1 movie is returned in the array of movies
       const [stateName, stateParams] = createProviderState({
         name: 'An existing movie exists',
-        params: EXPECTED_BODY,
+        params: movieWithId,
       })
 
       await pact
@@ -112,26 +113,26 @@ describe('Movies API', () => {
         .given(stateName, stateParams)
         .uponReceiving('a request to get a movie by name')
         .withRequest('GET', '/movies', builder => {
-          builder.query({name: EXPECTED_BODY.name}) // Use query to specify query parameters
+          builder.query({name: movieWithId.name}) // Use query to specify query parameters
         })
         .willRespondWith(
           200,
           setJsonBody({
             status: 200,
             data: {
-              id: integer(EXPECTED_BODY.id),
-              name: string(EXPECTED_BODY.name),
-              year: integer(EXPECTED_BODY.year),
-              rating: decimal(EXPECTED_BODY.rating),
+              id: integer(movieWithId.id),
+              name: string(movieWithId.name),
+              year: integer(movieWithId.year),
+              rating: decimal(movieWithId.rating),
             },
           }),
         )
         .executeTest(async (mockServer: V3MockServer) => {
           setApiUrl(mockServer.url)
           const res = (await getMovieByName(
-            EXPECTED_BODY.name,
+            movieWithId.name,
           )) as GetMovieResponse
-          expect(res.data).toEqual(EXPECTED_BODY)
+          expect(res.data).toEqual(movieWithId)
         })
     })
   })
@@ -149,14 +150,6 @@ describe('Movies API', () => {
   // and conditions are met, allowing for accurate verification of the consumer's expectations.
   describe('When a GET request is made to a specific movie ID', () => {
     it('should return a specific movie', async () => {
-      const testId = 100
-      const EXPECTED_BODY: Movie = {
-        id: testId,
-        name: 'My movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       const [stateName, stateParams] = createProviderState({
         name: 'Has a movie with a specific ID',
         params: {id: testId},
@@ -173,9 +166,9 @@ describe('Movies API', () => {
             status: 200,
             data: {
               id: integer(testId),
-              name: string(EXPECTED_BODY.name),
-              year: integer(EXPECTED_BODY.year),
-              rating: decimal(EXPECTED_BODY.rating),
+              name: string(movieWithTestId100.name),
+              year: integer(movieWithTestId100.year),
+              rating: decimal(movieWithTestId100.rating),
             },
           }),
         )
@@ -183,77 +176,66 @@ describe('Movies API', () => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
           const res = (await getMovieById(testId)) as GetMovieResponse
-          expect(res.data).toEqual(EXPECTED_BODY)
+          expect(res.data).toEqual(movieWithTestId100)
         })
     })
   })
 
   describe('When a POST request is made to /movies', () => {
     it('should add a new movie', async () => {
-      const movie: Omit<Movie, 'id'> = {
-        name: 'New movie',
-        year: 1999,
-        rating: 8.5,
-      }
-
       await pact
         .addInteraction()
         .given('No movies exist')
         .uponReceiving('a request to add a new movie')
-        .withRequest('POST', '/movies', setJsonBody(movie))
+        .withRequest('POST', '/movies', setJsonBody(movieWithoutId))
         .willRespondWith(
           200,
           setJsonBody({
             status: 200,
             data: {
               id: integer(), // if the example value is omitted, a random number is used
-              name: string(movie.name),
-              year: integer(movie.year),
-              rating: decimal(movie.rating),
+              name: string(movieWithoutId.name),
+              year: integer(movieWithoutId.year),
+              rating: decimal(movieWithoutId.rating),
             },
           }),
         )
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await addMovie(movie)
+          const res = await addMovie(movieWithoutId)
           expect(res).toEqual({
             status: 200,
             data: {
               id: expect.any(Number),
-              name: movie.name,
-              year: movie.year,
-              rating: movie.rating,
+              name: movieWithoutId.name,
+              year: movieWithoutId.year,
+              rating: movieWithoutId.rating,
             },
           })
         })
     })
 
     it('should not add a movie that already exists', async () => {
-      const movie: Omit<Movie, 'id'> = {
-        name: 'My existing movie',
-        year: 2001,
-        rating: 8.5,
-      }
       const errorRes: ErrorResponse = {
-        error: `Movie ${movie.name} already exists`,
+        error: `Movie ${movieWithoutId.name} already exists`,
       }
 
       const [stateName, stateParams] = createProviderState({
         name: 'An existing movie exists',
-        params: movie,
+        params: movieWithoutId,
       })
 
       await pact
         .addInteraction()
         .given(stateName, stateParams)
         .uponReceiving('a request to the existing movie')
-        .withRequest('POST', '/movies', setJsonBody({...movie}))
+        .withRequest('POST', '/movies', setJsonBody({...movieWithoutId}))
         .willRespondWith(409, setJsonBody(errorRes))
         .executeTest(async (mockServer: V3MockServer) => {
           // Override the API URL to point to the mock server
           setApiUrl(mockServer.url)
-          const res = await addMovie(movie)
+          const res = await addMovie(movieWithoutId)
           expect(res).toEqual(errorRes)
         })
     })
@@ -311,7 +293,7 @@ describe('Movies API', () => {
 
   describe('When a DELETE request is made to /movies', () => {
     it('should delete an existing movie successfully', async () => {
-      const testId = 100
+      const testId = 200
       const message = `Movie ${testId} has been deleted`
 
       const state = createProviderState({
