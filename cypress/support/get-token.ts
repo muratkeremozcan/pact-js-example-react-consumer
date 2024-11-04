@@ -1,7 +1,7 @@
 import 'cypress-data-session'
 const getToken = () =>
   cy
-    .api({
+    .request({
       method: 'POST',
       url: `${Cypress.env('VITE_API_URL')}/auth/fake-token`,
     })
