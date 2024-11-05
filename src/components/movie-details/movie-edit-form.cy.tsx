@@ -8,6 +8,7 @@ describe('<MovieEditForm />', () => {
   const movie: Movie = {id, ...generateMovie()}
   it('should cancel and submit a movie update', () => {
     cy.intercept('PUT', `/movies/${id}`, {status: 200}).as('updateMovie')
+
     cy.wrappedMount(
       <MovieEditForm movie={movie} onCancel={cy.stub().as('onCancel')} />,
     )
@@ -16,6 +17,7 @@ describe('<MovieEditForm />', () => {
     cy.get('@onCancel').should('have.been.calledOnce')
 
     cy.getByCy('update-movie').click()
+
     cy.wait('@updateMovie')
       .its('request.body')
       .should(

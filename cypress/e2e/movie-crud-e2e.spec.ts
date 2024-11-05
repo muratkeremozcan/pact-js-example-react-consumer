@@ -1,5 +1,6 @@
 import '@cypress/skip-test/support'
 import {generateMovie} from '@support/factories'
+import {addMovie} from '@support/helpers/add-movie'
 import {editMovie} from '@support/helpers/edit-movie'
 import spok from 'cy-spok'
 
@@ -26,9 +27,8 @@ describe('movie crud e2e', () => {
 
   it('should add and delete a movie from movie list', () => {
     cy.log('**add a movie**')
-    const {name, year} = generateMovie()
-    cy.getByCy('movie-input-comp-text').type(name)
-    cy.get('[placeholder="Movie rating"]').clear().type(`${year}{backspace}`)
+    const {name, year, rating} = generateMovie()
+    addMovie(name, year, rating)
 
     cy.intercept('POST', '/movies').as('addMovie')
     cy.getByCy('add-movie-button').click()
@@ -42,6 +42,7 @@ describe('movie crud e2e', () => {
               id: spok.number,
               name,
               year: spok.number,
+              rating: spok.number,
             },
           },
         }),
@@ -51,6 +52,13 @@ describe('movie crud e2e', () => {
     cy.intercept('DELETE', '/movies/*').as('deleteMovieById')
     cy.getByCy(`delete-movie-${name}`).click()
     cy.wait('@deleteMovieById')
+      .its('response.body')
+      .should(
+        spok({
+          status: 200,
+          message: spok.string,
+        }),
+      )
     cy.getByCy(`delete-movie-${name}`).should('not.exist')
   })
 

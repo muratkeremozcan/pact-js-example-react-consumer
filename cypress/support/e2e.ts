@@ -19,7 +19,7 @@ Cypress.Commands.add(
       cy.request({
         method: 'POST',
         url: `${baseUrl}/movies`,
-        body: body,
+        body,
         headers: commonHeaders(token),
         retryOnStatusCodeFailure: !allowedToFail,
         failOnStatusCode: !allowedToFail,

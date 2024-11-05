@@ -1,4 +1,5 @@
 import {generateMovie} from '@support/factories'
+import {addMovie} from '@support/helpers/add-movie'
 import {editMovie} from '@support/helpers/edit-movie'
 
 describe('movie crud e2e', () => {
@@ -16,33 +17,23 @@ describe('movie crud e2e', () => {
     cy.visit('/')
     cy.wait('@noMovies')
 
-    cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
-    cy.get('[placeholder="Movie year"]')
-      .clear()
-      .type(`${year}{backspace}`, {delay: 0})
-    cy.get('[placeholder="Movie rating"]').clear().type(`${rating}`, {
-      delay: 0,
-    })
-    cy.intercept('POST', '/movies', {
-      body: {
-        ...movie,
-      },
-    }).as('addMovie')
-    cy.intercept('GET', '**/movies', {body: [movie]}).as('getMovies')
+    addMovie(name, year, rating)
 
+    cy.intercept('POST', '/movies', {body: movie}).as('addMovie')
+    cy.intercept('GET', '**/movies', {body: {data: [movie]}}).as('getMovies')
     cy.getByCy('add-movie-button').click()
-    cy.wait('@getMovies')
     cy.wait('@addMovie')
+    cy.wait('@getMovies')
   })
 
   it('should edit a movie', () => {
     cy.intercept('GET', '**/movies', {body: {data: [movie]}}).as('getMovies')
     cy.intercept('GET', '**/movies/*', {body: {data: movie}}).as('getMovieById')
+
     cy.visit('/')
     cy.wait('@getMovies')
 
     cy.getByCy(`link-${id}`).click()
-
     cy.location('pathname').should('eq', `/movies/${id}`)
     cy.wait('@getMovieById').its('response.body.data').should('deep.eq', movie)
 
@@ -56,6 +47,7 @@ describe('movie crud e2e', () => {
     }).as('updateMovieById')
 
     editMovie(editedName, editedYear, editedRating)
+    cy.getByCy('movie-input-comp-text').should('have.attr', 'value', editedName)
 
     cy.wait('@updateMovieById')
   })
