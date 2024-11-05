@@ -6,7 +6,7 @@ export const editMovie = (
 ) => {
   cy.getByCy('edit-movie').click()
   cy.getByCy('movie-edit-form-comp').within(() => {
-    cy.getByCy('movie-input-comp-text').clear().type(editedName)
+    cy.get('[placeholder="Movie name"]').clear().type(editedName)
     cy.get('[placeholder="Movie rating"]')
       .clear()
       .type(`${editedYear}{backspace}`)

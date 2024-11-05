@@ -215,6 +215,7 @@ describe('Movies API', () => {
               name: movieWithoutId.name,
               year: movieWithoutId.year,
               rating: movieWithoutId.rating,
+              director: movieWithoutId.director,
             },
           })
         })
@@ -288,6 +289,7 @@ describe('Movies API', () => {
               name: updatedMovieData.name,
               year: updatedMovieData.year,
               rating: updatedMovieData.rating,
+              director: updatedMovieData.director,
             },
           })
         })

@@ -4,7 +4,7 @@ export const addMovie = (
   rating: number,
   director: string,
 ) => {
-  cy.getByCy('movie-input-comp-text').type(name, {delay: 0})
+  cy.get('[placeholder="Movie name"]').type(name, {delay: 0})
   cy.get('[placeholder="Movie year"]')
     .clear()
     .type(`${year}{backspace}`, {delay: 0})
