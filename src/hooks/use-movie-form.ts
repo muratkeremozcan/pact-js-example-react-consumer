@@ -7,6 +7,7 @@ export function useMovieForm() {
   const [movieName, setMovieName] = useState('')
   const [movieYear, setMovieYear] = useState(2023)
   const [movieRating, setMovieRating] = useState(0)
+  const [movieDirector, setMovieDirector] = useState('')
   const [validationError, setValidationError] = useState<ZodError | null>(null)
 
   const {status, mutate} = useAddMovie()
@@ -16,11 +17,13 @@ export function useMovieForm() {
   // Zod note: if you have a frontend, you can use the schema + safeParse there
   // in order to perform form validation before sending the data to the server
   const handleAddMovie = () => {
-    const result = CreateMovieSchema.safeParse({
+    const payload = {
       name: movieName,
       year: movieYear,
       rating: movieRating,
-    })
+      director: movieDirector,
+    }
+    const result = CreateMovieSchema.safeParse(payload)
 
     // Zod key feature 4: you can utilize
     // and expose the validation state to be used at a component
@@ -29,10 +32,13 @@ export function useMovieForm() {
       return
     }
 
-    mutate({name: movieName, year: movieYear, rating: movieRating})
+    mutate(payload)
+    // reset form after successful submission
     setMovieName('')
     setMovieYear(2023)
     setMovieRating(0)
+    setMovieDirector('')
+
     setValidationError(null)
   }
 
@@ -46,5 +52,7 @@ export function useMovieForm() {
     handleAddMovie,
     movieLoading,
     validationError, // for Zod key feature 4: expose the validation state
+    movieDirector,
+    setMovieDirector,
   }
 }

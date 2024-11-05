@@ -41,6 +41,7 @@ describe('Movies API', () => {
     name: 'My movie',
     year: 1999,
     rating: 8.5,
+    director: 'John Doe',
   }
   const testId = 100
   const movieWithTestId100: Movie = {
@@ -48,12 +49,21 @@ describe('Movies API', () => {
     name: 'My movie',
     year: 1999,
     rating: 8.5,
+    director: 'John Doe',
   }
   const movieWithoutId: Omit<Movie, 'id'> = {
     name: 'New movie',
     year: 1999,
     rating: 8.5,
+    director: 'John Doe',
   }
+
+  const propMatcherNoId = (movieEntity: Movie | Omit<Movie, 'id'>) => ({
+    name: string(movieEntity.name),
+    year: integer(movieEntity.year),
+    rating: decimal(movieEntity.rating),
+    director: string(movieEntity.director),
+  })
 
   describe('When a GET request is made to /movies', () => {
     it('should return all movies', async () => {
@@ -121,9 +131,7 @@ describe('Movies API', () => {
             status: 200,
             data: {
               id: integer(movieWithId.id),
-              name: string(movieWithId.name),
-              year: integer(movieWithId.year),
-              rating: decimal(movieWithId.rating),
+              ...propMatcherNoId(movieWithId),
             },
           }),
         )
@@ -166,9 +174,7 @@ describe('Movies API', () => {
             status: 200,
             data: {
               id: integer(testId),
-              name: string(movieWithTestId100.name),
-              year: integer(movieWithTestId100.year),
-              rating: decimal(movieWithTestId100.rating),
+              ...propMatcherNoId(movieWithTestId100),
             },
           }),
         )
@@ -194,9 +200,7 @@ describe('Movies API', () => {
             status: 200,
             data: {
               id: integer(), // if the example value is omitted, a random number is used
-              name: string(movieWithoutId.name),
-              year: integer(movieWithoutId.year),
-              rating: decimal(movieWithoutId.rating),
+              ...propMatcherNoId(movieWithoutId),
             },
           }),
         )
@@ -248,6 +252,7 @@ describe('Movies API', () => {
         name: 'Updated movie',
         year: 2000,
         rating: 8.5,
+        director: 'Steven Spielberg',
       }
 
       const [stateName, stateParams] = createProviderState({
@@ -266,9 +271,7 @@ describe('Movies API', () => {
             status: 200,
             data: {
               id: integer(testId),
-              name: updatedMovieData.name,
-              year: updatedMovieData.year,
-              rating: updatedMovieData.rating,
+              ...propMatcherNoId(updatedMovieData),
             },
           }),
         )

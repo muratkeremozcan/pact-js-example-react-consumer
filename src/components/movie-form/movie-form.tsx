@@ -15,6 +15,8 @@ export default function MovieForm() {
     handleAddMovie,
     movieLoading,
     validationError,
+    movieDirector,
+    setMovieDirector,
   } = useMovieForm()
 
   return (
@@ -41,6 +43,12 @@ export default function MovieForm() {
         value={movieRating}
         placeholder="Movie rating"
         onChange={e => setMovieRating(Number(e.target.value))}
+      />
+      <MovieInput
+        type="text"
+        value={movieDirector}
+        placeholder="Movie director"
+        onChange={e => setMovieDirector(e.target.value)}
       />
       <SButton
         data-cy="add-movie-button"

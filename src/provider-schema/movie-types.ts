@@ -1,7 +1,7 @@
 // in the real world, this file which is from the server side
 // would be published in a package and installed here
 
-import type {z} from 'zod'
+import type { z } from 'zod'
 import type {
   CreateMovieResponseSchema,
   CreateMovieSchema,
@@ -10,7 +10,7 @@ import type {
   DeleteMovieResponseSchema,
   ConflictMovieResponseSchema,
   UpdateMovieSchema,
-  UpdateMovieResponseSchema,
+  UpdateMovieResponseSchema
 } from './schema'
 
 export type CreateMovieRequest = z.infer<typeof CreateMovieSchema>
