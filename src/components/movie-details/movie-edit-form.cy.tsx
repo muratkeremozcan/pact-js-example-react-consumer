@@ -25,6 +25,7 @@ describe('<MovieEditForm />', () => {
           name: movie.name,
           year: movie.year,
           rating: movie.rating,
+          director: movie.director,
         }),
       )
   })

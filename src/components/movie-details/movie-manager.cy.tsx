@@ -6,6 +6,7 @@ describe('<MovieManager />', () => {
   const name = 'Inception'
   const year = 2010
   const rating = 8.5
+  const director = 'Christopher Nolan'
   it('should toggle between movie info and movie edit components', () => {
     const props: MovieManagerProps = {
       movie: {
@@ -13,6 +14,7 @@ describe('<MovieManager />', () => {
         name,
         year,
         rating,
+        director,
       },
       onDelete: cy.stub().as('onDelete'),
     }
