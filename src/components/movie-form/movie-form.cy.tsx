@@ -19,12 +19,16 @@ describe('<MovieForm />', () => {
       .clear({force: true})
       .type(`${rating}`, {delay: 0})
 
+  const fillDirector = (director: string) =>
+    getByPlaceHolder('Movie director').type(director, {delay: 0})
+
   it('should fill the form and add the movie', () => {
-    const {name, year, rating} = generateMovie()
+    const {name, year, rating, director} = generateMovie()
     cy.wrappedMount(<MovieForm />)
     fillName(name)
     fillYear(year)
     fillRating(rating)
+    fillDirector(director)
 
     cy.intercept('POST', '/movies', {statusCode: 200, delay: 50}).as('addMovie')
     cy.getByCy('add-movie-button').contains('Add Movie').click()
@@ -50,19 +54,21 @@ describe('<MovieForm />', () => {
 
     fillYear(2025)
     cy.getByCy('add-movie-button').click()
-    cy.getByCy('validation-error').should('have.length', 1)
+    cy.getByCy('validation-error').should('have.length', 2)
 
     fillYear(1899)
     cy.getByCy('add-movie-button').click()
-    cy.getByCy('validation-error').should('have.length', 2)
+    cy.getByCy('validation-error').should('have.length', 3)
 
     fillYear(2024)
     fillName('4')
+    fillDirector('Christopher Nolan')
     cy.getByCy('add-movie-button').click()
     cy.getByCy('validation-error').should('not.exist')
 
     fillYear(1900)
     fillName('4')
+    fillDirector('Christopher Nolan')
     cy.getByCy('add-movie-button').click()
     cy.getByCy('validation-error').should('not.exist')
   })

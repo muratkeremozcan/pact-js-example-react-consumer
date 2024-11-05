@@ -17,6 +17,7 @@ export type Movie = {
   name: string
   year: number
   rating: number
+  director: string
 }
 
 export type ErrorResponse = {

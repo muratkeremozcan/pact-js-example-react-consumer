@@ -8,6 +8,7 @@ export function useMovieEditForm(initialMovie: Movie) {
   const [movieName, setMovieName] = useState(initialMovie.name)
   const [movieYear, setMovieYear] = useState(initialMovie.year)
   const [movieRating, setMovieRating] = useState(initialMovie.rating)
+  const [movieDirector, setMovieDirector] = useState(initialMovie.director)
   const [validationError, setValidationError] = useState<ZodError | null>(null)
 
   const {status, mutate} = useUpdateMovie()
@@ -18,11 +19,13 @@ export function useMovieEditForm(initialMovie: Movie) {
   // in order to perform form validation before sending the data to the server
 
   const handleUpdateMovie = () => {
-    const result = UpdateMovieSchema.safeParse({
+    const payload = {
       name: movieName,
       year: movieYear,
       rating: movieRating,
-    })
+      director: movieDirector,
+    }
+    const result = UpdateMovieSchema.safeParse(payload)
 
     // Zod key feature 4: you can utilize
     // and expose the validation state to be used at a component
@@ -33,12 +36,9 @@ export function useMovieEditForm(initialMovie: Movie) {
 
     mutate({
       id: initialMovie.id,
-      movie: {
-        name: movieName,
-        year: movieYear,
-        rating: movieRating,
-      },
+      movie: payload,
     })
+
     setValidationError(null)
   }
 
@@ -52,5 +52,7 @@ export function useMovieEditForm(initialMovie: Movie) {
     handleUpdateMovie,
     movieLoading,
     validationError,
+    movieDirector,
+    setMovieDirector,
   }
 }

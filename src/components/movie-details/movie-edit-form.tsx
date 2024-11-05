@@ -21,6 +21,8 @@ export default function MovieEditForm({movie, onCancel}: MovieEditFormProps) {
     handleUpdateMovie,
     movieLoading,
     validationError,
+    movieDirector,
+    setMovieDirector,
   } = useMovieEditForm(movie)
 
   return (
@@ -46,6 +48,12 @@ export default function MovieEditForm({movie, onCancel}: MovieEditFormProps) {
         value={movieRating}
         placeholder="Movie rating"
         onChange={e => setMovieRating(Number(e.target.value))}
+      />
+      <MovieInput
+        type="text"
+        value={movieDirector}
+        placeholder="Movie director"
+        onChange={e => setMovieDirector(e.target.value)}
       />
       <SButton
         data-cy="update-movie"
