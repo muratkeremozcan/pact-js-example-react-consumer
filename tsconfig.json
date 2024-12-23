@@ -8,9 +8,17 @@
     "vite.config.ts",
     "vite-env.d.ts",
     "cypress",
-    "cypress.d.ts"
+    "cypress.d.ts",
+    "pw",
+    "playwright.config.ts"
   ],
-  "exclude": ["node_modules", "coverage", "dist", "**/*.*test.ts*"],
+  "exclude": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "**/*.*test.ts*",
+    "playwright-report"
+  ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
     /* Projects */
