@@ -9,8 +9,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DATABASE_URL: 'file:./dev.db'
-  SERVERPORT: 3001
+  VITE_PORT: 3000
+  API_PORT: 3001
+  VITE_API_URL: 'http://localhost:3001'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
