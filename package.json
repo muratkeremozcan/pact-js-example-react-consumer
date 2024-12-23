@@ -20,7 +20,12 @@
     "test:consumer": "rm -rf ./pacts && jest --config jest-pact.config.ts",
     "publish:pact": ". ./scripts/publish-pact.sh",
     "can:i:deploy:consumer": ". ./scripts/can-i-deploy-consumer.sh",
-    "record:consumer:deployment": ". ./scripts/record-consumer-deployment.sh"
+    "record:consumer:deployment": ". ./scripts/record-consumer-deployment.sh",
+    "pw:open-local": "npx playwright test --ui --config=pw/config/local.config.ts",
+    "pw:open-local-debug": "PWDEBUG=1 npx playwright test --ui --config=pw/config/local.config.ts",
+    "pw:run-local": "npx playwright test --config=pw/config/local.config.ts",
+    "pw:run-local-trace": "npx playwright test --trace on && npx playwright show-report --config=pw/config/local.config.ts",
+    "pw:open-local-trace": "npx playwright show-trace --config=pw/config/local.config.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.2.0",
@@ -42,9 +47,10 @@
     "@faker-js/faker": "9.2.0",
     "@pact-foundation/pact": "13.1.5",
     "@pact-foundation/pact-cli": "16.0.4",
+    "@playwright/test": "^1.49.1",
     "@testing-library/cypress": "10.0.2",
     "@testing-library/dom": "10.4.0",
-    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.14",
