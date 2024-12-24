@@ -33,7 +33,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install dependencies
-        uses: cypress-io/github-action@v6.7.7
+        uses: cypress-io/github-action@v6.7.8
         with:
           runTests: false
       - name: unit-test
@@ -48,7 +48,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install dependencies
-        uses: cypress-io/github-action@v6.7.7
+        uses: cypress-io/github-action@v6.7.8
         with:
           runTests: false
       - name: lint
@@ -63,7 +63,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Install dependencies
-        uses: cypress-io/github-action@v6.7.7
+        uses: cypress-io/github-action@v6.7.8
         with:
           runTests: false
       - name: typecheck
