@@ -47,151 +47,83 @@ export async function interceptNetworkCall({
   handler,
 }: InterceptOptions): Promise<NetworkCallResult> {
   if (!page) {
-    throw new Error('The `page` argument is required for network interception')
+    throw new Error('Page is required')
   }
 
-  if (fulfillResponse || handler) {
-    return fulfillNetworkCall(page, method, url, fulfillResponse, handler)
-  } else {
-    return observeNetworkCall(page, method, url)
-  }
-}
+  const preparedResponse = prepareResponse(fulfillResponse)
+  const responsePromise = new Promise<NetworkCallResult>((resolve, reject) => {
+    const handleResponse = async (response: Response) => {
+      const request = response.request()
+      let data = null
+      let requestJson = null
 
-/**
- * Prepares the response by stringifying the body if it's an object and setting appropriate headers.
- * @param {FulfillResponse} fulfillResponse - The response details.
- * @returns {PreparedResponse | undefined} - The prepared response.
- */
-function prepareResponse(
-  fulfillResponse?: FulfillResponse,
-): PreparedResponse | undefined {
-  if (!fulfillResponse) return undefined
-
-  const headers = {
-    'Content-Type': 'application/json',
-    ...fulfillResponse.headers,
-  }
-
-  let body: string | Buffer | undefined = undefined
-  if (fulfillResponse.body !== undefined) {
-    if (
-      typeof fulfillResponse.body === 'object' &&
-      fulfillResponse.body !== null &&
-      !Buffer.isBuffer(fulfillResponse.body)
-    ) {
-      body = JSON.stringify(fulfillResponse.body)
-    } else {
-      body = fulfillResponse.body as string | Buffer
-    }
-  }
-
-  return {
-    ...fulfillResponse,
-    headers,
-    body,
-  }
-}
-
-/**
- * Stubs the network request matching the criteria and fulfills it with the specified response or handler.
- * Automatically stringifies the body if it's an object and sets the Content-Type header.
- * Removes the route handler after fulfilling to allow subsequent intercepts.
- * @param {Page} page - The Playwright page object.
- * @param {string} [method] - The HTTP method to match.
- * @param {string} [url] - The URL pattern to match.
- * @param {FulfillResponse} [fulfillResponse] - The response to fulfill the request with.
- * @param {function} [handler] - Optional handler function for custom route handling.
- * @returns {Promise<NetworkCallResult>}
- */
-async function fulfillNetworkCall(
-  page: Page,
-  method?: string,
-  url?: string,
-  fulfillResponse?: FulfillResponse,
-  handler?: (route: Route, request: Request) => Promise<void> | void,
-): Promise<NetworkCallResult> {
-  // Define a predicate for matching the request
-  const predicate = (route: Route) =>
-    matchesRequest(route.request(), method, url)
-
-  // Define the route handler
-  const routeHandler = async (route: Route) => {
-    if (predicate(route)) {
-      if (handler) {
-        await handler(route, route.request())
-      } else if (fulfillResponse) {
-        const prepared = prepareResponse(fulfillResponse)
-        if (prepared) {
-          await route.fulfill(prepared)
+      if (fulfillResponse?.body) {
+        // If we have a fulfillResponse, use that directly
+        data =
+          typeof fulfillResponse.body === 'string'
+            ? JSON.parse(fulfillResponse.body)
+            : fulfillResponse.body
+      } else {
+        try {
+          const contentType = response.headers()['content-type']
+          if (contentType?.includes('application/json')) {
+            data = await response.json()
+          }
+        } catch {
+          // Response is not JSON
         }
       }
-      // Remove this specific handler after fulfilling
-      await page.unroute('**/*', routeHandler)
-    } else {
-      await route.continue()
-    }
-  }
 
-  // Set up the route
-  await page.route('**/*', routeHandler)
-
-  // Wait for the response
-  const response = await page.waitForResponse(
-    resp =>
-      (!method || resp.request().method() === method) &&
-      (!url || resp.url().includes(url)) &&
-      resp.status() === (fulfillResponse?.status || 200),
-  )
-
-  // Get request details
-  const request = response.request()
-
-  // Parse response data
-  let data: unknown = null
-  if (fulfillResponse?.body !== undefined) {
-    if (
-      typeof fulfillResponse.body === 'string' ||
-      Buffer.isBuffer(fulfillResponse.body)
-    ) {
       try {
-        data = JSON.parse(fulfillResponse.body.toString())
+        requestJson = await request.postDataJSON()
       } catch {
-        data = fulfillResponse.body
+        // Request has no post data or is not JSON
       }
-    } else {
-      data = fulfillResponse.body
+
+      return {
+        request,
+        response,
+        data,
+        status: response.status(),
+        requestJson,
+      }
     }
-  }
 
-  return {
-    request,
-    response,
-    data,
-    status: response.status(),
-    requestJson: null,
-  }
+    // Convert URL to glob pattern if it starts with **
+    const routePattern = url?.startsWith('**') ? url : `**${url}`
+
+    // Set up route handler first
+    page
+      .route(routePattern || '**', async (route, request) => {
+        if (!matchesRequest(request, method, url)) {
+          return route.continue()
+        }
+
+        if (handler) {
+          await handler(route, request)
+        } else if (preparedResponse) {
+          await route.fulfill(preparedResponse)
+        } else {
+          await route.continue()
+        }
+      })
+      .catch(reject)
+
+    // Then wait for response
+    page
+      .waitForResponse(response =>
+        matchesRequest(response.request(), method, url),
+      )
+      .then(handleResponse)
+      .then(resolve)
+      .catch(reject)
+  })
+
+  return responsePromise
 }
 
 /**
- * Matches a URL against a pattern with optional dynamic segments.
- * @param {string} url - The URL pathname to test.
- * @param {string} pattern - The pattern to match against (e.g., '/todos/:id').
- * @returns {boolean} - Whether the URL matches the pattern.
- */
-function matchUrl(url: string, pattern: string): boolean {
-  const urlSegments = url.split('/').filter(Boolean)
-  const patternSegments = pattern.split('/').filter(Boolean)
-
-  if (urlSegments.length !== patternSegments.length) return false
-
-  return patternSegments.every(
-    (segment, index) =>
-      segment.startsWith(':') || segment === urlSegments[index],
-  )
-}
-
-/**
- * Checks if a request matches the specified method and URL pattern.
+ * Matches a request against the specified method and URL pattern.
  * @param {Request} request - The request object.
  * @param {string} [method] - The HTTP method to match.
  * @param {string} [url] - The URL pattern to match.
@@ -202,10 +134,44 @@ function matchesRequest(
   method?: string,
   url?: string,
 ): boolean {
-  const methodMatches = method ? request.method() === method : true
-  const requestUrl = new URL(request.url()).pathname
-  const urlMatches = url ? matchUrl(requestUrl, url) : true
-  return methodMatches && urlMatches
+  if (method && request.method() !== method) {
+    return false
+  }
+
+  if (url) {
+    const requestUrl = request.url()
+    // Handle both exact matches and glob patterns
+    if (url.includes('*')) {
+      const pattern = url.startsWith('**') ? url.slice(2) : url
+      return requestUrl.includes(pattern.replace(/\*/g, ''))
+    }
+    return requestUrl.includes(url)
+  }
+
+  return true
+}
+
+/**
+ * Prepares the response by stringifying the body if it's an object and setting appropriate headers.
+ * @param {FulfillResponse} fulfillResponse - The response details.
+ * @returns {PreparedResponse | undefined} - The prepared response.
+ */
+export function prepareResponse(
+  fulfillResponse?: FulfillResponse,
+): PreparedResponse | undefined {
+  if (!fulfillResponse) return undefined
+
+  const {status = 200, headers = {}, body} = fulfillResponse
+  const contentType = headers['Content-Type'] || 'application/json'
+
+  return {
+    status,
+    headers: {
+      'Content-Type': contentType,
+      ...headers,
+    },
+    body: typeof body === 'string' ? body : JSON.stringify(body),
+  }
 }
 
 /**
