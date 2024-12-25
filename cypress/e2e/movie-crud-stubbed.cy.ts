@@ -2,7 +2,7 @@ import {generateMovie} from '@support/factories'
 import {addMovie} from '@support/helpers/add-movie'
 import {editMovie} from '@support/helpers/edit-movie'
 
-describe('movie crud e2e', () => {
+describe('movie crud e2e stubbed', () => {
   const {name, year, rating, director} = generateMovie()
   const id = 1
   const movie = {id, name, year, rating}

@@ -1,9 +1,16 @@
+// support/utils/network.ts
 import type {Page, Request, Response, Route} from '@playwright/test'
 
 type FulfillResponse = {
   status?: number
   headers?: Record<string, string>
-  body?: string
+  body?: unknown // Can be string, Buffer, or object
+}
+
+type PreparedResponse = {
+  status?: number
+  headers?: Record<string, string>
+  body?: string | Buffer
 }
 
 type InterceptOptions = {
@@ -51,7 +58,44 @@ export async function interceptNetworkCall({
 }
 
 /**
+ * Prepares the response by stringifying the body if it's an object and setting appropriate headers.
+ * @param {FulfillResponse} fulfillResponse - The response details.
+ * @returns {PreparedResponse | undefined} - The prepared response.
+ */
+function prepareResponse(
+  fulfillResponse?: FulfillResponse,
+): PreparedResponse | undefined {
+  if (!fulfillResponse) return undefined
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...fulfillResponse.headers,
+  }
+
+  let body: string | Buffer | undefined = undefined
+  if (fulfillResponse.body !== undefined) {
+    if (
+      typeof fulfillResponse.body === 'object' &&
+      fulfillResponse.body !== null &&
+      !Buffer.isBuffer(fulfillResponse.body)
+    ) {
+      body = JSON.stringify(fulfillResponse.body)
+    } else {
+      body = fulfillResponse.body as string | Buffer
+    }
+  }
+
+  return {
+    ...fulfillResponse,
+    headers,
+    body,
+  }
+}
+
+/**
  * Stubs the network request matching the criteria and fulfills it with the specified response or handler.
+ * Automatically stringifies the body if it's an object and sets the Content-Type header.
+ * Removes the route handler after fulfilling to allow subsequent intercepts.
  * @param {Page} page - The Playwright page object.
  * @param {string} [method] - The HTTP method to match.
  * @param {string} [url] - The URL pattern to match.
@@ -66,32 +110,58 @@ async function fulfillNetworkCall(
   fulfillResponse?: FulfillResponse,
   handler?: (route: Route, request: Request) => Promise<void> | void,
 ): Promise<NetworkCallResult> {
-  // Set up route handler
-  await page.route('**/*', async (route, request) => {
-    if (matchesRequest(request, method, url)) {
+  // Define a predicate for matching the request
+  const predicate = (route: Route) =>
+    matchesRequest(route.request(), method, url)
+
+  // Define the route handler
+  const routeHandler = async (route: Route) => {
+    if (predicate(route)) {
       if (handler) {
-        await handler(route, request)
+        await handler(route, route.request())
       } else if (fulfillResponse) {
-        await route.fulfill(fulfillResponse)
+        const prepared = prepareResponse(fulfillResponse)
+        if (prepared) {
+          await route.fulfill(prepared)
+        }
       }
+      // Remove this specific handler after fulfilling
+      await page.unroute('**/*', routeHandler)
     } else {
       await route.continue()
     }
-  })
+  }
 
-  // Wait for response
+  // Set up the route
+  await page.route('**/*', routeHandler)
+
+  // Wait for the response
   const response = await page.waitForResponse(
-    response =>
-      (!method || response.request().method() === method) &&
-      (!url || response.url().includes(url)) &&
-      response.status() === (fulfillResponse?.status || 200),
+    resp =>
+      (!method || resp.request().method() === method) &&
+      (!url || resp.url().includes(url)) &&
+      resp.status() === (fulfillResponse?.status || 200),
   )
 
-  // Get request
+  // Get request details
   const request = response.request()
 
   // Parse response data
-  const data = fulfillResponse?.body ? JSON.parse(fulfillResponse.body) : null
+  let data: unknown = null
+  if (fulfillResponse?.body !== undefined) {
+    if (
+      typeof fulfillResponse.body === 'string' ||
+      Buffer.isBuffer(fulfillResponse.body)
+    ) {
+      try {
+        data = JSON.parse(fulfillResponse.body.toString())
+      } catch {
+        data = fulfillResponse.body
+      }
+    } else {
+      data = fulfillResponse.body
+    }
+  }
 
   return {
     request,
@@ -104,7 +174,7 @@ async function fulfillNetworkCall(
 
 /**
  * Matches a URL against a pattern with optional dynamic segments.
- * @param {string} url - The URL to test.
+ * @param {string} url - The URL pathname to test.
  * @param {string} pattern - The pattern to match against (e.g., '/todos/:id').
  * @returns {boolean} - Whether the URL matches the pattern.
  */
@@ -145,7 +215,7 @@ function matchesRequest(
  * @param {string} [url] - The URL pattern to match.
  * @returns {Promise<NetworkCallResult>}
  */
-async function observeNetworkCall(
+export async function observeNetworkCall(
   page: Page,
   method?: string,
   url?: string,
@@ -156,7 +226,10 @@ async function observeNetworkCall(
   )
 
   const response = await request.response()
-  if (!response) throw new Error('No response received for the request')
+  if (!response)
+    throw new Error(
+      `No response received for ${request.method()} ${request.url()}`,
+    )
 
   const status = response.status()
 
