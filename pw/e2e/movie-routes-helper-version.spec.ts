@@ -20,7 +20,7 @@ test.describe('App routes', () => {
       page,
       fulfillResponse: {
         status: 200,
-        body: JSON.stringify({data: movies}),
+        body: {data: movies},
       },
     })
   })
@@ -48,7 +48,7 @@ test.describe('App routes', () => {
       page,
       fulfillResponse: {
         status: 200,
-        body: JSON.stringify(movie),
+        body: movie,
       },
     })
 
