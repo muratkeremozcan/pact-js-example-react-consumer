@@ -131,7 +131,7 @@ test.describe('movie crud e2e stubbed', () => {
       }
     })
 
-    const updateMovieByIdLoad = page.waitForResponse(
+    const loadUpdateMovieById = page.waitForResponse(
       response =>
         response.url().includes(`/movies/${id}`) &&
         response.request().method() === 'PUT' &&
@@ -140,7 +140,7 @@ test.describe('movie crud e2e stubbed', () => {
 
     await editMovie(page, editedName, editedYear, editedRating, editedDirector)
 
-    const updateMovieByIdRes = await updateMovieByIdLoad
+    const updateMovieByIdRes = await loadUpdateMovieById
     const updateMovieData = await updateMovieByIdRes.json()
     expect(updateMovieData.name).toBe(editedName)
   })
