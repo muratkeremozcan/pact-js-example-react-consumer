@@ -37,7 +37,7 @@ jobs:
         with:
           runTests: false
       - name: unit-test
-        run: npm run test:coverage
+        run: npm run test
 
   lint:
     needs: install-dependencies

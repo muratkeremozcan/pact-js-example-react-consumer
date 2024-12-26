@@ -11,7 +11,10 @@
     "cypress.d.ts",
     "pw",
     "playwright-ct.config.ts",
-    "playwright/index.tsx"
+    "playwright/index.tsx",
+    "vitest.workspace.ts",
+    "vitest.config.ts",
+    "vitest.setup.ts"
   ],
   "exclude": [
     "node_modules",

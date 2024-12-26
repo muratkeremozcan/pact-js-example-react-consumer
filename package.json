@@ -7,7 +7,6 @@
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "test": "jest",
     "test:coverage": "npm run test --watchAll=false --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/**/*.*.ts* --coverage",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|css|md|mdx|html)\"",
     "lint": "eslint . --cache-location node_modules/.cache/eslint --fix",
@@ -28,12 +27,15 @@
     "pw:run-local-trace": "npx playwright test --trace on && npx playwright show-report -c pw/config/local.config.ts",
     "pw:open-local-trace": "npx playwright show-trace -c pw/config/local.config.ts",
     "pw:run-ct": "npx playwright test -c playwright-ct.config.ts",
-    "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui"
+    "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui",
+    "test:ui": "vitest --workspace=vitest.workspace.ts",
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@tanstack/react-query": "5.62.10",
     "axios": "1.7.9",
+    "jsdom": "^25.0.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "4.1.2",
@@ -55,7 +57,7 @@
     "@testing-library/cypress": "10.0.2",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "16.1.0",
+    "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.14",
     "@types/lodash": "4.17.13",
@@ -66,7 +68,8 @@
     "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "8.18.2",
     "@typescript-eslint/parser": "8.18.2",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^2.1.8",
     "cy-spok": "1.6.2",
     "cypress": "13.17.0",
     "cypress-data-session": "2.8.6",
@@ -90,6 +93,7 @@
     "nock": "13.5.6",
     "npm-run-all2": "7.0.2",
     "picomatch": "^4.0.2",
+    "playwright": "^1.49.1",
     "prettier": "3.4.2",
     "sinon": "^19.0.2",
     "start-server-and-test": "2.0.9",
@@ -97,7 +101,8 @@
     "ts-jest-mock-import-meta": "1.2.1",
     "ts-node": "10.9.2",
     "typescript": "5.7.2",
-    "vite": "5.4.11"
+    "vite": "5.4.11",
+    "vitest-browser-react": "^0.0.4"
   },
   "husky": {
     "hooks": {
