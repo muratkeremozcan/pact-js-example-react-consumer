@@ -1,8 +1,8 @@
-import {editMovie} from 'pw/support/helpers/edit-movie'
+import {editMovie} from 'pw/support/ui-helpers/edit-movie'
 import {generateMovie} from '../../cypress/support/factories'
 import type {Movie} from '../../src/consumer'
 import {expect, test} from '../support/fixtures'
-import {addMovie} from '../support/helpers/add-movie'
+import {addMovie} from '../support/ui-helpers/add-movie'
 import {interceptNetworkCall} from '../support/utils/network'
 
 test.describe('movie crud e2e stubbed', () => {

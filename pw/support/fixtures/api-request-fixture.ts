@@ -1,9 +1,10 @@
 import {test as base} from '@playwright/test'
-import {apiRequest as apiRequestFunction} from './plain-functions'
+import {apiRequest as apiRequestFunction} from '../fixture-helpers/plain-functions'
 
 export type ApiRequestParams = {
   method: 'POST' | 'GET' | 'PUT' | 'DELETE'
   url: string
+  baseUrl?: string
   body?: Record<string, unknown> | null
   headers?: Record<string, string>
 }
@@ -22,6 +23,7 @@ const test = base.extend<{
     const apiRequest = async <T = unknown>({
       method,
       url,
+      baseUrl,
       body = null,
       headers,
     }: ApiRequestParams): Promise<ApiRequestResponse<T>> => {
@@ -29,6 +31,7 @@ const test = base.extend<{
         request,
         method,
         url,
+        baseUrl,
         body,
         headers,
       })
