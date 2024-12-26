@@ -1,5 +1,6 @@
 // support/utils/network.ts
 import type {Page, Request, Response, Route} from '@playwright/test'
+import picomatch from 'picomatch'
 
 type FulfillResponse = {
   status?: number
@@ -51,104 +52,105 @@ export async function interceptNetworkCall({
   }
 
   const preparedResponse = prepareResponse(fulfillResponse)
-  const responsePromise = new Promise<NetworkCallResult>((resolve, reject) => {
-    const handleResponse = async (response: Response) => {
-      const request = response.request()
-      let data = null
-      let requestJson = null
 
-      if (fulfillResponse?.body) {
-        // If we have a fulfillResponse, use that directly
-        data =
-          typeof fulfillResponse.body === 'string'
-            ? JSON.parse(fulfillResponse.body)
-            : fulfillResponse.body
-      } else {
-        try {
-          const contentType = response.headers()['content-type']
-          if (contentType?.includes('application/json')) {
-            data = await response.json()
-          }
-        } catch {
-          // Response is not JSON
-        }
-      }
-
-      try {
-        requestJson = await request.postDataJSON()
-      } catch {
-        // Request has no post data or is not JSON
-      }
-
-      return {
-        request,
-        response,
-        data,
-        status: response.status(),
-        requestJson,
-      }
-    }
-
-    // Convert URL to glob pattern if it starts with **
+  // Set up route handler if needed
+  if (handler || fulfillResponse) {
     const routePattern = url?.startsWith('**') ? url : `**${url}`
+    await page.route(routePattern || '**', async (route, request) => {
+      if (!matchesRequest(request, method, url)) {
+        return route.continue()
+      }
 
-    // Set up route handler first
-    page
-      .route(routePattern || '**', async (route, request) => {
-        if (!matchesRequest(request, method, url)) {
-          return route.continue()
-        }
+      if (handler) {
+        await handler(route, request)
+      } else if (preparedResponse) {
+        await route.fulfill(preparedResponse)
+      } else {
+        await route.continue()
+      }
+    })
+  }
 
-        if (handler) {
-          await handler(route, request)
-        } else if (preparedResponse) {
-          await route.fulfill(preparedResponse)
-        } else {
-          await route.continue()
-        }
-      })
-      .catch(reject)
+  // Wait for response
+  const response = await page.waitForResponse(res =>
+    matchesRequest(res.request(), method, url),
+  )
 
-    // Then wait for response
-    page
-      .waitForResponse(response =>
-        matchesRequest(response.request(), method, url),
-      )
-      .then(handleResponse)
-      .then(resolve)
-      .catch(reject)
-  })
+  const request = response.request()
+  let data = null
+  let requestJson = null
 
-  return responsePromise
+  if (fulfillResponse?.body) {
+    // If we have a fulfillResponse, use that directly
+    data =
+      typeof fulfillResponse.body === 'string'
+        ? JSON.parse(fulfillResponse.body)
+        : fulfillResponse.body
+  } else {
+    try {
+      const contentType = response.headers()['content-type']
+      if (contentType?.includes('application/json')) {
+        data = await response.json()
+      }
+    } catch {
+      // Response is not JSON
+    }
+  }
+
+  try {
+    requestJson = await request.postDataJSON()
+  } catch {
+    // Request has no post data or is not JSON
+  }
+
+  return {
+    request,
+    response,
+    data,
+    status: response.status(),
+    requestJson,
+  }
 }
 
-/**
- * Matches a request against the specified method and URL pattern.
- * @param {Request} request - The request object.
- * @param {string} [method] - The HTTP method to match.
- * @param {string} [url] - The URL pattern to match.
- * @returns {boolean} - True if the request matches the method and URL pattern.
- */
+function createUrlMatcher(pattern?: string): (url: string) => boolean {
+  if (!pattern) return () => true
+
+  // Split pattern into path and query if it contains a question mark
+  const [pathPattern, queryPattern] = pattern.split('?')
+
+  // Convert URL pattern to glob pattern if needed
+  const globPattern = pathPattern?.startsWith('**')
+    ? pathPattern
+    : `**${pathPattern}`
+  const isMatch = picomatch(globPattern)
+
+  return (url: string) => {
+    // Split URL into path and query
+    const [urlPath, urlQuery] = url.split('?')
+
+    // Check if path matches
+    const pathMatches = isMatch(urlPath as string)
+
+    // If there's no query pattern, just check the path
+    if (!queryPattern) return pathMatches
+
+    // If there's a query pattern but no query in URL, no match
+    if (!urlQuery) return false
+
+    // For query parameters, just check if it starts with the pattern
+    // This allows matching '/movies?' to match '/movies?name=something'
+    return pathMatches && urlQuery.startsWith(queryPattern)
+  }
+}
+
 function matchesRequest(
   request: Request,
   method?: string,
-  url?: string,
+  urlPattern?: string,
 ): boolean {
-  if (method && request.method() !== method) {
-    return false
-  }
-
-  if (url) {
-    const requestUrl = request.url()
-    // Handle both exact matches and glob patterns
-    if (url.includes('*')) {
-      const pattern = url.startsWith('**') ? url.slice(2) : url
-      return requestUrl.includes(pattern.replace(/\*/g, ''))
-    }
-    return requestUrl.includes(url)
-  }
-
-  return true
+  const matchesMethod = !method || request.method() === method
+  const matchesUrl = createUrlMatcher(urlPattern)(request.url())
+  return matchesMethod && matchesUrl
 }
 
 /**
@@ -186,17 +188,13 @@ export async function observeNetworkCall(
   method?: string,
   url?: string,
 ): Promise<NetworkCallResult> {
-  const request = await page.waitForRequest(
-    req =>
-      (!method || req.method() === method) && (!url || req.url().includes(url)),
+  const response = await page.waitForResponse(
+    res =>
+      (!method || res.request().method() === method) &&
+      (!url || createUrlMatcher(url)(res.url())),
   )
 
-  const response = await request.response()
-  if (!response)
-    throw new Error(
-      `No response received for ${request.method()} ${request.url()}`,
-    )
-
+  const request = response.request()
   const status = response.status()
 
   let data: unknown = null

@@ -1,8 +1,8 @@
 import {generateMovie} from '../../cypress/support/factories' // Adjust path if necessary
 import type {Movie} from '../../src/consumer'
 import {expect, test} from '../support/fixtures'
-import {addMovie} from '../support/helpers/add-movie'
-import {editMovie} from '../support/helpers/edit-movie'
+import {addMovie} from '../support/ui-helpers/add-movie'
+import {editMovie} from '../support/ui-helpers/edit-movie'
 
 test.describe('movie crud e2e stubbed', () => {
   // Generate initial movie data
