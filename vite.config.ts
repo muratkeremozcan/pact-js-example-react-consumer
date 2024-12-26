@@ -15,10 +15,9 @@ export default defineConfig(({mode}) => {
       alias: {
         '@components': path.resolve(__dirname, 'src', 'components'),
         '@hooks': path.resolve(__dirname, 'src', 'hooks'),
-        '@styles': path.resolve(__dirname, 'src', 'styles'),
-        '@support': path.resolve(__dirname, 'cypress', 'support'),
-        '@fixtures': path.resolve(__dirname, 'cypress', 'fixtures'),
         '@cypress': path.resolve(__dirname, 'cypress'),
+        '@pw': path.resolve(__dirname, 'pw'),
+        '@styles': path.resolve(__dirname, 'src', 'styles'),
         '@provider-schema': path.resolve(__dirname, 'src', 'provider-schema'),
       },
     },

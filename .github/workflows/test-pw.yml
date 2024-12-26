@@ -5,7 +5,7 @@ on:
 
 # if this branch is pushed back to back, cancel the older branch's workflow
 concurrency:
-  group: ${{ github.ref }} && ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -45,8 +45,11 @@ jobs:
       - name: Install Playwright Chromium Only
         run: npx playwright install chromium
 
-      - name: Run Playwright tests
+      - name: Run PW e2e tests
         run: npm run pw:run-local
+
+      - name: Run PW ct tests
+        run: npm run pw:run-ct
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
