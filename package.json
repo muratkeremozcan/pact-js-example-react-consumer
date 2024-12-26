@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "vite",
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
@@ -21,11 +22,13 @@
     "publish:pact": ". ./scripts/publish-pact.sh",
     "can:i:deploy:consumer": ". ./scripts/can-i-deploy-consumer.sh",
     "record:consumer:deployment": ". ./scripts/record-consumer-deployment.sh",
-    "pw:open-local": "npx playwright test --ui --config=pw/config/local.config.ts",
-    "pw:open-local-debug": "PWDEBUG=1 npx playwright test --ui --config=pw/config/local.config.ts",
-    "pw:run-local": "npx playwright test --config=pw/config/local.config.ts",
-    "pw:run-local-trace": "npx playwright test --trace on && npx playwright show-report --config=pw/config/local.config.ts",
-    "pw:open-local-trace": "npx playwright show-trace --config=pw/config/local.config.ts"
+    "pw:open-local": "npx playwright test --ui -c pw/config/local.config.ts",
+    "pw:open-local-debug": "PWDEBUG=1 npx playwright test --ui -c pw/config/local.config.ts",
+    "pw:run-local": "npx playwright test -c pw/config/local.config.ts",
+    "pw:run-local-trace": "npx playwright test --trace on && npx playwright show-report -c pw/config/local.config.ts",
+    "pw:open-local-trace": "npx playwright show-trace -c pw/config/local.config.ts",
+    "pw:run-ct": "npx playwright test -c playwright-ct.config.ts",
+    "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
@@ -47,6 +50,7 @@
     "@faker-js/faker": "9.3.0",
     "@pact-foundation/pact": "13.2.0",
     "@pact-foundation/pact-cli": "16.0.4",
+    "@playwright/experimental-ct-react": "^1.49.1",
     "@playwright/test": "^1.49.1",
     "@testing-library/cypress": "10.0.2",
     "@testing-library/dom": "10.4.0",

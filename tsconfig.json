@@ -10,7 +10,8 @@
     "cypress",
     "cypress.d.ts",
     "pw",
-    "playwright.config.ts"
+    "playwright-ct.config.ts",
+    "playwright/index.tsx"
   ],
   "exclude": [
     "node_modules",
@@ -51,6 +52,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@styles/*": ["./src/styles/*"],
       "@cypress/*": ["./cypress/*"],
+      "@pw/*": ["./pw/*"],
       "@support/*": ["./cypress/support/*"],
       "@fixtures/*": ["./cypress/fixtures/*"],
       "@provider-schema/*": ["./src/provider-schema/*"]

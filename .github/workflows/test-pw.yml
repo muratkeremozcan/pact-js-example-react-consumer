@@ -45,8 +45,11 @@ jobs:
       - name: Install Playwright Chromium Only
         run: npx playwright install chromium
 
-      - name: Run Playwright tests
+      - name: Run PW e2e tests
         run: npm run pw:run-local
+
+      - name: Run PW ct tests
+        run: npm run pw:run-ct
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
