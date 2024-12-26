@@ -10,7 +10,6 @@ import LoadingMessage from '@components/loading-message'
 // Initialize any global styles or theme providers here
 
 beforeMount(async ({App, hooksConfig}) => {
-  // Get route configuration if provided
   const {route = '/', path = '/'} =
     (hooksConfig as {route?: string; path?: string}) || {}
 

@@ -12,7 +12,7 @@ describe('<MovieInfo />', () => {
     // cy.mount(<MovieInfo {...props} />)
     cy.mount(<MovieInfo movie={movie} />)
 
-    cy.contains(id)
+    cy.contains(`ID: ${id}`)
     cy.contains(name)
     cy.contains(year)
     cy.contains(rating).should('be.visible')

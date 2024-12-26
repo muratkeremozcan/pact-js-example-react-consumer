@@ -31,12 +31,34 @@ export default defineConfig(
       ...baseConfig.use,
       ctPort: 3100,
       ctViteConfig: pwViteConfig,
+      testIdAttribute: 'data-cy',
     },
     /* We only need Chrome for component tests */
     projects: [
       {
         name: 'chromium',
         use: {...devices['Desktop Chrome']},
+      },
+      {
+        name: 'validation',
+        testMatch: /.*validation.*\.pw\.tsx/,
+        use: {
+          ...baseConfig.use,
+          ctPort: 3100,
+          ctViteConfig: pwViteConfig,
+          ctSetup: path.resolve(__dirname, './playwright/validation-test.tsx'),
+        },
+      },
+      {
+        name: 'default',
+        testMatch: /.*\.pw\.tsx/,
+        testIgnore: /.*validation.*\.pw\.tsx/,
+        use: {
+          ...baseConfig.use,
+          ctPort: 3100,
+          ctViteConfig: pwViteConfig,
+          ctSetup: path.resolve(__dirname, './playwright/index.tsx'),
+        },
       },
     ],
   }),
