@@ -26,7 +26,7 @@ const pwViteConfig = merge(
 export default defineConfig(
   merge({}, baseConfig, {
     testDir: './src',
-    testMatch: '**/*.ct.tsx',
+    testMatch: '**/*.pw.tsx',
     use: {
       ...baseConfig.use,
       ctPort: 3100,
