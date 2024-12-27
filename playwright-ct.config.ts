@@ -40,19 +40,8 @@ export default defineConfig(
         use: {...devices['Desktop Chrome']},
       },
       {
-        name: 'validation',
-        testMatch: /.*validation.*\.pw\.tsx/,
-        use: {
-          ...baseConfig.use,
-          ctPort: 3100,
-          ctViteConfig: pwViteConfig,
-          ctSetup: path.resolve(__dirname, './playwright/validation-test.tsx'),
-        },
-      },
-      {
         name: 'default',
         testMatch: /.*\.pw\.tsx/,
-        testIgnore: /.*validation.*\.pw\.tsx/,
         use: {
           ...baseConfig.use,
           ctPort: 3100,

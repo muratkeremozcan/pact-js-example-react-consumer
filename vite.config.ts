@@ -19,6 +19,12 @@ export default defineConfig(({mode}) => {
         '@pw': path.resolve(__dirname, 'pw'),
         '@styles': path.resolve(__dirname, 'src', 'styles'),
         '@provider-schema': path.resolve(__dirname, 'src', 'provider-schema'),
+        '@vitest-utils': path.resolve(
+          __dirname,
+          'src',
+          'test-utils',
+          'vitest-utils',
+        ),
       },
     },
   }

@@ -1,17 +1,22 @@
-import {describe, it, expect, vi} from 'vitest'
-import {screen} from '@testing-library/react'
-import {render} from 'vitest-browser-react'
+import {
+  wrappedRender,
+  screen,
+  describe,
+  it,
+  expect,
+  vi,
+} from '@vitest-utils/utils'
 import userEvent from '@testing-library/user-event'
 import MovieInput from './movie-input'
-import {generateMovie} from '../../../cypress/support/factories'
+import {generateMovie} from '@cypress/support/factories'
 
-describe('MovieInput', () => {
+describe('<MovieInput />', () => {
   const movie = generateMovie()
   const onChange = vi.fn()
   const user = userEvent.setup()
 
   it('should render a text input', async () => {
-    render(
+    wrappedRender(
       <MovieInput
         type="text"
         value={movie.name}
@@ -29,7 +34,7 @@ describe('MovieInput', () => {
   })
 
   it('should render a year input', async () => {
-    render(
+    wrappedRender(
       <MovieInput
         type="number"
         value={movie.year}

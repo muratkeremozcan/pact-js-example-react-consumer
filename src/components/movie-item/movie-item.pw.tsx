@@ -25,7 +25,8 @@ test.describe('<MovieItem>', () => {
     await expect(link).toBeVisible()
     await expect(link).toHaveAttribute('href', '/movies/3')
 
-    await component.getByText('Delete').click()
+    await component.getByRole('button', {name: /delete/i}).click()
     expect(onDelete.calledOnce).toBe(true)
+    expect(onDelete.calledWith(3)).toBe(true)
   })
 })

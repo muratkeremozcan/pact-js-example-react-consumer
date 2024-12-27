@@ -37,7 +37,14 @@ test.describe('<MovieList>', () => {
     )
 
     await expect(component.getByTestId('movie-list-comp')).toBeVisible()
-    await expect(component.getByTestId('movie-item-comp')).toHaveCount(2)
+
+    const movieItems = component.getByTestId('movie-item-comp').all()
+    await expect(await movieItems).toHaveLength(2)
+    // with PW you have to use for await of, since you have to await the expect
+    const items = await movieItems
+    for (const item of items) {
+      await expect(item).toBeVisible()
+    }
 
     await component.getByText('Delete').first().click()
     expect(onDelete.calledOnce).toBe(true)

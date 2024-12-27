@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/experimental-ct-react'
 import MovieForm from './movie-form'
 
-test.describe('<MovieForm>', () => {
+test.describe('<MovieForm />', () => {
   test('should fill the form and add the movie', async ({mount}) => {
     const component = await mount(<MovieForm />)
 
@@ -30,8 +30,8 @@ test.describe('<MovieForm>', () => {
 
     // // Check form reset
     // await expect(nameInput).toHaveValue('')
-    // await expect(yearInput).toHaveValue('2023')
-    // await expect(ratingInput).toHaveValue('0')
+    // await expect(yearInput).toHaveValue(2023)
+    // await expect(ratingInput).toHaveValue(0)
   })
 
   test('should exercise validation errors', async ({mount}) => {
