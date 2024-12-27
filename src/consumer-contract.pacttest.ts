@@ -11,7 +11,7 @@ import {
   setApiUrl,
   updateMovie,
 } from './consumer'
-import {createProviderState, setJsonBody} from './test-helpers/helpers'
+import {createProviderState, setJsonBody} from './test-utils/pact-utils/helpers'
 import type {
   DeleteMovieResponse,
   GetMovieResponse,

@@ -7,6 +7,8 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {MemoryRouter, Routes, Route} from 'react-router-dom'
 import ErrorComponent from '@components/error-component'
 import LoadingMessage from '@components/loading-message'
+import {describe, it, expect, vi} from 'vitest'
+import userEvent from '@testing-library/user-event'
 
 interface WrapperProps {
   children: ReactNode
@@ -64,3 +66,5 @@ export function wrappedRender(
 
 // re-export everything
 export * from '@testing-library/react'
+export * from './msw-setup'
+export {describe, it, expect, vi, userEvent}

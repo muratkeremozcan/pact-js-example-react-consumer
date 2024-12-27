@@ -14,8 +14,7 @@
     "playwright/index.tsx",
     "vitest.config.ts",
     "vitest.headless.config.ts",
-    "vitest.browser.config.ts",
-    "vitest.setup.ts"
+    "vitest.browser.config.ts"
   ],
   "exclude": [
     "node_modules",
@@ -59,7 +58,8 @@
       "@pw/*": ["./pw/*"],
       "@support/*": ["./cypress/support/*"],
       "@fixtures/*": ["./cypress/fixtures/*"],
-      "@provider-schema/*": ["./src/provider-schema/*"]
+      "@provider-schema/*": ["./src/provider-schema/*"],
+      "@vitest-utils/*": ["./src/test-utils/vitest-utils/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */

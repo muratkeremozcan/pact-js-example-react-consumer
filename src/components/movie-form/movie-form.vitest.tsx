@@ -1,6 +1,14 @@
-import {describe, it, expect} from 'vitest'
-import {wrappedRender, screen} from '../../../test/test-utils'
-import userEvent from '@testing-library/user-event'
+import {
+  wrappedRender,
+  screen,
+  waitFor,
+  worker,
+  http,
+  describe,
+  it,
+  expect,
+  userEvent,
+} from '@vitest-utils/utils'
 import MovieForm from './movie-form'
 import {generateMovie} from '../../../cypress/support/factories'
 
@@ -30,6 +38,16 @@ describe('<MovieForm />', () => {
   }
 
   it('should fill the form and add the movie', async () => {
+    // Setup MSW handler for this test
+    worker.use(
+      http.post('http://localhost:3001/movies', async ({request}) => {
+        const data = await request.json()
+        return new Response(JSON.stringify(data), {
+          status: 200,
+        })
+      }),
+    )
+
     wrappedRender(<MovieForm />)
     const nameInput = screen.getByPlaceholderText('Movie name')
     const yearInput = screen.getByPlaceholderText('Movie year')
@@ -46,11 +64,13 @@ describe('<MovieForm />', () => {
 
     await user.click(addButton)
 
-    // Verify the form is submitted
-    await expect(nameInput).toHaveValue('')
-    await expect(yearInput).toHaveValue(2023)
-    await expect(directorInput).toHaveValue('')
-    await expect(ratingInput).toHaveValue(0)
+    // Verify form reset
+    await waitFor(() => {
+      expect(nameInput).toHaveValue('')
+      expect(yearInput).toHaveValue(2023)
+      expect(ratingInput).toHaveValue(0)
+      expect(directorInput).toHaveValue('')
+    })
   })
 
   it('should exercise validation errors', async () => {
