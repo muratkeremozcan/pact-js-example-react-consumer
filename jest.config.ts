@@ -49,7 +49,7 @@ export function transform(): JestConfigWithTsJest['transform'] {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
       {
-        tsconfig: 'tsconfig.jest.json',
+        tsconfig: 'src/tsconfig.json',
         diagnostics: {
           ignoreCodes: [1343], // Ignore TypeScript error code for import.meta
         },

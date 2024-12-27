@@ -1,19 +1,18 @@
-/// <reference types="vitest" />
 import {defineConfig, mergeConfig} from 'vitest/config'
 import viteConfig from './vite.config'
 
-const baseConfig = viteConfig({
+const viteConfigBase = viteConfig({
   mode: process.env.NODE_ENV || 'test',
   command: 'serve',
 })
 
 export default mergeConfig(
-  baseConfig,
+  viteConfigBase,
   defineConfig({
     test: {
       environment: 'jsdom',
       setupFiles: ['./vitest.setup.ts'],
-      include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+      include: ['src/**/*.vitest.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
       exclude: [
         'node_modules/**',
         'pw/**',

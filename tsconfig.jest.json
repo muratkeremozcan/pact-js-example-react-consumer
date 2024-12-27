@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "exclude": ["**/cypress.d.ts", "**/cypress", "**/*.cy.ts*"],
-  "compilerOptions": {
-    "types": ["@types/jest"]
-  },
-  "include": ["**/*.test.ts*", "**/*.pacttest.ts*", "vite-env.d.ts"]
-}

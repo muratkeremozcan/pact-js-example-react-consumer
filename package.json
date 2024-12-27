@@ -2,6 +2,7 @@
   "name": "quick-vitejs-react-typescript-jest",
   "version": "1.0.0",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "start": "vite",
@@ -28,8 +29,9 @@
     "pw:open-local-trace": "npx playwright show-trace -c pw/config/local.config.ts",
     "pw:run-ct": "npx playwright test -c playwright-ct.config.ts",
     "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui",
-    "test:ui": "vitest --workspace=vitest.workspace.ts",
-    "test": "vitest run --config vitest.config.ts"
+    "jest": "jest",
+    "vitest:run": "vitest run --config vitest.headless.config.ts",
+    "vitest:open": "vitest --config vitest.browser.config.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",

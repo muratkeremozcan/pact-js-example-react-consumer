@@ -12,8 +12,9 @@
     "pw",
     "playwright-ct.config.ts",
     "playwright/index.tsx",
-    "vitest.workspace.ts",
     "vitest.config.ts",
+    "vitest.headless.config.ts",
+    "vitest.browser.config.ts",
     "vitest.setup.ts"
   ],
   "exclude": [

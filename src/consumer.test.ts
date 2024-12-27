@@ -17,7 +17,6 @@ import type {
   GetMovieResponse,
 } from './provider-schema/movie-types'
 
-// @ts-expect-error okay
 const API_URL = import.meta.env.VITE_API_URL
 
 // Nock can be used to test modules that make HTTP requests to external APIs in isolation.
