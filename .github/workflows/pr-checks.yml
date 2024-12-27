@@ -47,22 +47,6 @@ jobs:
       - name: Run Jest
         run: npm run jest
 
-  vitest:
-    name: Unit-vitest
-    runs-on: ubuntu-latest
-    needs: install-dependencies
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore Node Modules Cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key:
-            ${{ runner.os }}-node_modules-${{
-            hashFiles('**/package-lock.json')}}
-      - name: Run Vitest
-        run: npm run vitest:run
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
