@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "exclude": ["**/cypress.d.ts", "**/cypress", "**/*.cy.ts*"],
+  "compilerOptions": {
+    "types": ["@types/jest", "@testing-library/jest-dom"]
+  },
+  "include": [
+    "**/*.test.ts*",
+    "**/*.vitest.ts*",
+    "**/*.pacttest.ts*",
+    "vite-env.d.ts",
+    "vitest-example/HelloWorld.vitest.tsx",
+    "components/movie-form/movie-input.vitest.tsx"
+  ]
+}
