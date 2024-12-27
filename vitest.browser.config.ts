@@ -5,7 +5,6 @@ export default defineConfig({
   ...baseConfig,
   test: {
     ...baseConfig.test,
-    // optionally environment: 'jsdom',
     browser: {
       enabled: true,
       name: 'chromium',

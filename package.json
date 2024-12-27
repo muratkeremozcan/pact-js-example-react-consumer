@@ -29,6 +29,7 @@
     "pw:run-ct": "npx playwright test -c playwright-ct.config.ts",
     "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui",
     "jest": "jest",
+    "test": "jest",
     "vitest:run": "vitest run --config vitest.headless.config.ts",
     "vitest:open": "vitest --config vitest.browser.config.ts"
   },
