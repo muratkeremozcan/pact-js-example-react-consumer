@@ -5,11 +5,12 @@ import userEvent from '@testing-library/user-event'
 import MovieInput from './movie-input'
 import {generateMovie} from '../../../cypress/support/factories'
 
-describe('<MovieInput />', () => {
-  it('should render a name input', async () => {
-    const movie = generateMovie()
-    const onChange = vi.fn()
+describe('MovieInput', () => {
+  const movie = generateMovie()
+  const onChange = vi.fn()
+  const user = userEvent.setup()
 
+  it('should render a text input', async () => {
     render(
       <MovieInput
         type="text"
@@ -23,15 +24,11 @@ describe('<MovieInput />', () => {
     expect(input).toBeVisible()
     expect(input).toHaveValue(movie.name)
 
-    const user = userEvent.setup()
-    await user.type(input, 'a')
+    await user.type(input, 'test movie')
     expect(onChange).toHaveBeenCalled()
   })
 
   it('should render a year input', async () => {
-    const movie = generateMovie()
-    const onChange = vi.fn()
-
     render(
       <MovieInput
         type="number"
@@ -41,11 +38,10 @@ describe('<MovieInput />', () => {
       />,
     )
 
-    const input = screen.getByPlaceholderText('place holder')
+    const input = screen.getByTestId('movie-input-comp-number')
     expect(input).toBeVisible()
     expect(input).toHaveValue(movie.year)
 
-    const user = userEvent.setup()
     await user.type(input, '1')
     expect(onChange).toHaveBeenCalled()
   })
