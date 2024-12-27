@@ -6,11 +6,16 @@ const viteConfigBase = viteConfig({
   command: 'serve',
 })
 
-export default mergeConfig(
+const config = mergeConfig(
   viteConfigBase,
   defineConfig({
     test: {
-      environment: 'jsdom',
+      browser: {
+        enabled: true,
+        name: 'chromium',
+        provider: 'playwright',
+      },
+      environment: 'happy-dom',
       setupFiles: ['./vitest.setup.ts'],
       include: ['src/**/*.vitest.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
       exclude: [
@@ -25,3 +30,5 @@ export default mergeConfig(
     },
   }),
 )
+
+export default config

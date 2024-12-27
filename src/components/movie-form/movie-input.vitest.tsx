@@ -1,5 +1,6 @@
 import {describe, it, expect, vi} from 'vitest'
-import {render, screen} from '@testing-library/react'
+import {screen} from '@testing-library/react'
+import {render} from 'vitest-browser-react'
 import userEvent from '@testing-library/user-event'
 import MovieInput from './movie-input'
 import {generateMovie} from '../../../cypress/support/factories'

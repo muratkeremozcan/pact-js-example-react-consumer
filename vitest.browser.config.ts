@@ -1,15 +1,15 @@
 import baseConfig from './vitest.config'
+import type {UserConfigExport} from 'vitest/config'
 import {defineConfig} from 'vitest/config'
+import merge from 'lodash/merge'
 
-export default defineConfig({
-  ...baseConfig,
+const browserConfig: UserConfigExport = {
   test: {
-    ...baseConfig.test,
     browser: {
-      enabled: true,
-      name: 'chromium',
-      provider: 'playwright',
       headless: false,
+      name: 'chromium',
     },
   },
-})
+}
+
+export default defineConfig(merge({}, baseConfig, browserConfig))

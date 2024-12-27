@@ -1,15 +1,15 @@
 import baseConfig from './vitest.config'
+import type {UserConfigExport} from 'vitest/config'
 import {defineConfig} from 'vitest/config'
+import merge from 'lodash/merge'
 
-// merges your base config, but overrides environment + browser
-export default defineConfig({
-  ...baseConfig,
+const browserConfig: UserConfigExport = {
   test: {
-    ...baseConfig.test,
-    environment: 'jsdom',
     browser: {
-      enabled: false,
+      headless: true,
       name: 'chromium',
     },
   },
-})
+}
+
+export default defineConfig(merge({}, baseConfig, browserConfig))
