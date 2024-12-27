@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event'
 import MovieInput from './movie-input'
 import {generateMovie} from '../../../cypress/support/factories'
 
-describe('MovieInput', () => {
+describe('<MovieInput />', () => {
   const movie = generateMovie()
   const onChange = vi.fn()
   const user = userEvent.setup()
