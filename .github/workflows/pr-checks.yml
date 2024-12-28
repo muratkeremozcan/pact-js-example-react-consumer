@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Cache Node Modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key:
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore Node Modules Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key:
@@ -54,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore Node Modules Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key:
@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore Node Modules Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key:
