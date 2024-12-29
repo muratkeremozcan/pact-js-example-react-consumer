@@ -8,8 +8,6 @@
     "**/*.test.ts*",
     "**/*.vitest.ts*",
     "**/*.pacttest.ts*",
-    "vite-env.d.ts",
-    "vitest-example/HelloWorld.vitest.tsx",
-    "components/movie-form/movie-input.vitest.tsx"
+    "vite-env.d.ts"
   ]
 }

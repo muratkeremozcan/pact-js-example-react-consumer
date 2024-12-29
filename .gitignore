@@ -23,7 +23,8 @@ npm-debug.log*
 
 # Pact
 pacts
-node_modules/
+
+# Playwright
 /test-results/
 /playwright-report/
 /blob-report/
