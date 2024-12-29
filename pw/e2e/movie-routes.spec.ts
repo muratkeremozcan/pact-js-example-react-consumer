@@ -52,6 +52,7 @@ test.describe('App routes', () => {
       route.fulfill({
         status: 200,
         body: JSON.stringify(movie),
+        headers: {'Content-Type': 'application/json'},
       }),
     )
     const loadGetMovies2 = page.waitForResponse(
