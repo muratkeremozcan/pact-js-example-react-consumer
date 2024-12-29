@@ -21,13 +21,16 @@ describe('App routes', () => {
 
     cy.getByCy('movie-list-comp').should('be.visible')
     cy.getByCy('movie-form-comp').should('be.visible')
-    cy.getByCy('movie-item-comp').should('have.length', movies.length)
+    cy.getByCy('movie-item-comp')
+      .should('be.visible')
+      .and('have.length', movies.length)
   })
 
   it('should direct nav to by query param', () => {
     const movieName = encodeURIComponent(movie?.name as Movie['name'])
 
     cy.visit(`/movies?name=${movieName}`)
+
     cy.intercept('GET', '/movies?*', {body: movie}).as('getMovieByName')
 
     cy.wait('@getMovieByName').its('response.body').should('deep.eq', movie)
