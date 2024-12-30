@@ -3,7 +3,6 @@ import type {Movie} from '../../src/consumer'
 import {expect, test} from '../support/fixtures'
 import {addMovie} from '../support/ui-helpers/add-movie'
 import {editMovie} from '../support/ui-helpers/edit-movie'
-// import {interceptNetworkCall} from '../support/utils/network'
 
 test.describe('movie crud e2e stubbed', () => {
   const {name, year, rating, director} = generateMovie()

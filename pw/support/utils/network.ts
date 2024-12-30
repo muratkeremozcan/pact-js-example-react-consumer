@@ -175,11 +175,3 @@ function prepareResponse(
     body: typeof body === 'string' ? body : JSON.stringify(body),
   }
 }
-
-/**
- * Observes the network request matching the criteria and returns its data.
- * @param {Page} page - The Playwright page object.
- * @param {string} [method] - The HTTP method to match.
- * @param {string} [url] - The URL pattern to match.
- * @returns {Promise<NetworkCallResult>}
- */

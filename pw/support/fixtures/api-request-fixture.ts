@@ -14,13 +14,19 @@ export type ApiRequestResponse<T = unknown> = {
   body: T
 }
 
-export const test = base.extend<{
-  apiRequest: <T = unknown>(
-    params: ApiRequestParams,
-  ) => Promise<ApiRequestResponse<T>>
-}>({
+// define the function signature as a type
+type ApiRequestFn = <T = unknown>(
+  params: ApiRequestParams,
+) => Promise<ApiRequestResponse<T>>
+
+// grouping them all together
+type ApiRequestMethods = {
+  apiRequest: ApiRequestFn
+}
+
+export const test = base.extend<ApiRequestMethods>({
   apiRequest: async ({request}, use) => {
-    const apiRequestFn = async <T = unknown>({
+    const apiRequestFn: ApiRequestFn = async <T = unknown>({
       method,
       url,
       baseUrl,
