@@ -1,5 +1,5 @@
 import {test as base} from '@playwright/test'
-import {apiRequest as apiRequestFunction} from '../fixture-helpers/plain-functions'
+import {apiRequest as apiRequestOriginal} from '../fixture-helpers/plain-functions'
 
 export type ApiRequestParams = {
   method: 'POST' | 'GET' | 'PUT' | 'DELETE'
@@ -14,20 +14,20 @@ export type ApiRequestResponse<T = unknown> = {
   body: T
 }
 
-const test = base.extend<{
+export const test = base.extend<{
   apiRequest: <T = unknown>(
     params: ApiRequestParams,
   ) => Promise<ApiRequestResponse<T>>
 }>({
   apiRequest: async ({request}, use) => {
-    const apiRequest = async <T = unknown>({
+    const apiRequestFn = async <T = unknown>({
       method,
       url,
       baseUrl,
       body = null,
       headers,
     }: ApiRequestParams): Promise<ApiRequestResponse<T>> => {
-      const response = await apiRequestFunction({
+      const response = await apiRequestOriginal({
         request,
         method,
         url,
@@ -42,8 +42,6 @@ const test = base.extend<{
       }
     }
 
-    await use(apiRequest)
+    await use(apiRequestFn)
   },
 })
-
-export {test}

@@ -14,7 +14,7 @@ type PreparedResponse = {
   body?: string | Buffer
 }
 
-type InterceptOptions = {
+export type InterceptOptions = {
   method?: string
   url?: string
   page: Page
@@ -158,7 +158,7 @@ function matchesRequest(
  * @param {FulfillResponse} fulfillResponse - The response details.
  * @returns {PreparedResponse | undefined} - The prepared response.
  */
-export function prepareResponse(
+function prepareResponse(
   fulfillResponse?: FulfillResponse,
 ): PreparedResponse | undefined {
   if (!fulfillResponse) return undefined
@@ -183,33 +183,3 @@ export function prepareResponse(
  * @param {string} [url] - The URL pattern to match.
  * @returns {Promise<NetworkCallResult>}
  */
-export async function observeNetworkCall(
-  page: Page,
-  method?: string,
-  url?: string,
-): Promise<NetworkCallResult> {
-  const response = await page.waitForResponse(
-    res =>
-      (!method || res.request().method() === method) &&
-      (!url || createUrlMatcher(url)(res.url())),
-  )
-
-  const request = response.request()
-  const status = response.status()
-
-  let data: unknown = null
-  try {
-    data = await response.json()
-  } catch {
-    // Response is not JSON; ignore
-  }
-
-  let requestJson: unknown = null
-  try {
-    requestJson = await request.postDataJSON()
-  } catch {
-    // Request has no post data or is not JSON; ignore
-  }
-
-  return {request, response, data, status, requestJson}
-}

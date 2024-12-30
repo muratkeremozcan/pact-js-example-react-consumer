@@ -1,7 +1,6 @@
 import {test, expect} from '../support/fixtures'
 import {generateMovie} from '../../cypress/support/factories'
 import type {InterceptNetworkCall} from '../support/utils/network'
-import {interceptNetworkCall} from '../support/utils/network'
 import type {Movie} from 'src/consumer'
 
 test.describe('App routes', () => {
@@ -13,11 +12,10 @@ test.describe('App routes', () => {
   const movie = movies[0]
   let loadGetMovies: InterceptNetworkCall
 
-  test.beforeEach(({page}) => {
+  test.beforeEach(({interceptNetworkCall}) => {
     loadGetMovies = interceptNetworkCall({
       method: 'GET',
       url: '/movies',
-      page,
       fulfillResponse: {
         status: 200,
         body: {data: movies},
@@ -45,13 +43,15 @@ test.describe('App routes', () => {
     }
   })
 
-  test('should direct nav to by query param', async ({page}) => {
+  test('should direct nav to by query param', async ({
+    page,
+    interceptNetworkCall,
+  }) => {
     const movieName = encodeURIComponent(movie?.name as Movie['name'])
 
     const loadGetMovies2 = interceptNetworkCall({
       method: 'GET',
       url: '/movies?',
-      page,
       fulfillResponse: {
         status: 200,
         body: movie,

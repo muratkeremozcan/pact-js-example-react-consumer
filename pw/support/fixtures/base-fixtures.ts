@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {test as base} from '@playwright/test'
 import {
-  spyOn as spyOnFunction,
-  stubMethod as stubMethodFunction,
+  spyOn as spyOnOriginal,
+  stubMethod as stubMethodOriginal,
 } from '../utils/spy-stub-helper'
 
-type SpyOnFunction = (objectName: string, method: string) => Promise<any[]>
-type StubMethodFunction = (
+type SpyOnFn = (objectName: string, method: string) => Promise<any[]>
+type StubMethodFn = (
   objectName: string,
   method: string,
   implementation?: (...args: any[]) => any,
@@ -14,21 +14,18 @@ type StubMethodFunction = (
 
 // Extend the base test with our custom fixture
 const test = base.extend<{
-  spyOn: SpyOnFunction
-  stubMethod: StubMethodFunction
+  spyOn: SpyOnFn
+  stubMethod: StubMethodFn
 }>({
   spyOn: async ({page}, use) => {
-    const spyOn: SpyOnFunction = (objectName, method) =>
-      spyOnFunction(page, objectName, method)
-    await use(spyOn)
+    const spyOnFn: SpyOnFn = (objectName, method) =>
+      spyOnOriginal(page, objectName, method)
+    await use(spyOnFn)
   },
 
   stubMethod: async ({page}, use) => {
-    const stubMethod: StubMethodFunction = (
-      objectName,
-      method,
-      implementation,
-    ) => stubMethodFunction(page, objectName, method, implementation)
+    const stubMethod: StubMethodFn = (objectName, method, implementation) =>
+      stubMethodOriginal(page, objectName, method, implementation)
     await use(stubMethod)
   },
 })
