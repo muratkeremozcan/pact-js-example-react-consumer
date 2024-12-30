@@ -1,28 +1,23 @@
 import {test as base} from '@playwright/test'
-import type {Route, Request} from '@playwright/test'
 import {
-  interceptNetworkCall as interceptNetworkCallOriginal,
+  interceptNetworkCall as InterceptNetworkCallOriginal,
   type InterceptOptions,
 } from '../utils/network'
 
-//  Shared Types
-type InterceptNetworkCallOptions = {
-  method?: string
-  url?: string
-  fulfillResponse?: InterceptOptions['fulfillResponse']
-  handler?: (route: Route, request: Request) => Promise<void> | void
-}
+// Shared Types
+type InterceptOptionsFixture = Omit<InterceptOptions, 'page'>
 
 // Define the function signature as a type
 type InterceptNetworkCallFn = (
-  options: InterceptNetworkCallOptions,
-) => ReturnType<typeof interceptNetworkCallOriginal>
+  options: InterceptOptionsFixture,
+) => ReturnType<typeof InterceptNetworkCallOriginal>
 
-//  grouping them all together
-export type InterceptNetworkMethods = {
+// group the types together
+type InterceptNetworkMethods = {
   interceptNetworkCall: InterceptNetworkCallFn
 }
 
+// Generic Type Extension
 export const test = base.extend<InterceptNetworkMethods>({
   interceptNetworkCall: async ({page}, use) => {
     const interceptNetworkCallFn: InterceptNetworkCallFn = ({
@@ -30,13 +25,13 @@ export const test = base.extend<InterceptNetworkMethods>({
       url,
       fulfillResponse,
       handler,
-    }: InterceptNetworkCallOptions) =>
-      interceptNetworkCallOriginal({
-        page,
+    }: InterceptOptionsFixture) =>
+      InterceptNetworkCallOriginal({
         method,
         url,
         fulfillResponse,
         handler,
+        page,
       })
 
     await use(interceptNetworkCallFn)
