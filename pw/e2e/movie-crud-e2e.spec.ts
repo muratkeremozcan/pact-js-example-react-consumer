@@ -17,21 +17,19 @@ test.describe('movie crud e2e', () => {
     }
   })
 
-  test.beforeEach(
-    'should add and delete a movie from movie list',
-    async ({page}) => {
-      const loadGetMovies = page.waitForResponse(
-        response =>
-          response.url().includes('/movies') &&
-          response.request().method() === 'GET',
-      )
-      await page.goto('/')
-      const response = await loadGetMovies
-      const responseStatus = await response.status()
-      expect(responseStatus).toBeGreaterThanOrEqual(200)
-      expect(responseStatus).toBeLessThan(400)
-    },
-  )
+  test.beforeEach(async ({page}) => {
+    const loadGetMovies = page.waitForResponse(
+      response =>
+        response.url().includes('/movies') &&
+        response.request().method() === 'GET',
+    )
+
+    await page.goto('/')
+    const response = await loadGetMovies
+    const responseStatus = await response.status()
+    expect(responseStatus).toBeGreaterThanOrEqual(200)
+    expect(responseStatus).toBeLessThan(400)
+  })
 
   test('should add and delete a movie from movie list', async ({page}) => {
     const {name, year, rating, director} = generateMovie()
@@ -98,13 +96,13 @@ test.describe('movie crud e2e', () => {
       baseUrl: process.env.VITE_API_URL,
     })
 
-    const {body: createResponse} = await addMovie(
+    const {body: createResponseBody} = await addMovie(
       token,
       movie,
       process.env.VITE_API_URL,
     )
 
-    const id = createResponse.data.id
+    const id = createResponseBody.data.id
 
     await page.goto(`/movies/${id}`)
 
@@ -116,7 +114,6 @@ test.describe('movie crud e2e', () => {
 
     await page.goto(`/movies/${id}`)
     await page.getByTestId('delete-movie').click()
-
     await expect(page).toHaveURL('/movies')
     await page.waitForSelector(`text=${editedName}`, {state: 'detached'})
   })

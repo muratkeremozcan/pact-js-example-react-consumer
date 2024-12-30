@@ -26,7 +26,7 @@ test.describe('movie crud e2e stubbed', () => {
         headers: {'Content-Type': 'application/json'},
       }),
     )
-    const loadGetMovies = page.waitForResponse(
+    const loadNoMovies = page.waitForResponse(
       response =>
         response.url().includes('/movies') &&
         response.request().method() === 'GET' &&
@@ -34,7 +34,7 @@ test.describe('movie crud e2e stubbed', () => {
     )
 
     await page.goto('/')
-    await loadGetMovies
+    await loadNoMovies
 
     await addMovie(page, name, year, rating, director)
 
@@ -55,13 +55,14 @@ test.describe('movie crud e2e stubbed', () => {
         return route.continue()
       }
     })
+
     const loadAddMovie = page.waitForResponse(
       response =>
         response.url().includes('/movies') &&
         response.request().method() === 'POST' &&
         response.status() === 200,
     )
-    const loadGetMovies2 = page.waitForResponse(
+    const loadGetMovies = page.waitForResponse(
       response =>
         response.url().includes('/movies') &&
         response.request().method() === 'GET' &&
@@ -70,7 +71,7 @@ test.describe('movie crud e2e stubbed', () => {
 
     await page.getByTestId('add-movie-button').click()
     await loadAddMovie
-    await loadGetMovies2
+    await loadGetMovies
   })
 
   test('should edit a movie', async ({page}) => {
@@ -106,9 +107,9 @@ test.describe('movie crud e2e stubbed', () => {
     await loadGetMovies
 
     await page.getByTestId(`link-${id}`).click()
+    await expect(page).toHaveURL(`/movies/${id}`)
     const getMovieByIdResponse = await loadGetMovieById
 
-    await expect(page).toHaveURL(`/movies/${id}`)
     const {data} = await getMovieByIdResponse.json()
     expect(data).toEqual(movie)
 
@@ -139,10 +140,9 @@ test.describe('movie crud e2e stubbed', () => {
     )
 
     await editMovie(page, editedName, editedYear, editedRating, editedDirector)
-
     const updateMovieByIdRes = await loadUpdateMovieById
-    const updateMovieData = await updateMovieByIdRes.json()
-    expect(updateMovieData.name).toBe(editedName)
+    const updatedMovieData = await updateMovieByIdRes.json()
+    expect(updatedMovieData.name).toBe(editedName)
   })
 
   test('should delete a movie', async ({page}) => {

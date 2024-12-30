@@ -3,7 +3,6 @@ import {expect, test} from '../support/fixtures'
 import {addMovie} from '../support/ui-helpers/add-movie'
 import {editMovie} from '../support/ui-helpers/edit-movie'
 import {runCommand} from '../support/utils/run-command'
-import {interceptNetworkCall} from 'pw/support/utils/network'
 const isCI = require('is-ci')
 
 test.describe('movie crud e2e', () => {
@@ -18,22 +17,23 @@ test.describe('movie crud e2e', () => {
     }
   })
 
-  test.beforeEach(
-    'should add and delete a movie from movie list',
-    async ({page}) => {
-      const loadGetMovies = interceptNetworkCall({
-        method: 'GET',
-        url: '/movies',
-        page,
-      })
-      await page.goto('/')
-      const {status: responseStatus} = await loadGetMovies
-      expect(responseStatus).toBeGreaterThanOrEqual(200)
-      expect(responseStatus).toBeLessThan(400)
-    },
-  )
+  test.beforeEach(async ({page, interceptNetworkCall}) => {
+    const loadGetMovies = interceptNetworkCall({
+      method: 'GET',
+      url: '/movies',
+      page,
+    })
 
-  test('should add and delete a movie from movie list', async ({page}) => {
+    await page.goto('/')
+    const {status: responseStatus} = await loadGetMovies
+    expect(responseStatus).toBeGreaterThanOrEqual(200)
+    expect(responseStatus).toBeLessThan(400)
+  })
+
+  test('should add and delete a movie from movie list', async ({
+    page,
+    interceptNetworkCall,
+  }) => {
     const {name, year, rating, director} = generateMovie()
 
     await addMovie(page, name, year, rating, director)

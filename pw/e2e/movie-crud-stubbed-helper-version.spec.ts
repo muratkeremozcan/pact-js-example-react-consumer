@@ -1,17 +1,15 @@
-import {editMovie} from 'pw/support/ui-helpers/edit-movie'
-import {generateMovie} from '../../cypress/support/factories'
+import {generateMovie} from '../../cypress/support/factories' // Adjust path if necessary
 import type {Movie} from '../../src/consumer'
 import {expect, test} from '../support/fixtures'
 import {addMovie} from '../support/ui-helpers/add-movie'
-import {interceptNetworkCall} from '../support/utils/network'
+import {editMovie} from '../support/ui-helpers/edit-movie'
+// import {interceptNetworkCall} from '../support/utils/network'
 
 test.describe('movie crud e2e stubbed', () => {
-  // Generate initial movie data
   const {name, year, rating, director} = generateMovie()
   const id = 1
   const movie: Movie = {id, name, year, rating, director}
 
-  // Generate edited movie data
   const {
     name: editedName,
     year: editedYear,
@@ -19,12 +17,10 @@ test.describe('movie crud e2e stubbed', () => {
     director: editedDirector,
   } = generateMovie()
 
-  test('should add a movie', async ({page}) => {
-    // Initial empty movies list
-    const loadGetMovies = interceptNetworkCall({
+  test('should add a movie', async ({page, interceptNetworkCall}) => {
+    const loadNoMovies = interceptNetworkCall({
       method: 'GET',
       url: '/movies',
-      page,
       fulfillResponse: {
         status: 200,
         body: {data: []},
@@ -32,40 +28,40 @@ test.describe('movie crud e2e stubbed', () => {
     })
 
     await page.goto('/')
-    await loadGetMovies
+    await loadNoMovies
 
     await addMovie(page, name, year, rating, director)
 
-    // Single intercept for both POST and GET
     const loadPostOrGetMovies = interceptNetworkCall({
-      page,
       url: '/movies',
       handler: async (route, request) => {
         if (request.method() === 'POST') {
-          await route.fulfill({
+          return route.fulfill({
             status: 200,
             body: JSON.stringify(movie),
+            headers: {'Content-Type': 'application/json'},
           })
         } else if (request.method() === 'GET') {
-          await route.fulfill({
+          return route.fulfill({
             status: 200,
             body: JSON.stringify({data: [movie]}),
+            headers: {'Content-Type': 'application/json'},
           })
         } else {
-          await route.continue()
+          return route.continue()
         }
       },
     })
 
     await page.getByTestId('add-movie-button').click()
     await loadPostOrGetMovies
+    await loadPostOrGetMovies
   })
 
-  test('should edit a movie', async ({page}) => {
+  test('should edit movie', async ({page, interceptNetworkCall}) => {
     const loadGetMovies = interceptNetworkCall({
       method: 'GET',
-      url: '**/movies',
-      page,
+      url: '/movies',
       fulfillResponse: {
         status: 200,
         body: {data: [movie]},
@@ -73,9 +69,8 @@ test.describe('movie crud e2e stubbed', () => {
     })
 
     const loadGetMovieById = interceptNetworkCall({
-      page,
       method: 'GET',
-      url: '**/movies/*',
+      url: '/movies/*',
       fulfillResponse: {
         status: 200,
         body: {data: movie},
@@ -86,14 +81,15 @@ test.describe('movie crud e2e stubbed', () => {
     await loadGetMovies
 
     await page.getByTestId(`link-${id}`).click()
-    await loadGetMovieById
-
     await expect(page).toHaveURL(`/movies/${id}`)
+    const {
+      data: {data: getMovieByIdData},
+    } = (await loadGetMovieById) as {data: {data: Movie}}
+    expect(getMovieByIdData).toEqual(movie)
 
     const loadUpdateMovieById = interceptNetworkCall({
-      page,
       method: 'PUT',
-      url: '**/movies/*',
+      url: '/movies/*',
       fulfillResponse: {
         status: 200,
         body: {
@@ -113,11 +109,10 @@ test.describe('movie crud e2e stubbed', () => {
     expect((data as {data: Movie}).data.name).toBe(editedName)
   })
 
-  test('should delete a movie', async ({page}) => {
+  test('should delete a movie', async ({page, interceptNetworkCall}) => {
     const loadGetMovies = interceptNetworkCall({
       method: 'GET',
-      url: '**/movies',
-      page,
+      url: '/movies',
       fulfillResponse: {
         status: 200,
         body: {data: [movie]},
@@ -128,9 +123,8 @@ test.describe('movie crud e2e stubbed', () => {
     await loadGetMovies
 
     const loadDeleteMovie = interceptNetworkCall({
-      page,
       method: 'DELETE',
-      url: '**/movies/*',
+      url: '/movies/*',
       fulfillResponse: {
         status: 200,
       },
@@ -138,8 +132,7 @@ test.describe('movie crud e2e stubbed', () => {
 
     const loadGetMoviesAfterDelete = interceptNetworkCall({
       method: 'GET',
-      url: '**/movies',
-      page,
+      url: '/movies',
       fulfillResponse: {
         status: 200,
         body: {data: []},
