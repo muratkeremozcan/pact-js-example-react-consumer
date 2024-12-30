@@ -21,7 +21,6 @@ test.describe('movie crud e2e', () => {
     const loadGetMovies = interceptNetworkCall({
       method: 'GET',
       url: '/movies',
-      page,
     })
 
     await page.goto('/')
@@ -41,7 +40,6 @@ test.describe('movie crud e2e', () => {
     const loadAddMovie = interceptNetworkCall({
       method: 'POST',
       url: '/movies',
-      page,
     })
 
     await page.getByTestId('add-movie-button').click()
@@ -61,7 +59,6 @@ test.describe('movie crud e2e', () => {
     const loadDeleteMovie = interceptNetworkCall({
       method: 'DELETE',
       url: '/movies/*',
-      page,
     })
 
     await page.getByTestId(`delete-movie-${name}`).click()
