@@ -11,6 +11,7 @@ import {
 } from '@vitest-utils/utils'
 import MovieForm from './movie-form'
 import {generateMovie} from '../../../cypress/support/factories'
+import type {Movie} from 'src/consumer'
 
 describe('<MovieForm />', () => {
   const user = userEvent.setup()
@@ -38,69 +39,62 @@ describe('<MovieForm />', () => {
   }
 
   it('should fill the form and add the movie', async () => {
-    // Setup MSW handler for this test
-    worker.use(
-      http.post('http://localhost:3001/movies', async ({request}) => {
-        const data = await request.json()
-        return new Response(JSON.stringify(data), {
-          status: 200,
-        })
-      }),
-    )
+    const {name, year, rating, director} = generateMovie()
+    const movie: Omit<Movie, 'id'> = {name, year, rating, director}
 
     wrappedRender(<MovieForm />)
-    const nameInput = screen.getByPlaceholderText('Movie name')
-    const yearInput = screen.getByPlaceholderText('Movie year')
-    const ratingInput = screen.getByPlaceholderText('Movie rating')
-    const directorInput = screen.getByPlaceholderText('Movie director')
-    const addButton = screen.getByRole('button', {name: /add movie/i})
-
-    const {name, year, rating, director} = generateMovie()
-
     await fillName(name)
     await fillYear(year)
     await fillRating(rating)
     await fillDirector(director)
 
-    await user.click(addButton)
+    let postRequest
+    worker.use(
+      http.post('http://localhost:3001/movies', async ({request}) => {
+        postRequest = await request.json()
+        return new Response(undefined, {
+          status: 200,
+        })
+      }),
+    )
 
-    // Verify form reset
+    await user.click(screen.getByText('Add Movie'))
+
     await waitFor(() => {
-      expect(nameInput).toHaveValue('')
-      expect(yearInput).toHaveValue(2023)
-      expect(ratingInput).toHaveValue(0)
-      expect(directorInput).toHaveValue('')
+      expect(screen.getByPlaceholderText('Movie name')).toHaveValue('')
+      expect(screen.getByPlaceholderText('Movie year')).toHaveValue(2023)
+      expect(screen.getByPlaceholderText('Movie rating')).toHaveValue(0)
     })
+    expect(postRequest).toEqual(movie)
   })
 
   it('should exercise validation errors', async () => {
     wrappedRender(<MovieForm />)
-    const addButton = screen.getByRole('button', {name: /add movie/i})
 
-    // Test with year 2025 - should show 3 errors
     await fillYear(2025)
-    await user.click(addButton)
-    const validationErrors = screen.getAllByTestId('validation-error')
-    expect(validationErrors).toHaveLength(3)
+    await user.click(screen.getByText('Add Movie'))
 
-    // Test with year 1899 - should show 3 errors
+    const validationError = screen.getAllByTestId('validation-error')
+    expect(validationError).toHaveLength(3)
+
     await fillYear(1899)
-    await user.click(addButton)
-    const moreValidationErrors = screen.getAllByTestId('validation-error')
-    expect(moreValidationErrors).toHaveLength(3)
+    screen.getByText('Add Movie').click()
+    expect(validationError).toHaveLength(3)
 
-    // Test with valid data - should show no errors
     await fillYear(2024)
     await fillName('4')
     await fillDirector('Christopher Nolan')
-    await user.click(addButton)
-    expect(screen.queryByTestId('validation-error')).not.toBeInTheDocument()
+    screen.getByText('Add Movie').click()
+    await waitFor(() => {
+      expect(screen.queryByTestId('validation-error')).not.toBeInTheDocument()
+    })
 
-    // Test with lower bound - should show no errors
     await fillYear(1900)
     await fillName('4')
     await fillDirector('Christopher Nolan')
-    await user.click(addButton)
-    expect(screen.queryByTestId('validation-error')).not.toBeInTheDocument()
+    screen.getByText('Add Movie').click()
+    await waitFor(() => {
+      expect(screen.queryByTestId('validation-error')).not.toBeInTheDocument()
+    })
   })
 })

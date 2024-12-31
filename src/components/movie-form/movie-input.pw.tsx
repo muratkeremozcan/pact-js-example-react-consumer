@@ -16,16 +16,15 @@ test.describe('<MovieInput>', () => {
   test('should render a name input', async ({mount}) => {
     const {name} = movie
 
-    const component = await mount(
+    const c = await mount(
       <MovieInput
         type="text"
         value={name}
-        onChange={onChange}
         placeholder="place holder"
+        onChange={onChange}
       />,
     )
-
-    const input = component.getByPlaceholder('place holder')
+    const input = c.getByPlaceholder('place holder')
     expect(input).toBeVisible()
     expect(input).toHaveValue(name)
 
@@ -38,7 +37,7 @@ test.describe('<MovieInput>', () => {
   test('should render a year input', async ({mount}) => {
     const {year} = movie
 
-    const component = await mount(
+    const c = await mount(
       <MovieInput
         type="number"
         value={year}
@@ -47,7 +46,7 @@ test.describe('<MovieInput>', () => {
       />,
     )
 
-    const input = component.getByPlaceholder('place holder')
+    const input = c.getByPlaceholder('place holder')
     expect(input).toBeVisible()
     expect(input).toHaveValue(String(year))
 

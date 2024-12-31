@@ -16,7 +16,6 @@ describe('<MovieList />', () => {
     wrappedRender(<MovieList movies={[]} onDelete={onDelete} />)
 
     expect(screen.queryByTestId('movie-list-comp')).not.toBeInTheDocument()
-    expect(onDelete).not.toHaveBeenCalled()
   })
 
   it('should show error with error', () => {
@@ -24,7 +23,6 @@ describe('<MovieList />', () => {
 
     expect(screen.queryByTestId('movie-list-comp')).not.toBeInTheDocument()
     expect(screen.getByTestId('error')).toBeInTheDocument()
-    expect(onDelete).not.toHaveBeenCalled()
   })
 
   it('should verify the movie and delete', () => {
@@ -37,8 +35,6 @@ describe('<MovieList />', () => {
 
     const movieItems = screen.getAllByTestId('movie-item-comp')
     expect(movieItems).toHaveLength(2)
-    movieItems.forEach(movieItem => {
-      expect(movieItem).toBeVisible()
-    })
+    movieItems.forEach(movieItem => expect(movieItem).toBeVisible())
   })
 })

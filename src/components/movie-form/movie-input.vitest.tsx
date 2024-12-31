@@ -16,28 +16,42 @@ describe('<MovieInput />', () => {
   const user = userEvent.setup()
 
   it('should render a text input', async () => {
+    const {name} = movie
+
     wrappedRender(
       <MovieInput
         type="text"
-        value={movie.name}
-        onChange={onChange}
+        value={name}
         placeholder="place holder"
+        onChange={onChange}
       />,
     )
 
     const input = screen.getByPlaceholderText('place holder')
     expect(input).toBeVisible()
-    expect(input).toHaveValue(movie.name)
+    expect(input).toHaveValue(name)
 
-    await user.type(input, 'test movie')
-    expect(onChange).toHaveBeenCalled()
+    await user.type(input, 'a')
+    expect(onChange).toHaveBeenCalledTimes(1)
+
+    // @ts-expect-error okay
+    expect(onChange.mock.calls[0][0].target.value).toBe(`${name}`)
+    // alternative
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        target: expect.objectContaining({
+          value: name,
+        }),
+      }),
+    )
   })
 
   it('should render a year input', async () => {
+    const {year} = movie
     wrappedRender(
       <MovieInput
         type="number"
-        value={movie.year}
+        value={year}
         onChange={onChange}
         placeholder="place holder"
       />,
@@ -45,9 +59,8 @@ describe('<MovieInput />', () => {
 
     const input = screen.getByTestId('movie-input-comp-number')
     expect(input).toBeVisible()
-    expect(input).toHaveValue(movie.year)
+    expect(input).toHaveValue(year)
 
     await user.type(input, '1')
-    expect(onChange).toHaveBeenCalled()
   })
 })

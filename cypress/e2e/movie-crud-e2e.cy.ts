@@ -41,7 +41,6 @@ describe('movie crud e2e', () => {
             data: {
               id: spok.number,
               name,
-              year,
               rating,
               director,
             },

@@ -5,14 +5,16 @@ import sinon from 'sinon'
 test.describe('<MovieItem>', () => {
   const sandbox = sinon.createSandbox()
   const onDelete = sandbox.stub()
+
   test.afterEach(() => {
     sandbox.restore()
   })
 
   test('should verify the movie and delete', async ({mount}) => {
-    const component = await mount(
+    const id = 3
+    const c = await mount(
       <MovieItem
-        id={3}
+        id={id}
         name={'my movie'}
         year={2023}
         rating={8.5}
@@ -21,12 +23,12 @@ test.describe('<MovieItem>', () => {
       />,
     )
 
-    const link = component.getByText('my movie')
+    const link = c.getByText('my movie')
     await expect(link).toBeVisible()
-    await expect(link).toHaveAttribute('href', '/movies/3')
+    await expect(link).toHaveAttribute('href', `/movies/${id}`)
 
-    await component.getByRole('button', {name: /delete/i}).click()
+    await c.getByRole('button', {name: /delete/i}).click()
     expect(onDelete.calledOnce).toBe(true)
-    expect(onDelete.calledWith(3)).toBe(true)
+    expect(onDelete.calledWith(id)).toBe(true)
   })
 })

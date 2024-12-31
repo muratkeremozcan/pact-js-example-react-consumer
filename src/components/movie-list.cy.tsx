@@ -34,5 +34,9 @@ describe('<MovieList />', () => {
 
     cy.getByCy('movie-list-comp').should('be.visible')
     cy.getByCy('movie-item-comp').should('have.length', 2)
+
+    cy.contains('Delete').click()
+    cy.get('@onDelete').should('be.calledOnce')
+    cy.get('@onDelete').its('callCount').should('eq', 1)
   })
 })

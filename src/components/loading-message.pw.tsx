@@ -3,10 +3,10 @@ import LoadingMessage from './loading-message'
 
 test.describe('<LoadingMessage>', () => {
   test('should render a loading message', async ({mount}) => {
-    const component = await mount(<LoadingMessage />)
+    const c = await mount(<LoadingMessage />)
 
     // PW CT is in beta: PW has Issues with attribute selectors in component tests
-    await expect(component.getByText('Loading movies...')).toBeVisible()
-    // await expect(component.getByTestId('loading-message-comp')).toBeVisible() // this fails
+    await expect(c.getByText('Loading movies...')).toBeVisible()
+    // await expect(c.getByTestId('loading-message-comp')).toBeVisible() // this fails
   })
 })

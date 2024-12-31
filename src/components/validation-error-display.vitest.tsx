@@ -1,5 +1,4 @@
 import {describe, expect, it, screen, wrappedRender} from '@vitest-utils/utils'
-
 import ValidationErrorDisplay from './validation-error-display'
 import {ZodError} from 'zod'
 
@@ -27,10 +26,10 @@ describe('<ValidationErrorDisplay />', () => {
         received: 'string',
       },
     ])
+
     wrappedRender(<ValidationErrorDisplay validationError={mockError} />)
 
-    const validationErrors = screen.getAllByTestId('validation-error')
-    expect(validationErrors).toHaveLength(2)
+    expect(screen.getAllByTestId('validation-error')).toHaveLength(2)
     expect(screen.getByText('Name is required')).toBeVisible()
     expect(screen.getByText('Year must be a number')).toBeVisible()
   })

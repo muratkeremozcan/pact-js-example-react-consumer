@@ -5,19 +5,18 @@ import {
   it,
   expect,
   vi,
-  userEvent,
 } from '@vitest-utils/utils'
 
 import MovieItem from './movie-item'
 
 describe('<MovieItem />', () => {
   const onDelete = vi.fn()
-  const user = userEvent.setup()
 
   it('should verify the movie and delete', async () => {
+    const id = 3
     wrappedRender(
       <MovieItem
-        id={3}
+        id={id}
         name={'my movie'}
         year={2023}
         rating={8.5}
@@ -28,11 +27,10 @@ describe('<MovieItem />', () => {
 
     const link = screen.getByText('my movie (2023) 8.5 my director')
     expect(link).toBeVisible()
-    expect(link).toHaveAttribute('href', '/movies/3')
+    expect(link).toHaveAttribute('href', `/movies/${id}`)
 
-    await user.click(screen.getByRole('button', {name: /delete/i}))
-
+    await screen.getByRole('button', {name: /delete/i}).click()
     expect(onDelete).toHaveBeenCalledTimes(1)
-    expect(onDelete).toHaveBeenCalledWith(3)
+    expect(onDelete).toHaveBeenCalledWith(id)
   })
 })
