@@ -6,10 +6,8 @@ test.describe('<ValidationErrorDisplay>', () => {
   test('should not render when there is no validation error', async ({
     mount,
   }) => {
-    const component = await mount(
-      <ValidationErrorDisplay validationError={null} />,
-    )
-    await expect(component.getByText('Name is required')).not.toBeVisible()
+    const c = await mount(<ValidationErrorDisplay validationError={null} />)
+    await expect(c.getByText('Name is required')).not.toBeVisible()
   })
 
   test('should render validation errors correctly', async ({mount}) => {
@@ -30,17 +28,17 @@ test.describe('<ValidationErrorDisplay>', () => {
       },
     ])
 
-    const component = await mount(
+    const c = await mount(
       <ValidationErrorDisplay validationError={mockError} />,
     )
 
     // PW CT is in beta: Playwright's Error boundary is always active in the global mount... this is not ideal
 
     // these should be the real check
-    // await expect(component.getByText('Name is required')).toBeVisible()
-    // await expect(component.getByText('Year must be a number')).toBeVisible()
+    // await expect(c.getByText('Name is required')).toBeVisible()
+    // await expect(c.getByText('Year must be a number')).toBeVisible()
 
     // but only this works
-    await expect(component.getByText('Something went wrong')).toBeVisible()
+    await expect(c.getByText('Something went wrong')).toBeVisible()
   })
 })

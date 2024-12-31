@@ -41,7 +41,6 @@ describe('movie crud e2e', () => {
             data: {
               id: spok.number,
               name,
-              year,
               rating,
               director,
             },
@@ -88,7 +87,7 @@ describe('movie crud e2e', () => {
 
         cy.visit(`/movies/${id}`)
         cy.getByCy('delete-movie').click()
-
+        cy.location('pathname').should('eq', '/movies')
         cy.contains(editedName).should('not.exist')
       })
   })

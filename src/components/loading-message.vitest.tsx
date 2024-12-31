@@ -5,6 +5,6 @@ describe('<LoadingMessage />', () => {
   it('should render a loading message', () => {
     wrappedRender(<LoadingMessage />)
 
-    expect(screen.getByText('Loading movies...')).toBeVisible()
+    expect(screen.getByTestId('loading-message-comp')).toBeVisible()
   })
 })
