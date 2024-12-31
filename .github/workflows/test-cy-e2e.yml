@@ -1,4 +1,4 @@
-name: Run e2e & ct with cy
+name: Run e2e with cy
 on:
   push:
   workflow_dispatch:
