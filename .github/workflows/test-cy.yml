@@ -1,4 +1,4 @@
-name: Run e2e & ct tests with cy
+name: Run e2e & ct with cy
 on:
   push:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Cypress e2e tests 
+      - name: Cypress e2e tests
         uses: cypress-io/github-action@v6.7.8
         with:
           start: npm run start
@@ -53,7 +53,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Cypress component tests 
+      - name: Cypress component tests
         uses: cypress-io/github-action@v6.7.8
         with:
           component: true

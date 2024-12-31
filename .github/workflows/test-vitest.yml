@@ -1,4 +1,4 @@
-name: Run e2e tests with pw
+name: Run ct with Vitest
 on:
   push:
   workflow_dispatch:
