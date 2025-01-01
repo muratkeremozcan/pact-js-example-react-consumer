@@ -2,6 +2,8 @@
 import type {Page, Request, Response, Route} from '@playwright/test'
 import picomatch from 'picomatch'
 
+export type InterceptNetworkCall = ReturnType<typeof interceptNetworkCall>
+
 type FulfillResponse = {
   status?: number
   headers?: Record<string, string>
