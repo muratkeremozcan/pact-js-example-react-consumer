@@ -150,32 +150,9 @@ async function observeNetworkCall(
 function createUrlMatcher(pattern?: string): (url: string) => boolean {
   if (!pattern) return () => true
 
-  // Split pattern into path and query if it contains a question mark
-  const [pathPattern, queryPattern] = pattern.split('?')
-
-  // Convert URL pattern to glob pattern if needed
-  const globPattern = pathPattern?.startsWith('**')
-    ? pathPattern
-    : `**${pathPattern}`
+  const globPattern = pattern.startsWith('**') ? pattern : `**${pattern}`
   const isMatch = picomatch(globPattern)
-
-  return (url: string) => {
-    // Split URL into path and query
-    const [urlPath, urlQuery] = url.split('?')
-
-    // Check if path matches
-    const pathMatches = isMatch(urlPath as string)
-
-    // If there's no query pattern, just check the path
-    if (!queryPattern) return pathMatches
-
-    // If there's a query pattern but no query in URL, no match
-    if (!urlQuery) return false
-
-    // For query parameters, just check if it starts with the pattern
-    // This allows matching '/movies?' to match '/movies?name=something'
-    return pathMatches && urlQuery.startsWith(queryPattern)
-  }
+  return (url: string) => isMatch(url)
 }
 
 function matchesRequest(
