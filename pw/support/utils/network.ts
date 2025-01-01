@@ -68,8 +68,17 @@ async function fulfillNetworkCall(
   const routePattern = url?.startsWith('**') ? url : `**${url || '*'}`
   const preparedResponse = prepareResponse(fulfillResponse)
 
+  // Create a promise that will resolve with the request data
+  let resolveRequest: (request: Request) => void
+  const requestPromise = new Promise<Request>(resolve => {
+    resolveRequest = resolve
+  })
+
   await page.route(routePattern, async (route, request) => {
     if (matchesRequest(request, method, url)) {
+      // Capture the request before handling it
+      resolveRequest(request)
+
       if (handler) {
         await handler(route, request)
       } else if (preparedResponse) {
@@ -80,12 +89,21 @@ async function fulfillNetworkCall(
     }
   })
 
+  // Wait for the request to be captured
+  const request = await requestPromise
+  let requestJson = null
+  try {
+    requestJson = await request.postDataJSON()
+  } catch {
+    // Request has no post data or is not JSON
+  }
+
   return {
-    request: null,
+    request,
     response: null,
     data: fulfillResponse?.body ?? null,
     status: fulfillResponse?.status ?? 200,
-    requestJson: null,
+    requestJson,
   }
 }
 
