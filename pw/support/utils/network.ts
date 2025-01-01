@@ -2,6 +2,8 @@
 import type {Page, Request, Response, Route} from '@playwright/test'
 import picomatch from 'picomatch'
 
+export type InterceptNetworkCall = ReturnType<typeof interceptNetworkCall>
+
 type FulfillResponse = {
   status?: number
   headers?: Record<string, string>
@@ -30,8 +32,6 @@ type NetworkCallResult = {
   requestJson: unknown
 }
 
-export type InterceptNetworkCall = ReturnType<typeof interceptNetworkCall>
-
 /**
  * Intercepts a network request matching the given criteria.
  * - If `fulfillResponse` is provided, stubs the request and fulfills it with the given response.
@@ -48,55 +48,90 @@ export async function interceptNetworkCall({
   handler,
 }: InterceptOptions): Promise<NetworkCallResult> {
   if (!page) {
-    throw new Error('Page is required')
+    throw new Error('The `page` argument is required for network interception')
   }
 
+  if (fulfillResponse || handler) {
+    return fulfillNetworkCall(page, method, url, fulfillResponse, handler)
+  } else {
+    return observeNetworkCall(page, method, url)
+  }
+}
+
+async function fulfillNetworkCall(
+  page: Page,
+  method?: string,
+  url?: string,
+  fulfillResponse?: FulfillResponse,
+  handler?: (route: Route, request: Request) => Promise<void> | void,
+): Promise<NetworkCallResult> {
+  const routePattern = url?.startsWith('**') ? url : `**${url || '*'}`
   const preparedResponse = prepareResponse(fulfillResponse)
 
-  // Set up route handler if needed
-  if (handler || fulfillResponse) {
-    const routePattern = url?.startsWith('**') ? url : `**${url}`
-    await page.route(routePattern || '**', async (route, request) => {
-      if (!matchesRequest(request, method, url)) {
-        return route.continue()
-      }
+  // Create a promise that will resolve with the request data
+  let resolveRequest: (request: Request) => void
+  const requestPromise = new Promise<Request>(resolve => {
+    resolveRequest = resolve
+  })
+
+  await page.route(routePattern, async (route, request) => {
+    if (matchesRequest(request, method, url)) {
+      // Capture the request before handling it
+      resolveRequest(request)
 
       if (handler) {
         await handler(route, request)
       } else if (preparedResponse) {
         await route.fulfill(preparedResponse)
-      } else {
-        await route.continue()
       }
-    })
+    } else {
+      await route.continue()
+    }
+  })
+
+  // Wait for the request to be captured
+  const request = await requestPromise
+  let requestJson = null
+  try {
+    requestJson = await request.postDataJSON()
+  } catch {
+    // Request has no post data or is not JSON
   }
 
-  // Wait for response
-  const response = await page.waitForResponse(res =>
-    matchesRequest(res.request(), method, url),
+  return {
+    request,
+    response: null,
+    data: fulfillResponse?.body ?? null,
+    status: fulfillResponse?.status ?? 200,
+    requestJson,
+  }
+}
+
+async function observeNetworkCall(
+  page: Page,
+  method?: string,
+  url?: string,
+): Promise<NetworkCallResult> {
+  const request = await page.waitForRequest(req =>
+    matchesRequest(req, method, url),
   )
 
-  const request = response.request()
-  let data = null
-  let requestJson = null
-
-  if (fulfillResponse?.body) {
-    // If we have a fulfillResponse, use that directly
-    data =
-      typeof fulfillResponse.body === 'string'
-        ? JSON.parse(fulfillResponse.body)
-        : fulfillResponse.body
-  } else {
-    try {
-      const contentType = response.headers()['content-type']
-      if (contentType?.includes('application/json')) {
-        data = await response.json()
-      }
-    } catch {
-      // Response is not JSON
-    }
+  const response = await request.response()
+  if (!response) {
+    throw new Error('No response received for the request')
   }
 
+  let data = null
+  try {
+    const contentType = response.headers()['content-type']
+    if (contentType?.includes('application/json')) {
+      data = await response.json()
+    }
+  } catch {
+    // Response is not JSON
+  }
+
+  let requestJson = null
   try {
     requestJson = await request.postDataJSON()
   } catch {
@@ -115,32 +150,9 @@ export async function interceptNetworkCall({
 function createUrlMatcher(pattern?: string): (url: string) => boolean {
   if (!pattern) return () => true
 
-  // Split pattern into path and query if it contains a question mark
-  const [pathPattern, queryPattern] = pattern.split('?')
-
-  // Convert URL pattern to glob pattern if needed
-  const globPattern = pathPattern?.startsWith('**')
-    ? pathPattern
-    : `**${pathPattern}`
+  const globPattern = pattern.startsWith('**') ? pattern : `**${pattern}`
   const isMatch = picomatch(globPattern)
-
-  return (url: string) => {
-    // Split URL into path and query
-    const [urlPath, urlQuery] = url.split('?')
-
-    // Check if path matches
-    const pathMatches = isMatch(urlPath as string)
-
-    // If there's no query pattern, just check the path
-    if (!queryPattern) return pathMatches
-
-    // If there's a query pattern but no query in URL, no match
-    if (!urlQuery) return false
-
-    // For query parameters, just check if it starts with the pattern
-    // This allows matching '/movies?' to match '/movies?name=something'
-    return pathMatches && urlQuery.startsWith(queryPattern)
-  }
+  return (url: string) => isMatch(url)
 }
 
 function matchesRequest(

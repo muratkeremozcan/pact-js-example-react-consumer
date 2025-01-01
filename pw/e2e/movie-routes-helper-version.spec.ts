@@ -51,7 +51,7 @@ test.describe('App routes', () => {
 
     const loadGetMovies2 = interceptNetworkCall({
       method: 'GET',
-      url: '/movies?',
+      url: '/movies?*',
       fulfillResponse: {
         status: 200,
         body: movie,
