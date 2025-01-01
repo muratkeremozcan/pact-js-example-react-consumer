@@ -27,6 +27,7 @@
     "pw:open-local-trace": "npx playwright show-trace -c pw/config/local.config.ts",
     "pw:run-ct": "npx playwright test -c playwright-ct.config.ts",
     "pw:open-ct": "npx playwright test -c playwright-ct.config.ts --ui",
+    "pw:clear": "rm -rf test-results playwright-report",
     "jest": "jest",
     "test": "jest",
     "vitest:run": "vitest run --config vitest.headless.config.ts",
