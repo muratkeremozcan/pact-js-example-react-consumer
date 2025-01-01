@@ -1,4 +1,3 @@
-// support/utils/network.ts
 import type {Page, Request, Response, Route} from '@playwright/test'
 import picomatch from 'picomatch'
 
