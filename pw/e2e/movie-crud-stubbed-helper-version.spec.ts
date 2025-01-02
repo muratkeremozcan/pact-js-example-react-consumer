@@ -82,8 +82,8 @@ test.describe('movie crud e2e stubbed', () => {
     await page.getByTestId(`link-${id}`).click()
     await expect(page).toHaveURL(`/movies/${id}`)
     const {
-      data: {data: getMovieByIdData},
-    } = (await loadGetMovieById) as {data: {data: Movie}}
+      responseJson: {data: getMovieByIdData},
+    } = (await loadGetMovieById) as {responseJson: {data: Movie}}
     expect(getMovieByIdData).toEqual(movie)
 
     const loadUpdateMovieById = interceptNetworkCall({
@@ -104,7 +104,7 @@ test.describe('movie crud e2e stubbed', () => {
     })
 
     await editMovie(page, editedName, editedYear, editedRating, editedDirector)
-    const {data} = await loadUpdateMovieById
+    const {responseJson: data} = await loadUpdateMovieById
     expect((data as {data: Movie}).data.name).toBe(editedName)
   })
 
