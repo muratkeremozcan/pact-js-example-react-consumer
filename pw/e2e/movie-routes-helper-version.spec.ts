@@ -28,8 +28,8 @@ test.describe('App routes', () => {
 
     await expect(page).toHaveURL('/movies')
     const {
-      data: {data: moviesResponse},
-    } = (await loadGetMovies) as {data: {data: typeof movies}}
+      responseJson: {data: moviesResponse},
+    } = (await loadGetMovies) as {responseJson: {data: typeof movies}}
     expect(moviesResponse).toEqual(movies)
 
     await expect(page.getByTestId('movie-list-comp')).toBeVisible()
@@ -60,7 +60,7 @@ test.describe('App routes', () => {
 
     await page.goto(`/movies?name=${movieName}`)
 
-    const {data: resBody} = await loadGetMovies2
+    const {responseJson: resBody} = await loadGetMovies2
     expect(resBody).toEqual(movie)
 
     await expect(page).toHaveURL(`/movies?name=${movieName}`)

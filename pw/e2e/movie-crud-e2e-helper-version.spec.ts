@@ -44,7 +44,7 @@ test.describe('movie crud e2e', () => {
 
     await page.getByTestId('add-movie-button').click()
 
-    const {data: addMovieResponseBody} = await loadAddMovie
+    const {responseJson: addMovieResponseBody} = await loadAddMovie
     expect(addMovieResponseBody).toEqual({
       status: 200,
       data: {
@@ -63,7 +63,7 @@ test.describe('movie crud e2e', () => {
 
     await page.getByTestId(`delete-movie-${name}`).click()
 
-    const {data: deleteMovieResponseBody} = await loadDeleteMovie
+    const {responseJson: deleteMovieResponseBody} = await loadDeleteMovie
     expect(deleteMovieResponseBody).toEqual({
       status: 200,
       message: expect.any(String),
