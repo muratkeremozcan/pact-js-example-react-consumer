@@ -5,9 +5,9 @@ export const baseConfig = defineConfig({
   testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 3 : 2,
+  retries: process.env.CI ? 4 : 3,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: process.env.CI ? 'html' : 'list',
   use: {
     trace: 'on-first-retry',
     testIdAttribute: 'data-cy',

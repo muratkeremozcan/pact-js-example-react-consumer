@@ -54,6 +54,22 @@ npm run cy:open-e2e
 npm run cy:run-e2e  # headless version
 
 npm run test # run unit tests with jest
+
+# PW scripts
+npm run pw:open-local       # open mode (local config)
+npm run pw:open-local-debug # open with debug (local config)
+
+npm run pw:run-local        # run mode (local config)
+npm run pw:run-local-debug  # run with debug (local config)
+
+npm run pw:open-ct          # open mode (component tests)
+npm run pw:open-ct-debug    # open with debug (component tests)
+
+npm run pw:run-ct           # run mode (component tests)
+npm run pw:run-ct-debug     # run with debug (component tests)
+
+npm run pw:trace            # inspect a trace.zip file
+npm run pw:clear            # remove all temporary PW files
 ```
 
 #### Consumer flow for Pact Bi-directional contract testing
