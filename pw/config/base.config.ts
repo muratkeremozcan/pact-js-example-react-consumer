@@ -9,7 +9,7 @@ export const baseConfig = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'html' : 'list',
   use: {
-    trace: 'on-first-retry',
+    trace: 'retain-on-first-failure',
     testIdAttribute: 'data-cy',
   },
   projects: [
