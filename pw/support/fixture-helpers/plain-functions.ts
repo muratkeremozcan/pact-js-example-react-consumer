@@ -61,8 +61,21 @@ export async function apiRequest({
       throw new Error(`Unsupported HTTP method: ${method}`)
   }
 
-  const bodyJson = await response.json()
   const status = response.status()
 
-  return {status, body: bodyJson}
+  // Determine how to parse the response body
+  let bodyData: unknown = null
+  const contentType = response.headers()['content-type'] || ''
+
+  try {
+    if (contentType.includes('application/json')) {
+      bodyData = await response.json()
+    } else if (contentType.includes('text/')) {
+      bodyData = await response.text()
+    }
+  } catch (err) {
+    console.warn(`Failed to parse response body for status ${status}: ${err}`)
+  }
+
+  return {status, body: bodyData}
 }
