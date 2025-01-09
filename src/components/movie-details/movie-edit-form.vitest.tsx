@@ -8,6 +8,7 @@ import {
   expect,
   userEvent,
   vi,
+  waitFor,
 } from '@vitest-utils/utils'
 import MovieEditForm from './movie-edit-form'
 import {generateMovie} from '@cypress/support/factories'
@@ -36,11 +37,13 @@ describe('<MovieEditForm />', () => {
 
     await userEvent.click(screen.getByTestId('update-movie'))
 
-    expect(putRequest).toMatchObject({
-      name: movie.name,
-      year: movie.year,
-      rating: movie.rating,
-      director: movie.director,
+    await waitFor(() => {
+      expect(putRequest).toMatchObject({
+        name: movie.name,
+        year: movie.year,
+        rating: movie.rating,
+        director: movie.director,
+      })
     })
   })
 })
