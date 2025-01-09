@@ -23,8 +23,11 @@ describe('<MovieList />', () => {
   })
 
   it('should verify the movie and delete', () => {
-    const movie1 = {id: 1, ...generateMovie()}
-    const movie2 = {id: 2, ...generateMovie()}
+    const movie1Id = 7
+    const movie2Id = 42
+    const movie1 = {id: movie1Id, ...generateMovie()}
+    const movie2 = {id: movie2Id, ...generateMovie()}
+
     cy.routeWrappedMount(
       <MovieList
         movies={[movie1, movie2]}
@@ -35,8 +38,11 @@ describe('<MovieList />', () => {
     cy.getByCy('movie-list-comp').should('be.visible')
     cy.getByCy('movie-item-comp').should('have.length', 2)
 
-    cy.contains('Delete').click()
-    cy.get('@onDelete').should('be.calledOnce')
-    cy.get('@onDelete').its('callCount').should('eq', 1)
+    cy.getByCy(`delete-movie-${movie1.name}`).click()
+    cy.getByCy(`delete-movie-${movie2.name}`).click()
+    cy.get('@onDelete').should('be.calledTwice')
+    cy.get('@onDelete').its('callCount').should('eq', 2) // same thing
+    cy.get('@onDelete').should('be.calledWith', movie1Id)
+    cy.get('@onDelete').should('be.calledWith', movie2Id)
   })
 })

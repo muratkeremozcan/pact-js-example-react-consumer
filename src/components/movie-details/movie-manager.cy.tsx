@@ -22,7 +22,7 @@ describe('<MovieManager />', () => {
     cy.wrappedMount(<MovieManager {...props} />)
 
     cy.getByCy('delete-movie').click()
-    cy.get('@onDelete').should('have.been.calledOnce')
+    cy.get('@onDelete').should('have.been.calledOnceWith', id)
 
     cy.getByCy('movie-info-comp').should('be.visible')
     cy.getByCy('movie-edit-form-comp').should('not.exist')
