@@ -26,8 +26,10 @@ describe('<MovieList />', () => {
   })
 
   it('should verify the movie and delete', () => {
-    const movie1 = {id: 1, ...generateMovie()}
-    const movie2 = {id: 2, ...generateMovie()}
+    const movie1Id = 7
+    const movie2Id = 42
+    const movie1 = {id: movie1Id, ...generateMovie()}
+    const movie2 = {id: movie2Id, ...generateMovie()}
 
     wrappedRender(<MovieList movies={[movie1, movie2]} onDelete={onDelete} />)
 
@@ -36,5 +38,11 @@ describe('<MovieList />', () => {
     const movieItems = screen.getAllByTestId('movie-item-comp')
     expect(movieItems).toHaveLength(2)
     movieItems.forEach(movieItem => expect(movieItem).toBeVisible())
+
+    screen.getByTestId(`delete-movie-${movie1.name}`).click()
+    screen.getByTestId(`delete-movie-${movie2.name}`).click()
+    expect(onDelete).toBeCalledTimes(2)
+    expect(onDelete).toBeCalledWith(movie1Id)
+    expect(onDelete).toBeCalledWith(movie2Id)
   })
 })

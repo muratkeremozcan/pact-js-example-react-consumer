@@ -27,8 +27,10 @@ test.describe('<MovieList>', () => {
   })
 
   test('should verify the movie and delete', async ({mount}) => {
-    const movie1 = {id: 1, ...generateMovie()}
-    const movie2 = {id: 2, ...generateMovie()}
+    const movie1Id = 7
+    const movie2Id = 42
+    const movie1 = {id: movie1Id, ...generateMovie()}
+    const movie2 = {id: movie2Id, ...generateMovie()}
 
     const c = await mount(
       <MovieList movies={[movie1, movie2]} onDelete={onDelete} />,
@@ -44,8 +46,10 @@ test.describe('<MovieList>', () => {
       await expect(item).toBeVisible()
     }
 
-    await c.getByText('Delete').first().click()
-    expect(onDelete.calledOnce).toBe(true)
-    expect(onDelete.calledWith(1)).toBe(true)
+    await c.getByTestId(`delete-movie-${movie1.name}`).click()
+    await c.getByTestId(`delete-movie-${movie2.name}`).click()
+    expect(onDelete.calledTwice).toBe(true)
+    expect(onDelete.calledWith(movie1Id)).toBe(true)
+    expect(onDelete.calledWith(movie2Id)).toBe(true)
   })
 })
