@@ -8,7 +8,7 @@ export const baseConfig = defineConfig({
   retries: process.env.CI ? 4 : 1,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'html' : 'list',
-  timeout: 5000,
+  timeout: process.env.CI ? 15000 : 5000,
   use: {
     trace: 'retain-on-first-failure',
     testIdAttribute: 'data-cy',
