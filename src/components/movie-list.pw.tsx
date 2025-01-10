@@ -49,6 +49,7 @@ test.describe('<MovieList>', () => {
     await c.getByTestId(`delete-movie-${movie1.name}`).click()
     await c.getByTestId(`delete-movie-${movie2.name}`).click()
     expect(onDelete.calledTwice).toBe(true)
+    expect(onDelete.callCount).toBe(2)
     expect(onDelete.calledWith(movie1Id)).toBe(true)
     expect(onDelete.calledWith(movie2Id)).toBe(true)
   })

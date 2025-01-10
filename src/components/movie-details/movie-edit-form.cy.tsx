@@ -6,6 +6,7 @@ import spok from 'cy-spok'
 describe('<MovieEditForm />', () => {
   const id = 7
   const movie: Movie = {id, ...generateMovie()}
+
   it('should cancel and submit a movie update', () => {
     cy.intercept('PUT', `/movies/${id}`, {status: 200}).as('updateMovie')
 

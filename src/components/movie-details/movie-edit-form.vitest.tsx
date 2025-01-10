@@ -21,6 +21,11 @@ describe('<MovieEditForm />', () => {
   it('should cancel and submit a movie update', async () => {
     const onCancel = vi.fn()
 
+    wrappedRender(<MovieEditForm movie={movie} onCancel={onCancel} />)
+
+    await userEvent.click(screen.getByTestId('cancel'))
+    expect(onCancel).toHaveBeenCalledOnce()
+
     let putRequest: Record<string, unknown> | undefined
     worker.use(
       http.put(`http://localhost:3001/movies/${id}`, async ({request}) => {
@@ -29,11 +34,6 @@ describe('<MovieEditForm />', () => {
         return new Response(undefined, {status: 200})
       }),
     )
-
-    wrappedRender(<MovieEditForm movie={movie} onCancel={onCancel} />)
-
-    await userEvent.click(screen.getByTestId('cancel'))
-    expect(onCancel).toHaveBeenCalledOnce()
 
     await userEvent.click(screen.getByTestId('update-movie'))
 
