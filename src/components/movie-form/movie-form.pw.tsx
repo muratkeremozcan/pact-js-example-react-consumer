@@ -37,7 +37,6 @@ test.describe('<MovieForm />', () => {
 
     await c.getByText('Add Movie').click()
     const {requestJson} = await loadPostMovie
-    console.log(requestJson)
     expect(requestJson).toEqual({
       name,
       year,
