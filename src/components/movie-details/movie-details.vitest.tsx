@@ -99,7 +99,7 @@ describe('<MovieDetails />', () => {
   })
 
   it('should make a unique network call when the route takes a query parameter', async () => {
-    const route = `/movies?name=${movieName}`
+    const route = `/movies?name=${encodeURIComponent(movieName)}`
     let responseData: any
 
     worker.use(

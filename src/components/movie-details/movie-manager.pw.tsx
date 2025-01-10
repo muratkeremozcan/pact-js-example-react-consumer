@@ -31,18 +31,16 @@ test.describe('<MovieManager />', () => {
       onDelete,
     }
 
-    const component = await mount(<MovieManager {...props} />)
+    const c = await mount(<MovieManager {...props} />)
 
-    await component.getByTestId('delete-movie').click()
+    await c.getByTestId('delete-movie').click()
     expect(onDelete.calledOnceWith(id)).toBe(true)
 
-    await expect(component.getByTestId('movie-info-comp')).toBeVisible()
-    await expect(
-      component.getByTestId('movie-edit-form-comp'),
-    ).not.toBeVisible()
+    await expect(c.getByTestId('movie-info-comp')).toBeVisible()
+    await expect(c.getByTestId('movie-edit-form-comp')).not.toBeVisible()
 
-    await component.getByTestId('edit-movie').click()
-    await expect(component.getByTestId('movie-info-comp')).not.toBeVisible()
-    await expect(component.getByTestId('movie-edit-form-comp')).toBeVisible()
+    await c.getByTestId('edit-movie').click()
+    await expect(c.getByTestId('movie-info-comp')).not.toBeVisible()
+    await expect(c.getByTestId('movie-edit-form-comp')).toBeVisible()
   })
 })

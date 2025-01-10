@@ -22,17 +22,13 @@ test.describe('<MovieDetails />', () => {
     })
 
     const c = await mount(<MovieDetails />, {
-      hooksConfig: {
-        route: `/${id}`,
-        path: '/:id',
-      },
+      hooksConfig: {path: '/:id', route: `/${id}`},
     })
 
     // loading state in PW ct is handled differently than in Cypress
     // due to how React Suspense and the test runners interact.
     // so, this fails
     // await expect(c.getByTestId('loading-message-comp')).toBeVisible()
-
     const {responseJson} = await loadNetworkError
     expect(responseJson).toMatchObject({error})
 
@@ -57,7 +53,7 @@ test.describe('<MovieDetails />', () => {
     })
 
     const c = await mount(<MovieDetails />, {
-      hooksConfig: {route: `/${id}`, path: '/:id'},
+      hooksConfig: {path: '/:id', route: `/${id}`},
     })
 
     const {responseJson} = await loadNetworkError
@@ -67,7 +63,7 @@ test.describe('<MovieDetails />', () => {
       },
     })
 
-    await expect(c.locator(`text=${error}`)).toBeVisible()
+    await expect(c.getByText(error)).toBeVisible()
   })
 
   test('should make a unique network call when the route takes an id', async ({
