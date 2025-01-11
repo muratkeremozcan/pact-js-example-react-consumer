@@ -24,6 +24,8 @@ const pwViteConfig = merge(
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig(
+  // @ts-expect-error PW ct beta is not yet vite 6 compliant
+  // - revisit removing this when PW updates
   merge({}, baseConfig, {
     testDir: './src',
     testMatch: '**/*.pw.tsx',
