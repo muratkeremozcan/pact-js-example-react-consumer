@@ -27,5 +27,9 @@ export default defineConfig(({mode}) => {
         ),
       },
     },
+    // Vite 6 changes the way environment variables are handled
+    define: {
+      'process.env': {},
+    },
   }
 })
