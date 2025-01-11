@@ -31,10 +31,7 @@ describe('<MovieDetails />', () => {
       }),
     )
 
-    wrappedRender(<MovieDetails />, {
-      route: `/${id}`,
-      path: '/:id',
-    })
+    wrappedRender(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
     await waitFor(() => {
       expect(responseData).toMatchObject({error})
@@ -60,10 +57,7 @@ describe('<MovieDetails />', () => {
       }),
     )
 
-    wrappedRender(<MovieDetails />, {
-      route: `/${id}`,
-      path: '/:id',
-    })
+    wrappedRender(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
     await waitFor(() => {
       expect(responseData).toMatchObject({
@@ -82,16 +76,11 @@ describe('<MovieDetails />', () => {
     worker.use(
       http.get(`${baseUrl}/movies/${id}`, () => {
         responseData = {data: movie}
-        return new Response(JSON.stringify(responseData), {
-          status: 200,
-        })
+        return new Response(JSON.stringify(responseData), {status: 200})
       }),
     )
 
-    wrappedRender(<MovieDetails />, {
-      route: `/${id}`,
-      path: '/:id',
-    })
+    wrappedRender(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
     await waitFor(() => {
       expect(responseData).toMatchObject({data: movie})
@@ -103,16 +92,11 @@ describe('<MovieDetails />', () => {
     let responseData: any
 
     worker.use(
-      http.get(`${baseUrl}/movies`, ({request}) => {
-        const url = new URL(request.url)
-        const name = url.searchParams.get('name')
-
-        if (name === movieName) {
-          responseData = {data: movie}
-          return new Response(JSON.stringify(responseData), {
-            status: 200,
-          })
-        }
+      http.get(`${baseUrl}/movies`, () => {
+        responseData = {data: movie}
+        return new Response(JSON.stringify(responseData), {
+          status: 200,
+        })
       }),
     )
 
