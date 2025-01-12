@@ -7,7 +7,11 @@ export const baseConfig = defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 3 : 2,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'html' : 'list',
+  reporter: process.env.CI
+    ? 'html'
+    : process.env.PW_HTML_REPORT
+      ? [['list'], ['html']]
+      : 'list',
   timeout: process.env.CI ? 15000 : 5000,
   use: {
     trace: 'retain-on-first-failure',
