@@ -69,7 +69,7 @@ test.describe('movie crud e2e', () => {
       message: expect.any(String),
     })
 
-    expect(await page.getByTestId(`delete-movie-${name}`)).not.toBeVisible()
+    await expect(page.getByTestId(`delete-movie-${name}`)).not.toBeVisible()
   })
 
   test('should update and delete a movie at movie manager', async ({

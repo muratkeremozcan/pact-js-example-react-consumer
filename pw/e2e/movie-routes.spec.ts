@@ -12,8 +12,8 @@ test.describe('App routes', () => {
   const movie = movies[0]
   let loadGetMovies: Promise<Response>
 
-  test.beforeEach(({page}) => {
-    page.route('**/movies', route =>
+  test.beforeEach(async ({page}) => {
+    await page.route('**/movies', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: movies}),
@@ -48,7 +48,7 @@ test.describe('App routes', () => {
   test('should direct nav to by query param', async ({page}) => {
     const movieName = encodeURIComponent(movie?.name as Movie['name'])
 
-    page.route('**/movies?*', route =>
+    await page.route('**/movies?*', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify(movie),

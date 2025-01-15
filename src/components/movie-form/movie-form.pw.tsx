@@ -56,7 +56,7 @@ test.describe('<MovieForm />', () => {
     await c.getByText('Add Movie').click()
 
     const validationError = c.getByTestId('validation-error')
-    expect(validationError).toHaveCount(3)
+    await expect(validationError).toHaveCount(3)
 
     await fillYear(c, '1899')
     await c.getByText('Add Movie').click()
@@ -68,12 +68,12 @@ test.describe('<MovieForm />', () => {
     await fillName(c, '4')
     await fillDirector(c, 'Christopher Nolan')
     await c.getByText('Add Movie').click()
-    expect(validationError).toHaveCount(0)
+    await expect(validationError).toHaveCount(0)
 
     await fillYear(c, '1900')
     await fillName(c, '4')
     await fillDirector(c, 'Christopher Nolan')
     await c.getByText('Add Movie').click()
-    expect(validationError).toHaveCount(0)
+    await expect(validationError).toHaveCount(0)
   })
 })

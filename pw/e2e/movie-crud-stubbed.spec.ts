@@ -19,7 +19,7 @@ test.describe('movie crud e2e stubbed', () => {
   } = generateMovie()
 
   test('should add a movie', async ({page}) => {
-    page.route('**/movies', route =>
+    await page.route('**/movies', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: []}),
@@ -38,7 +38,7 @@ test.describe('movie crud e2e stubbed', () => {
 
     await addMovie(page, name, year, rating, director)
 
-    page.route('**/movies', route => {
+    await page.route('**/movies', route => {
       if (route.request().method() === 'POST') {
         return route.fulfill({
           status: 200,
@@ -75,7 +75,7 @@ test.describe('movie crud e2e stubbed', () => {
   })
 
   test('should edit a movie', async ({page}) => {
-    page.route('**/movies', route =>
+    await page.route('**/movies', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: [movie]}),
@@ -89,7 +89,7 @@ test.describe('movie crud e2e stubbed', () => {
         response.status() === 200,
     )
 
-    page.route('**/movies/*', route =>
+    await page.route('**/movies/*', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: movie}),
@@ -113,7 +113,7 @@ test.describe('movie crud e2e stubbed', () => {
     const {data} = await getMovieByIdResponse.json()
     expect(data).toEqual(movie)
 
-    page.route(`**/movies/${id}`, route => {
+    await page.route(`**/movies/${id}`, async route => {
       if (route.request().method() === 'PUT') {
         const updatedMovie: Movie = {
           id: movie.id,
@@ -122,13 +122,13 @@ test.describe('movie crud e2e stubbed', () => {
           rating: editedRating,
           director: editedDirector,
         }
-        route.fulfill({
+        await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify(updatedMovie),
         })
       } else {
-        route.continue()
+        await route.continue()
       }
     })
 
@@ -146,7 +146,7 @@ test.describe('movie crud e2e stubbed', () => {
   })
 
   test('should delete a movie', async ({page}) => {
-    page.route('**/movies', route =>
+    await page.route('**/movies', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: [movie]}),
@@ -163,13 +163,13 @@ test.describe('movie crud e2e stubbed', () => {
     await page.goto('/')
     await loadGetMovies
 
-    page.route(`**/movies/${id}`, route => {
+    await page.route(`**/movies/${id}`, async route => {
       if (route.request().method() === 'DELETE') {
-        route.fulfill({
+        await route.fulfill({
           status: 200,
         })
       } else {
-        route.continue()
+        await route.continue()
       }
     })
     const loadDeleteMovie = page.waitForResponse(
@@ -179,7 +179,7 @@ test.describe('movie crud e2e stubbed', () => {
         response.status() === 200,
     )
 
-    page.route('**/movies', route =>
+    await page.route('**/movies', route =>
       route.fulfill({
         status: 200,
         body: JSON.stringify({data: []}),
