@@ -14,7 +14,13 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      "packageNames": ["husky", "jest", "ts-jest", "jest-environment-jsdom"],
+      "packageNames": [
+        "husky",
+        "jest",
+        "ts-jest",
+        "jest-environment-jsdom",
+        "eslint"
+      ],
       "enabled": false
     }
   ]
