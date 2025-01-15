@@ -19,7 +19,8 @@
         "jest",
         "ts-jest",
         "jest-environment-jsdom",
-        "eslint"
+        "eslint",
+        "eslint-plugin-cypress"
       ],
       "enabled": false
     }
