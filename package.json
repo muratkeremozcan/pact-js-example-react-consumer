@@ -80,7 +80,7 @@
     "cypress-map": "1.43.0",
     "dotenv": "16.4.7",
     "eslint": "9.18.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-config-prettier": "10.0.1",
     "eslint-import-resolver-typescript": "3.7.0",
     "eslint-plugin-cypress": "4.1.0",
     "eslint-plugin-implicit-dependencies": "1.1.1",
