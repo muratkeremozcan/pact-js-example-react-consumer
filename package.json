@@ -73,7 +73,7 @@
     "@typescript-eslint/eslint-plugin": "8.20.0",
     "@typescript-eslint/parser": "8.20.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/browser": "^2.1.8",
+    "@vitest/browser": "^3.0.0",
     "cy-spok": "1.6.2",
     "cypress": "13.17.0",
     "cypress-data-session": "2.8.6",
