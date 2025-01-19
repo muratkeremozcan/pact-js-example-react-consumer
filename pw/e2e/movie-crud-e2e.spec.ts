@@ -26,7 +26,7 @@ test.describe('movie crud e2e', () => {
 
     await page.goto('/')
     const response = await loadGetMovies
-    const responseStatus = await response.status()
+    const responseStatus = response.status()
     expect(responseStatus).toBeGreaterThanOrEqual(200)
     expect(responseStatus).toBeLessThan(400)
   })

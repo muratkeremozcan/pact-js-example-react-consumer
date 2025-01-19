@@ -29,7 +29,7 @@ describe('<MovieItem />', () => {
     expect(link).toBeVisible()
     expect(link).toHaveAttribute('href', `/movies/${id}`)
 
-    await screen.getByRole('button', {name: /delete/i}).click()
+    screen.getByRole('button', {name: /delete/i}).click()
     expect(onDelete).toHaveBeenCalledTimes(1)
     expect(onDelete).toHaveBeenCalledWith(id)
   })
