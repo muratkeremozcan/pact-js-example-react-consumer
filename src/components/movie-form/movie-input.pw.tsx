@@ -24,7 +24,7 @@ test.describe('<MovieInput>', () => {
         onChange={onChange}
       />,
     )
-    await c.getByPlaceholder('place holder')
+    c.getByPlaceholder('place holder')
     // PW is in beta
     // await expect(input).toBeVisible()
     // await expect(input).toHaveValue(name)
@@ -46,7 +46,7 @@ test.describe('<MovieInput>', () => {
       />,
     )
 
-    await c.getByPlaceholder('place holder')
+    c.getByPlaceholder('place holder')
     // PW is in beta
     // await expect(input).toBeVisible()
     // await expect(input).toHaveValue(String(year))
