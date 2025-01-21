@@ -75,7 +75,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.0.0",
     "cy-spok": "1.6.2",
-    "cypress": "13.17.0",
+    "cypress": "14.0.0",
     "cypress-data-session": "2.8.6",
     "cypress-map": "1.43.0",
     "dotenv": "16.4.7",
