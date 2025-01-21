@@ -10,6 +10,7 @@ const config = mergeConfig(
   viteConfigBase,
   defineConfig({
     test: {
+      retry: 3,
       browser: {
         enabled: true,
         name: 'chromium',

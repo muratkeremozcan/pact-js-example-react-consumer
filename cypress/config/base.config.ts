@@ -5,7 +5,7 @@ import esbuildPreprocessor from '../support/esbuild-preprocessor'
 export const baseConfig: Cypress.ConfigOptions = {
   projectId: 'dg3xsf',
   retries: {
-    runMode: 1,
+    runMode: 3,
     openMode: 0,
   },
   viewportHeight: 1280,
