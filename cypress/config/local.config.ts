@@ -39,6 +39,7 @@ const config: Cypress.ConfigOptions = {
     baseUrl: `http://localhost:${PORT}`, // Cypress.config
   },
   component: {
+    experimentalJustInTimeCompile: true,
     experimentalSingleTabRunMode: true,
     specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
     devServer: {
