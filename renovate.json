@@ -20,7 +20,8 @@
         "ts-jest",
         "jest-environment-jsdom",
         "eslint",
-        "eslint-plugin-cypress"
+        "eslint-plugin-cypress",
+        "cypress"
       ],
       "enabled": false
     }
