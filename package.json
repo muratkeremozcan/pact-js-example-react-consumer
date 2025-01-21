@@ -58,7 +58,6 @@
     "@pact-foundation/pact-cli": "16.0.4",
     "@playwright/experimental-ct-react": "^1.49.1",
     "@playwright/test": "^1.49.1",
-    "@testing-library/cypress": "10.0.2",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
