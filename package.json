@@ -44,7 +44,7 @@
     "react-dom": "19.0.0",
     "react-error-boundary": "5.0.0",
     "react-router-dom": "7.1.5",
-    "styled-components": "6.1.14",
+    "styled-components": "6.1.15",
     "zod": "3.24.1"
   },
   "devDependencies": {
