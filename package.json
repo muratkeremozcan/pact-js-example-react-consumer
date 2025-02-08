@@ -77,7 +77,7 @@
     "cy-spok": "1.6.2",
     "cypress": "13.17.0",
     "cypress-data-session": "2.8.6",
-    "cypress-map": "1.43.0",
+    "cypress-map": "1.45.0",
     "dotenv": "16.4.7",
     "eslint": "8.57.1",
     "eslint-config-prettier": "10.0.1",
