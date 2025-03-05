@@ -55,7 +55,7 @@
     "@esbuild-plugins/node-modules-polyfill": "0.2.2",
     "@faker-js/faker": "9.5.1",
     "@pact-foundation/pact": "14.0.0",
-    "@pact-foundation/pact-cli": "16.0.5",
+    "@pact-foundation/pact-cli": "16.0.6",
     "@playwright/experimental-ct-react": "^1.49.1",
     "@playwright/test": "^1.49.1",
     "@testing-library/cypress": "10.0.3",
