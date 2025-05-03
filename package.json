@@ -98,7 +98,7 @@
     "lodash": "4.17.21",
     "msw": "^2.7.0",
     "nock": "14.0.4",
-    "npm-run-all2": "7.0.2",
+    "npm-run-all2": "8.0.1",
     "picomatch": "^4.0.2",
     "prettier": "3.5.3",
     "sinon": "^20.0.0",
