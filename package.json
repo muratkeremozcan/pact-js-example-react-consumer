@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
-    "@tanstack/react-query": "5.76.0",
+    "@tanstack/react-query": "5.76.1",
     "axios": "1.9.0",
     "jsdom": "^26.0.0",
     "react": "19.1.0",
@@ -68,7 +68,7 @@
     "@types/node": "22.15.17",
     "@types/picomatch": "^4.0.0",
     "@types/react": "19.1.4",
-    "@types/react-dom": "19.1.4",
+    "@types/react-dom": "19.1.5",
     "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "8.32.1",
     "@typescript-eslint/parser": "8.32.1",
