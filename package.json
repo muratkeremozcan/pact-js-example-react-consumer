@@ -108,7 +108,7 @@
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
     "vite": "^6.0.7",
-    "vitest-browser-react": "^0.1.0"
+    "vitest-browser-react": "^0.2.0"
   },
   "husky": {
     "hooks": {
