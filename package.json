@@ -65,7 +65,7 @@
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "29.5.14",
     "@types/lodash": "4.17.16",
-    "@types/node": "22.15.18",
+    "@types/node": "22.15.19",
     "@types/picomatch": "^4.0.0",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
