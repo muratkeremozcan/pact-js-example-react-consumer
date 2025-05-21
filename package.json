@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.0",
     "styled-components": "6.1.18",
-    "zod": "3.25.7"
+    "zod": "3.25.13"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
@@ -64,8 +64,8 @@
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "29.5.14",
-    "@types/lodash": "4.17.16",
-    "@types/node": "22.15.19",
+    "@types/lodash": "4.17.17",
+    "@types/node": "22.15.21",
     "@types/picomatch": "^4.0.0",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
@@ -98,7 +98,7 @@
     "lodash": "4.17.21",
     "msw": "^2.7.0",
     "nock": "14.0.4",
-    "npm-run-all2": "8.0.2",
+    "npm-run-all2": "8.0.3",
     "picomatch": "^4.0.2",
     "prettier": "3.5.3",
     "sinon": "^20.0.0",
