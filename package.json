@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.2",
-    "@tanstack/react-query": "5.79.0",
+    "@tanstack/react-query": "5.79.2",
     "axios": "1.9.0",
     "jsdom": "^26.0.0",
     "react": "19.1.0",
@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.1",
     "styled-components": "6.1.18",
-    "zod": "3.25.47"
+    "zod": "3.25.49"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
@@ -70,8 +70,8 @@
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
     "@types/sinon": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "8.33.0",
-    "@typescript-eslint/parser": "8.33.0",
+    "@typescript-eslint/eslint-plugin": "8.33.1",
+    "@typescript-eslint/parser": "8.33.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.0.0",
     "cy-spok": "1.6.2",
