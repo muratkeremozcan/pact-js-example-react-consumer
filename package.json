@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.2",
     "styled-components": "6.1.18",
-    "zod": "3.25.56"
+    "zod": "3.25.57"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
@@ -65,13 +65,13 @@
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "29.5.14",
     "@types/lodash": "4.17.17",
-    "@types/node": "22.15.30",
+    "@types/node": "22.15.31",
     "@types/picomatch": "^4.0.0",
-    "@types/react": "19.1.6",
+    "@types/react": "19.1.7",
     "@types/react-dom": "19.1.6",
     "@types/sinon": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "8.33.1",
-    "@typescript-eslint/parser": "8.33.1",
+    "@typescript-eslint/eslint-plugin": "8.34.0",
+    "@typescript-eslint/parser": "8.34.0",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.0.0",
     "cy-spok": "1.6.2",
