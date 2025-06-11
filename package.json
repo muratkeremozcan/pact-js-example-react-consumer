@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.2",
     "styled-components": "6.1.18",
-    "zod": "3.25.57"
+    "zod": "3.25.60"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
