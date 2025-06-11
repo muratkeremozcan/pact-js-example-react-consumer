@@ -88,7 +88,7 @@
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-no-only-tests": "3.3.0",
     "eslint-plugin-prettier": "5.4.1",
-    "happy-dom": "^17.0.0",
+    "happy-dom": "^18.0.0",
     "husky": "4.3.8",
     "identity-obj-proxy": "3.0.0",
     "is-ci": "4.1.0",
