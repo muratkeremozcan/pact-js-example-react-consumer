@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.3",
     "styled-components": "6.1.19",
-    "zod": "3.25.74"
+    "zod": "3.25.75"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
@@ -70,15 +70,15 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/sinon": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "8.35.1",
-    "@typescript-eslint/parser": "8.35.1",
+    "@typescript-eslint/eslint-plugin": "8.36.0",
+    "@typescript-eslint/parser": "8.36.0",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/browser": "^3.0.0",
     "cy-spok": "1.6.2",
     "cypress": "13.17.0",
     "cypress-data-session": "2.8.7",
     "cypress-map": "1.49.0",
-    "dotenv": "17.0.1",
+    "dotenv": "17.1.0",
     "eslint": "8.57.1",
     "eslint-config-prettier": "10.1.5",
     "eslint-import-resolver-typescript": "4.4.4",
