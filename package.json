@@ -45,7 +45,7 @@
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.6.3",
     "styled-components": "6.1.19",
-    "zod": "3.25.75"
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@bahmutov/cy-api": "2.2.8",
@@ -65,7 +65,7 @@
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "30.0.0",
     "@types/lodash": "4.17.20",
-    "@types/node": "22.16.0",
+    "@types/node": "22.16.2",
     "@types/picomatch": "^4.0.0",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
