@@ -43,7 +43,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-error-boundary": "6.0.0",
-    "react-router-dom": "7.7.1",
+    "react-router-dom": "7.8.0",
     "styled-components": "6.1.19",
     "zod": "3.25.76"
   },
@@ -97,7 +97,7 @@
     "lint-staged": "16.1.4",
     "lodash": "4.17.21",
     "msw": "^2.7.0",
-    "nock": "14.0.8",
+    "nock": "14.0.9",
     "npm-run-all2": "8.0.4",
     "picomatch": "^4.0.2",
     "prettier": "3.6.2",
