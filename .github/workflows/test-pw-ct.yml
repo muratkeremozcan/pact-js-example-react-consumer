@@ -48,7 +48,7 @@ jobs:
       - name: Run PW ct tests
         run: npm run pw:run-ct
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: playwright-artifacts
