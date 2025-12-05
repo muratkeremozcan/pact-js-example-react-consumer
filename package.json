@@ -37,13 +37,13 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.4",
-    "@tanstack/react-query": "5.90.11",
+    "@tanstack/react-query": "5.90.12",
     "axios": "1.13.2",
     "jsdom": "^27.0.0",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "react-error-boundary": "6.0.0",
-    "react-router-dom": "7.10.0",
+    "react-router-dom": "7.10.1",
     "styled-components": "6.1.19",
     "zod": "3.25.76"
   },
