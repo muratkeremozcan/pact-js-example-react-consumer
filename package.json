@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.4",
-    "@tanstack/react-query": "5.90.12",
+    "@tanstack/react-query": "5.90.13",
     "axios": "1.13.2",
     "jsdom": "^27.0.0",
     "react": "19.2.3",
