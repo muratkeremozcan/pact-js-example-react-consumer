@@ -44,7 +44,7 @@
     "react-dom": "19.2.3",
     "react-error-boundary": "6.0.2",
     "react-router-dom": "7.11.0",
-    "styled-components": "6.1.19",
+    "styled-components": "6.2.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
@@ -70,8 +70,8 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@types/sinon": "^21.0.0",
-    "@typescript-eslint/eslint-plugin": "8.51.0",
-    "@typescript-eslint/parser": "8.51.0",
+    "@typescript-eslint/eslint-plugin": "8.52.0",
+    "@typescript-eslint/parser": "8.52.0",
     "@vitejs/plugin-react": "^5.0.0",
     "@vitest/browser": "^3.0.0",
     "cy-spok": "1.7.0",
