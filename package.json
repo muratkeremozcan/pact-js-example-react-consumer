@@ -43,7 +43,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-error-boundary": "6.0.2",
-    "react-router-dom": "7.11.0",
+    "react-router-dom": "7.12.0",
     "styled-components": "6.2.0",
     "zod": "3.25.76"
   },
