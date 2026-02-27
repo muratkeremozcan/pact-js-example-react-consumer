@@ -48,7 +48,7 @@ jobs:
       - name: Run PW e2e tests
         run: npm run pw:run-local
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-artifacts
