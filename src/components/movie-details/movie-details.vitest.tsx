@@ -46,13 +46,9 @@ describe('<MovieDetails />', () => {
 
     worker.use(
       http.get(`${baseUrl}/movies/${id}`, () => {
-        responseData = {
-          error: {
-            error,
-          },
-        }
+        responseData = {status: 404, error}
         return new Response(JSON.stringify(responseData), {
-          status: 400,
+          status: 404,
         })
       }),
     )
@@ -60,11 +56,7 @@ describe('<MovieDetails />', () => {
     wrappedRender(<MovieDetails />, {path: '/:id', route: `/${id}`})
 
     await waitFor(() => {
-      expect(responseData).toMatchObject({
-        error: {
-          error,
-        },
-      })
+      expect(responseData).toMatchObject({error})
     })
 
     expect(await screen.findByText(error)).toBeVisible()
