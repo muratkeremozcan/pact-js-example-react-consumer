@@ -21,7 +21,7 @@ export default function MovieDetails() {
   if (isLoading) return <LoadingMessage />
 
   const movieData = (data as unknown as {data: Movie}).data
-  const movieError = (data as unknown as {error: ErrorResponse}).error?.error
+  const movieError = (data as unknown as ErrorResponse).error
 
   return (
     <SMovieDetails data-cy="movie-details-comp">

@@ -43,12 +43,8 @@ test.describe('<MovieDetails />', () => {
       method: 'GET',
       url: `/movies/${id}`,
       fulfillResponse: {
-        status: 400,
-        body: {
-          error: {
-            error,
-          },
-        },
+        status: 404,
+        body: {status: 404, error},
       },
     })
 
@@ -57,11 +53,7 @@ test.describe('<MovieDetails />', () => {
     })
 
     const {responseJson} = await loadNetworkError
-    expect(responseJson).toMatchObject({
-      error: {
-        error,
-      },
-    })
+    expect(responseJson).toMatchObject({error})
 
     await expect(c.getByText(error)).toBeVisible()
   })

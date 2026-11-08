@@ -25,16 +25,12 @@ describe('<MovieDetails />', () => {
   it('should display a specific error', () => {
     const error = 'Movie not found'
     cy.intercept('GET', '/movies/*', {
-      statusCode: 400,
-      body: {
-        error: {
-          error,
-        },
-      },
+      statusCode: 404,
+      body: {status: 404, error},
     }).as('networkErr')
 
     cy.routeWrappedMount(<MovieDetails />, {path: '/:id', route: `/${id}`})
-    cy.wait('@networkErr').its('response.body.error.error').should('eq', error)
+    cy.wait('@networkErr').its('response.body.error').should('eq', error)
 
     cy.contains(error)
   })
